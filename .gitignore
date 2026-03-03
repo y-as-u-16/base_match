@@ -53,3 +53,4 @@ CLAUDE.md
 .env.local
 .env.*
 !.env.example
+.claude/
