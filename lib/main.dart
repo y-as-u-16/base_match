@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,8 +15,16 @@ Future<void> main() async {
   final envFile = env == 'release' ? '.env' : '.env.local';
   await dotenv.load(fileName: envFile);
 
+  var supabaseUrl = dotenv.env['SUPABASE_URL']!;
+
+  // ローカル開発時、Androidエミュレータでは 127.0.0.1 でホストPCに
+  // アクセスできないため、10.0.2.2 に自動変換する
+  if (env == 'local' && Platform.isAndroid) {
+    supabaseUrl = supabaseUrl.replaceAll('127.0.0.1', '10.0.2.2');
+  }
+
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
+    url: supabaseUrl,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
