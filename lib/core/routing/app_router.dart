@@ -143,6 +143,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: const HomePage(),
             ),
           ),
+          // タブ画面: フェード
+          GoRoute(
+            path: '/teams',
+            pageBuilder: (context, state) => _fadeTransitionPage(
+              key: state.pageKey,
+              child: const CreateTeamPage(),
+            ),
+          ),
           // 作成系画面: 右からスライド
           GoRoute(
             path: '/teams/create',
@@ -291,7 +299,7 @@ class _ScaffoldWithNavBar extends StatelessWidget {
       case 0:
         context.go('/');
       case 1:
-        context.go('/teams/create');
+        context.go('/teams');
       case 2:
         context.go('/matchups');
       case 3:
