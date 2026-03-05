@@ -4,6 +4,16 @@ on:
   pull_request:
     branches:
       - develop
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.env.example'
+      - 'supabase/**'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.svg'
+      - '**/*.ico'
 
 jobs:
   test:
