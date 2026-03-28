@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__find_symbol",
+      "Bash(gh issue:*)",
+      "WebSearch",
+      "mcp__serena__list_dir"
+    ]
+  }
+}
