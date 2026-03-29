@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-草野球対戦履歴アプリ「base_match」。バッター×ピッチャー、チーム×チームの対戦履歴を蓄積し、「因縁カード」として共有できるプロダクト。
+草野球対戦履歴アプリ「草野球マッチ」。バッター×ピッチャー、チーム×チームの対戦履歴を蓄積し、「因縁カード」として共有できるプロダクト。
 
 ## 技術スタック
 

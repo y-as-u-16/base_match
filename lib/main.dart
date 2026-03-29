@@ -39,7 +39,7 @@ class BaseMatchApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'base_match',
+      title: '草野球マッチ',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       routerConfig: router,
