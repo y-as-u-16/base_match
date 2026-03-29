@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,7 +10,8 @@ import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   const env = String.fromEnvironment('ENV', defaultValue: 'local');
   final envFile = env == 'release' ? '.env' : '.env.local';
@@ -29,6 +31,7 @@ Future<void> main() async {
   );
 
   runApp(const ProviderScope(child: BaseMatchApp()));
+  FlutterNativeSplash.remove();
 }
 
 class BaseMatchApp extends ConsumerWidget {
