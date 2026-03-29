@@ -14,9 +14,13 @@ import '../../features/matchups/presentation/pages/matchup_list_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/share/presentation/pages/card_preview_page.dart';
+import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/teams/presentation/pages/create_team_page.dart';
 import '../../features/teams/presentation/pages/join_team_page.dart';
 import '../../features/teams/presentation/pages/team_detail_page.dart';
+
+/// Supabase初期化完了フラグ。SplashPageの初期化完了後にtrueにする。
+final isInitializedProvider = StateProvider<bool>((ref) => false);
 
 /// フェード遷移を生成するヘルパー
 CustomTransitionPage<void> _fadeTransitionPage({
@@ -102,21 +106,42 @@ CustomTransitionPage<void> _slideRightTransitionPage({
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  final isInitialized = ref.watch(isInitializedProvider);
+
+  // Supabase初期化完了後のみauthStateを参照する
+  final authState = isInitialized ? ref.watch(authStateProvider) : null;
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/splash',
     redirect: (context, state) {
-      final isLoggedIn = authState.valueOrNull != null;
+      // 初期化完了前はスプラッシュに留まる
+      if (!isInitialized) {
+        if (state.matchedLocation != '/splash') return '/splash';
+        return null;
+      }
+
+      // スプラッシュから離れた後の認証リダイレクト
+      final isLoggedIn = authState?.valueOrNull != null;
       final isAuthRoute =
           state.matchedLocation == '/login' ||
           state.matchedLocation == '/sign-up';
 
+      if (state.matchedLocation == '/splash') {
+        return isLoggedIn ? '/' : '/login';
+      }
       if (!isLoggedIn && !isAuthRoute) return '/login';
       if (isLoggedIn && isAuthRoute) return '/';
       return null;
     },
     routes: [
+      // スプラッシュ画面
+      GoRoute(
+        path: '/splash',
+        pageBuilder: (context, state) => _fadeTransitionPage(
+          key: state.pageKey,
+          child: const SplashPage(),
+        ),
+      ),
       // 認証画面: フェード
       GoRoute(
         path: '/login',

@@ -92,3 +92,4 @@ lib/
 | `design-check` | UI実装後のレビュー、デザイン崩れの指摘、新しい画面のWidget作成後 |
 | `build-runner` | freezedモデルやjson_serializableの変更後（※手動起動のみ、自動実行はしない） |
 | `review-pr` | PRレビューの依頼、「PRを確認して」等の依頼時 |
+| `codex` | 「codexと相談」「レビューして」等の依頼、文言検討、設計相談、バグ調査時 |
