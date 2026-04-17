@@ -45,8 +45,6 @@ app.*.map.json
 /android/app/release
 
 
-.serena/
-
 # Environment variables
 .env
 .env.local
