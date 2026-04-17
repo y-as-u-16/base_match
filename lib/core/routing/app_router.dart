@@ -120,6 +120,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         return null;
       }
 
+      // 認証状態がまだ確定していない間はスプラッシュに留まる
+      // （StreamProviderの初回ロード中に/loginへ飛ばすとちらつきが発生するため）
+      if (authState != null && authState.isLoading) {
+        if (state.matchedLocation != '/splash') return '/splash';
+        return null;
+      }
+
       // スプラッシュから離れた後の認証リダイレクト
       final isLoggedIn = authState?.valueOrNull != null;
       final isAuthRoute =
