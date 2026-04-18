@@ -1,0 +1,41 @@
+# Codex CLI プロジェクト設定
+# 参考: https://developers.openai.com/codex/config-reference
+
+# 承認ポリシー
+# "untrusted" = 全てのツール使用に承認が必要
+# "on-request" = ファイル変更・コマンド実行時に承認が必要
+# "never" = 承認不要（信頼できるリポジトリのみ）
+approval_policy = "on-request"
+
+# サンドボックスモード
+# "workspace-write" = ワークスペース内のみ書き込み可
+# "danger-full-access" = 全アクセス（注意して使用）
+sandbox_mode = "workspace-write"
+
+# パーソナリティ
+# "pragmatic" = 簡潔で実用的
+# "friendly" = フレンドリーで丁寧
+# "none" = パーソナリティなし
+personality = "friendly"
+
+# Web検索
+# "cached" = キャッシュ優先
+# "live" = ライブ検索
+# "disabled" = 無効
+web_search = "live"
+
+# AGENTS.md 関連
+project_doc_max_bytes = 32768
+
+# 機能フラグ
+[features]
+codex_hooks = true
+memories = true
+
+# シェル環境ポリシー（必要な環境変数のみ公開）
+[shell_environment_policy]
+include_only = ["PATH", "HOME", "LANG", "NODE_ENV"]
+
+# テレメトリ（必要に応じて無効化）
+[analytics]
+enabled = false

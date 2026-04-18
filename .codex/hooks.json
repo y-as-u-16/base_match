@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.codex/hooks/validate-bash.sh",
+            "statusMessage": "コマンドを検証中...",
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  }
+}
