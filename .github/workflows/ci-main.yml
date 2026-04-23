@@ -4,16 +4,15 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '*.md'
-      - 'docs/**'
-      - 'LICENSE'
-      - '.env.example'
-      - 'supabase/**'
-      - '**/*.png'
-      - '**/*.jpg'
-      - '**/*.svg'
-      - '**/*.ico'
+    paths:
+      - 'lib/**'
+      - 'test/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'analysis_options.yaml'
+      - 'ios/**'
+      - 'android/**'
+      - '.github/workflows/**'
 
 jobs:
   test:
