@@ -13,6 +13,8 @@
 - `/debug <エラー>` - デバッグ支援
 - `/performance [ファイル]` - パフォーマンス分析
 - `/git-summary` - Git変更サマリー
+- `/issue-worktree <Issue番号>` - Issue単位のブランチ/worktree作成と開発
+- `/multi-issue-worktree-agents <Issue番号...>` - 複数Issueをworktreeとサブエージェントで並列開発
 
 ## 利用可能なエージェント
 - `@code-reviewer` - コードレビュー専門家

@@ -1,11 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "mcp__serena__find_symbol",
-      "Bash(gh issue:*)",
-      "WebSearch",
-      "mcp__serena__list_dir",
-      "mcp__codex__codex"
+      "WebFetch(domain:developers.openai.com)",
+      "WebFetch(domain:github.com)",
+      "WebSearch"
     ]
   }
 }

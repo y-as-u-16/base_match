@@ -16,7 +16,7 @@ sandbox_mode = "workspace-write"
 # "pragmatic" = 簡潔で実用的
 # "friendly" = フレンドリーで丁寧
 # "none" = パーソナリティなし
-personality = "friendly"
+personality = "pragmatic"
 
 # Web検索
 # "cached" = キャッシュ優先
