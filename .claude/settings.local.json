@@ -3,7 +3,12 @@
     "allow": [
       "WebFetch(domain:developers.openai.com)",
       "WebFetch(domain:github.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(gh issue:*)",
+      "WebSearch",
+      "mcp__serena__list_dir",
+      "mcp__codex__codex",
+      "Bash(grep -E \"\\\\.dart$\")"
     ]
   }
 }
