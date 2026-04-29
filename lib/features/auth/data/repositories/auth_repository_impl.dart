@@ -40,16 +40,13 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _client.auth.signUp(
         email: email,
         password: password,
+        data: {'display_name': displayName},
       );
       if (response.user == null) {
         throw const AuthException('アカウント作成に失敗しました');
       }
 
-      // Create user profile in users table
-      await _client.from('users').insert({
-        'id': response.user!.id,
-        'display_name': displayName,
-      });
+      // public.usersへの挿入はDBトリガー(handle_new_user)が自動実行
 
       return AppUser(
         id: response.user!.id,
@@ -58,8 +55,6 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     } on AuthApiException catch (e) {
       throw AuthException(e.message);
-    } on PostgrestException catch (e) {
-      throw DatabaseException(e.message);
     }
   }
 
