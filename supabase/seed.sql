@@ -59,11 +59,14 @@ values
     now()
   );
 
--- public.users プロフィール
+-- public.users プロフィール (トリガーで自動作成されるため、ON CONFLICTで上書き)
 insert into public.users (id, display_name, photo_url)
 values
   ('11111111-1111-1111-1111-111111111111', '山田太郎', null),
-  ('22222222-2222-2222-2222-222222222222', '鈴木花子', null);
+  ('22222222-2222-2222-2222-222222222222', '鈴木花子', null)
+on conflict (id) do update set
+  display_name = excluded.display_name,
+  photo_url = excluded.photo_url;
 
 -- チーム作成
 insert into public.teams (id, name, area, invite_code, created_by)
