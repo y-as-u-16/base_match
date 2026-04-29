@@ -32,29 +32,48 @@ class _SplashPageState extends ConsumerState<SplashPage>
   }
 
   Future<void> _initialize() async {
+    // Phase 1: Supabase は任意。.env が存在し、URL/ANON_KEY が揃っている場合のみ初期化する。
+    // 設定が無い場合はローカル記録モードでアプリを起動する。
     const env = String.fromEnvironment('ENV', defaultValue: 'local');
     final envFile = env == 'release' ? '.env' : '.env.local';
-    await dotenv.load(fileName: envFile);
 
-    var supabaseUrl = dotenv.env['SUPABASE_URL']!;
-
-    // ローカル開発時、Androidエミュレータでは 127.0.0.1 でホストPCに
-    // アクセスできないため、10.0.2.2 に自動変換する
-    if (env == 'local' && Platform.isAndroid) {
-      supabaseUrl = supabaseUrl.replaceAll('127.0.0.1', '10.0.2.2');
+    try {
+      await dotenv.load(fileName: envFile);
+    } catch (e) {
+      // .env ファイルが無くても起動を続行する
+      debugPrint('[SplashPage] $envFile が見つかりません。ローカル記録モードで起動します: $e');
     }
 
-    await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-    );
+    final supabaseUrl = dotenv.env['SUPABASE_URL'];
+    final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'];
+
+    if (supabaseUrl != null &&
+        supabaseUrl.isNotEmpty &&
+        supabaseAnonKey != null &&
+        supabaseAnonKey.isNotEmpty) {
+      var url = supabaseUrl;
+
+      // ローカル開発時、Androidエミュレータでは 127.0.0.1 でホストPCに
+      // アクセスできないため、10.0.2.2 に自動変換する
+      if (env == 'local' && Platform.isAndroid) {
+        url = url.replaceAll('127.0.0.1', '10.0.2.2');
+      }
+
+      try {
+        await Supabase.initialize(url: url, anonKey: supabaseAnonKey);
+      } catch (e) {
+        debugPrint('[SplashPage] Supabase 初期化に失敗。ローカル記録モードで起動します: $e');
+      }
+    } else {
+      debugPrint('[SplashPage] SUPABASE_URL / SUPABASE_ANON_KEY が未設定。ローカル記録モードで起動します。');
+    }
 
     // 最低1.5秒はスプラッシュを表示
     await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
-    // 初期化完了フラグをONにする → ルーターのredirectが認証状態に応じて遷移させる
+    // アプリ初期化完了フラグをONにする → ルーターがホームへ遷移させる
     ref.read(isInitializedProvider.notifier).state = true;
   }
 

@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/sign_up_page.dart';
-import '../../features/auth/presentation/view_models/auth_view_model.dart';
 import '../../features/games/presentation/pages/create_game_page.dart';
 import '../../features/games/presentation/pages/game_detail_page.dart';
 import '../../features/games/presentation/pages/plate_appearance_input_page.dart';
@@ -19,7 +18,8 @@ import '../../features/teams/presentation/pages/create_team_page.dart';
 import '../../features/teams/presentation/pages/join_team_page.dart';
 import '../../features/teams/presentation/pages/team_detail_page.dart';
 
-/// Supabase初期化完了フラグ。SplashPageの初期化完了後にtrueにする。
+/// アプリ初期化完了フラグ。SplashPageの初期化完了後にtrueにする。
+/// Phase 1 では Supabase 初期化は任意で、設定が無くてもtrueになる。
 final isInitializedProvider = StateProvider<bool>((ref) => false);
 
 /// フェード遷移を生成するヘルパー
@@ -108,9 +108,6 @@ CustomTransitionPage<void> _slideRightTransitionPage({
 final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(isInitializedProvider);
 
-  // Supabase初期化完了後のみauthStateを参照する
-  final authState = isInitialized ? ref.watch(authStateProvider) : null;
-
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
@@ -120,24 +117,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         return null;
       }
 
-      // 認証状態がまだ確定していない間はスプラッシュに留まる
-      // （StreamProviderの初回ロード中に/loginへ飛ばすとちらつきが発生するため）
-      if (authState != null && authState.isLoading) {
-        if (state.matchedLocation != '/splash') return '/splash';
-        return null;
-      }
-
-      // スプラッシュから離れた後の認証リダイレクト
-      final isLoggedIn = authState?.valueOrNull != null;
-      final isAuthRoute =
-          state.matchedLocation == '/login' ||
-          state.matchedLocation == '/sign-up';
-
+      // Phase 1: 認証ガードは撤去。スプラッシュ完了後はホームへ。
+      // ログイン必須機能は AuthRequiredOverlay で画面側からロックする想定。
       if (state.matchedLocation == '/splash') {
-        return isLoggedIn ? '/' : '/login';
+        return '/';
       }
-      if (!isLoggedIn && !isAuthRoute) return '/login';
-      if (isLoggedIn && isAuthRoute) return '/';
       return null;
     },
     routes: [
