@@ -10,6 +10,7 @@ import '../../../../core/widgets/empty_state_widget.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../games/presentation/view_models/game_view_model.dart';
 import '../view_models/team_view_model.dart';
+import '../../../auth/presentation/view_models/auth_view_model.dart';
 
 class TeamDetailPage extends ConsumerWidget {
   const TeamDetailPage({super.key, required this.teamId});
@@ -132,6 +133,26 @@ class TeamDetailPage extends ConsumerWidget {
                     ),
                   ],
                 ),
+              ),
+              const Gap(16),
+              // Regenerate invite code button (owner/admin only)
+          
+              membersAsync.maybeWhen(
+                data: (members) {
+                  final currentUserRole = members
+                      .where((m) => m.userId == ref.watch(currentUserProvider)?.id)
+                      .map((m) => m.role)
+                      .firstWhere((_) => true, orElse: () => '');
+                  if (currentUserRole == 'owner' || currentUserRole == 'admin') {
+                    return OutlinedButton.icon(
+                      onPressed: () => context.go('/teams/invite-code'),
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('招待コードを再発行'),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+                orElse: () => const SizedBox.shrink(),
               ),
               const Gap(24),
 

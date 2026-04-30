@@ -157,4 +157,20 @@ class TeamRepositoryImpl implements TeamRepository {
       throw DatabaseException(e.message);
     }
   }
+// 既存の招待コードを新しいコードに更新して返す：招待コード発行画面用
+  @override
+  Future<String> regenerateInviteCode(String teamId) async {
+    try {
+      final newInviteCode = InviteCodeGenerator.generate();
+
+      await _client
+          .from('teams')
+          .update({'invite_code': newInviteCode})
+          .eq('id', teamId);
+
+      return newInviteCode;
+    } on PostgrestException catch (e) {
+      throw DatabaseException(e.message);
+    }
+  }
 }

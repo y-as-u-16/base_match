@@ -50,6 +50,15 @@ class TeamViewModel extends StateNotifier<AsyncValue<void>> {
     });
     return result;
   }
+// 既存の招待コードを新しいコードに更新して返す：招待コード発行画面用
+  Future<String?> regenerateInviteCode(String teamId) async {
+    state = const AsyncValue.loading();
+    String? result;
+    state = await AsyncValue.guard(() async {
+      result = await _repository.regenerateInviteCode(teamId);
+    });
+    return result;
+  }
 }
 
 final teamViewModelProvider =

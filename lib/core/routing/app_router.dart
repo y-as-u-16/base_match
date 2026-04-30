@@ -16,6 +16,7 @@ import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/share/presentation/pages/card_preview_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/teams/presentation/pages/create_team_page.dart';
+import '../../features/teams/presentation/pages/invite_code_page.dart';
 import '../../features/teams/presentation/pages/join_team_page.dart';
 import '../../features/teams/presentation/pages/team_detail_page.dart';
 
@@ -196,6 +197,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) => _slideRightTransitionPage(
               key: state.pageKey,
               child: const JoinTeamPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/teams/invite-code',
+            pageBuilder: (context, state) => _slideRightTransitionPage(
+              key: state.pageKey,
+              child: const InviteCodePage(),
             ),
           ),
           // 詳細画面: ボトムアップ+フェード
