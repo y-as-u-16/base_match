@@ -32,7 +32,7 @@ void main() {
     testWidgets('ホームの主要アクションを表示する', (tester) async {
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text(l10n.brandName), findsOneWidget);
+      expect(find.text(l10n.navHome), findsOneWidget);
       expect(find.text(l10n.homeHeadline), findsOneWidget);
       expect(find.text(l10n.seasonSummaryTitle), findsOneWidget);
       expect(find.text(l10n.seasonGamesCount(0)), findsOneWidget);

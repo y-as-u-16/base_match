@@ -23,7 +23,7 @@ class HomePage extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.brandName)),
+      appBar: AppBar(title: Text(l10n.navHome)),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
