@@ -34,6 +34,9 @@ void main() {
 
       expect(find.text(l10n.brandName), findsOneWidget);
       expect(find.text(l10n.homeHeadline), findsOneWidget);
+      expect(find.text(l10n.seasonSummaryTitle), findsOneWidget);
+      expect(find.text(l10n.seasonGamesCount(0)), findsOneWidget);
+      expect(find.text(l10n.seasonRecordLabel(0, 0, 0)), findsOneWidget);
       expect(find.text(l10n.recordGameButton), findsOneWidget);
       expect(find.text(l10n.viewStatsButton), findsOneWidget);
     });

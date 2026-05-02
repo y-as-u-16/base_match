@@ -7,6 +7,50 @@
   "navStats": "成績",
   "homeHeadline": "ローカル記録",
   "homeDescription": "ログインなしで試合、打席、ピッチング成績を端末内に記録します。",
+  "seasonSummaryTitle": "今季サマリー",
+  "seasonSummarySubtitle": "{year}年のローカル記録",
+  "@seasonSummarySubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonGamesMetricLabel": "試合",
+  "seasonRecordMetricLabel": "勝敗",
+  "seasonRunsMetricLabel": "得点",
+  "seasonAverageMetricLabel": "打率",
+  "seasonEraMetricLabel": "防御率",
+  "seasonGamesCount": "{count}試合",
+  "@seasonGamesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRecordLabel": "{wins}勝 {losses}敗 {draws}分",
+  "@seasonRecordLabel": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRunsLabel": "{runs}点",
+  "@seasonRunsLabel": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
   "recordGameButton": "試合を記録する",
   "viewStatsButton": "成績を見る",
   "recentGamesTitle": "直近の試合",

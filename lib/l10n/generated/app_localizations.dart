@@ -136,6 +136,66 @@ abstract class AppLocalizations {
   /// **'ログインなしで試合、打席、ピッチング成績を端末内に記録します。'**
   String get homeDescription;
 
+  /// No description provided for @seasonSummaryTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'今季サマリー'**
+  String get seasonSummaryTitle;
+
+  /// No description provided for @seasonSummarySubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'{year}年のローカル記録'**
+  String seasonSummarySubtitle(int year);
+
+  /// No description provided for @seasonGamesMetricLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'試合'**
+  String get seasonGamesMetricLabel;
+
+  /// No description provided for @seasonRecordMetricLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'勝敗'**
+  String get seasonRecordMetricLabel;
+
+  /// No description provided for @seasonRunsMetricLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'得点'**
+  String get seasonRunsMetricLabel;
+
+  /// No description provided for @seasonAverageMetricLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'打率'**
+  String get seasonAverageMetricLabel;
+
+  /// No description provided for @seasonEraMetricLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'防御率'**
+  String get seasonEraMetricLabel;
+
+  /// No description provided for @seasonGamesCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'{count}試合'**
+  String seasonGamesCount(int count);
+
+  /// No description provided for @seasonRecordLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'{wins}勝 {losses}敗 {draws}分'**
+  String seasonRecordLabel(int wins, int losses, int draws);
+
+  /// No description provided for @seasonRunsLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'{runs}点'**
+  String seasonRunsLabel(int runs);
+
   /// No description provided for @recordGameButton.
   ///
   /// In ja, this message translates to:

@@ -30,6 +30,44 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeDescription => 'ログインなしで試合、打席、ピッチング成績を端末内に記録します。';
 
   @override
+  String get seasonSummaryTitle => '今季サマリー';
+
+  @override
+  String seasonSummarySubtitle(int year) {
+    return '$year年のローカル記録';
+  }
+
+  @override
+  String get seasonGamesMetricLabel => '試合';
+
+  @override
+  String get seasonRecordMetricLabel => '勝敗';
+
+  @override
+  String get seasonRunsMetricLabel => '得点';
+
+  @override
+  String get seasonAverageMetricLabel => '打率';
+
+  @override
+  String get seasonEraMetricLabel => '防御率';
+
+  @override
+  String seasonGamesCount(int count) {
+    return '$count試合';
+  }
+
+  @override
+  String seasonRecordLabel(int wins, int losses, int draws) {
+    return '$wins勝 $losses敗 $draws分';
+  }
+
+  @override
+  String seasonRunsLabel(int runs) {
+    return '$runs点';
+  }
+
+  @override
   String get recordGameButton => '試合を記録する';
 
   @override
