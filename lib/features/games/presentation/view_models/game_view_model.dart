@@ -98,7 +98,6 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
 
   PlateAppearance addPlateAppearance({
     required String gameId,
-    required String battingSide,
     required String resultType,
     required String resultDetail,
     int? inning,
@@ -108,7 +107,6 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
       id: _id('pa'),
       gameId: gameId,
       inning: inning,
-      battingSide: battingSide,
       resultType: resultType,
       resultDetail: resultDetail,
       rbi: rbi,
@@ -118,10 +116,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
     final games = state.games.map((game) {
       if (game.id != gameId) return game;
       final runs = rbi ?? 0;
-      if (battingSide == AppConstants.sideHome) {
-        return game.copyWith(homeScore: (game.homeScore ?? 0) + runs);
-      }
-      return game.copyWith(awayScore: (game.awayScore ?? 0) + runs);
+      return game.copyWith(homeScore: (game.homeScore ?? 0) + runs);
     }).toList();
 
     state = state.copyWith(
@@ -133,7 +128,6 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
 
   PitchingAppearance addPitchingAppearance({
     required String gameId,
-    required String pitchingSide,
     required int outsPitched,
     required int runs,
     required int earnedRuns,
@@ -145,7 +139,6 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
     final appearance = PitchingAppearance(
       id: _id('pit'),
       gameId: gameId,
-      pitchingSide: pitchingSide,
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,

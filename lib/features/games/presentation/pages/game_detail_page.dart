@@ -106,7 +106,7 @@ class GameDetailPage extends ConsumerWidget {
                     ),
                   ),
                   subtitle: Text(
-                    '${_sideLabel(appearance.battingSide)} / ${appearance.inning ?? '-'}回 / 打点 ${appearance.rbi ?? 0}',
+                    '${appearance.inning ?? '-'}回 / 打点 ${appearance.rbi ?? 0}',
                   ),
                 ),
               ),
@@ -125,9 +125,7 @@ class GameDetailPage extends ConsumerWidget {
             ...pitchingAppearances.map(
               (appearance) => Card(
                 child: ListTile(
-                  title: Text(
-                    '${_sideLabel(appearance.pitchingSide)} 投球回 ${_outsLabel(appearance.outsPitched)}',
-                  ),
+                  title: Text('投球回 ${_outsLabel(appearance.outsPitched)}'),
                   subtitle: Text(
                     '失点 ${appearance.runs} / 自責 ${appearance.earnedRuns} / 奪三振 ${appearance.strikeouts}',
                   ),
@@ -138,9 +136,6 @@ class GameDetailPage extends ConsumerWidget {
       ),
     );
   }
-
-  static String _sideLabel(String side) =>
-      side == AppConstants.sideHome ? '自分側' : '相手側';
 
   static String _outsLabel(int outs) {
     final innings = outs ~/ 3;

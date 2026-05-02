@@ -8,7 +8,6 @@ void main() {
       'id': 'pa-1',
       'game_id': 'game-1',
       'inning': 3,
-      'batting_side': 'home',
       'result_type': 'hit',
       'result_detail': 'single',
       'rbi': 1,
@@ -21,7 +20,6 @@ void main() {
       expect(pa.id, 'pa-1');
       expect(pa.gameId, 'game-1');
       expect(pa.inning, 3);
-      expect(pa.battingSide, 'home');
       expect(pa.resultType, 'hit');
       expect(pa.resultDetail, 'single');
       expect(pa.rbi, 1);
@@ -52,7 +50,6 @@ void main() {
         'id': 'pa-2',
         'game_id': 'game-1',
         'inning': null,
-        'batting_side': 'away',
         'result_type': 'out',
         'result_detail': 'ground',
         'rbi': null,

@@ -21,7 +21,6 @@ class _PlateAppearanceInputPageState
   final _formKey = GlobalKey<FormState>();
   final _inningController = TextEditingController();
   final _rbiController = TextEditingController();
-  String _battingSide = AppConstants.sideHome;
   String? _selectedResultType;
   String? _selectedResultDetail;
 
@@ -76,7 +75,6 @@ class _PlateAppearanceInputPageState
         .read(localGameStoreProvider.notifier)
         .addPlateAppearance(
           gameId: widget.gameId,
-          battingSide: _battingSide,
           inning: int.tryParse(_inningController.text.trim()),
           resultType: _selectedResultType!,
           resultDetail: _selectedResultDetail!,
@@ -98,25 +96,6 @@ class _PlateAppearanceInputPageState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('攻撃側', style: theme.textTheme.titleMedium),
-              const Gap(8),
-              SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(
-                    value: AppConstants.sideHome,
-                    label: Text('自分側'),
-                  ),
-                  ButtonSegment(
-                    value: AppConstants.sideAway,
-                    label: Text('相手側'),
-                  ),
-                ],
-                selected: {_battingSide},
-                onSelectionChanged: (selected) {
-                  setState(() => _battingSide = selected.first);
-                },
-              ),
-              const Gap(24),
               TextFormField(
                 controller: _inningController,
                 decoration: const InputDecoration(

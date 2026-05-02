@@ -86,7 +86,7 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
               TextFormField(
                 controller: _homeTeamController,
                 decoration: const InputDecoration(
-                  labelText: '自分側チーム名',
+                  labelText: '自チーム名',
                   prefixIcon: Icon(Icons.home_outlined),
                 ),
                 validator: (value) => value == null || value.trim().isEmpty

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/constants/app_constants.dart';
 import '../view_models/game_view_model.dart';
 
 class PitchingInputPage extends ConsumerStatefulWidget {
@@ -24,7 +23,6 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
   final _walksController = TextEditingController();
   final _strikeoutsController = TextEditingController();
   final _homeRunsAllowedController = TextEditingController();
-  String _pitchingSide = AppConstants.sideHome;
 
   @override
   void dispose() {
@@ -44,7 +42,6 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
         .read(localGameStoreProvider.notifier)
         .addPitchingAppearance(
           gameId: widget.gameId,
-          pitchingSide: _pitchingSide,
           outsPitched: int.parse(_outsController.text.trim()),
           runs: _intValue(_runsController),
           earnedRuns: _intValue(_earnedRunsController),
@@ -61,8 +58,6 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(title: const Text('ピッチング入力')),
       body: SingleChildScrollView(
@@ -72,25 +67,6 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('投球側', style: theme.textTheme.titleMedium),
-              const Gap(8),
-              SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(
-                    value: AppConstants.sideHome,
-                    label: Text('自分側'),
-                  ),
-                  ButtonSegment(
-                    value: AppConstants.sideAway,
-                    label: Text('相手側'),
-                  ),
-                ],
-                selected: {_pitchingSide},
-                onSelectionChanged: (selected) {
-                  setState(() => _pitchingSide = selected.first);
-                },
-              ),
-              const Gap(24),
               _numberField(_outsController, '投球アウト数（1回 = 3）', required: true),
               const Gap(12),
               _numberField(_runsController, '失点'),

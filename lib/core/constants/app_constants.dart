@@ -7,10 +7,6 @@ class AppConstants {
   static const String statusDraft = 'draft';
   static const String statusFinal = 'final';
 
-  // Local sides
-  static const String sideHome = 'home';
-  static const String sideAway = 'away';
-
   // Result types
   static const String resultHit = 'hit';
   static const String resultOut = 'out';

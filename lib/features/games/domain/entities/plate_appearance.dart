@@ -3,7 +3,6 @@ class PlateAppearance {
     required this.id,
     required this.gameId,
     this.inning,
-    required this.battingSide,
     required this.resultType,
     required this.resultDetail,
     this.rbi,
@@ -13,7 +12,6 @@ class PlateAppearance {
   final String id;
   final String gameId;
   final int? inning;
-  final String battingSide;
   final String resultType;
   final String resultDetail;
   final int? rbi;
@@ -24,7 +22,6 @@ class PlateAppearance {
       id: json['id'] as String,
       gameId: json['game_id'] as String,
       inning: json['inning'] as int?,
-      battingSide: json['batting_side'] as String,
       resultType: json['result_type'] as String,
       resultDetail: json['result_detail'] as String,
       rbi: json['rbi'] as int?,
@@ -37,7 +34,6 @@ class PlateAppearance {
       'id': id,
       'game_id': gameId,
       'inning': inning,
-      'batting_side': battingSide,
       'result_type': resultType,
       'result_detail': resultDetail,
       'rbi': rbi,
@@ -49,7 +45,6 @@ class PlateAppearance {
     String? id,
     String? gameId,
     int? inning,
-    String? battingSide,
     String? resultType,
     String? resultDetail,
     int? rbi,
@@ -59,7 +54,6 @@ class PlateAppearance {
       id: id ?? this.id,
       gameId: gameId ?? this.gameId,
       inning: inning ?? this.inning,
-      battingSide: battingSide ?? this.battingSide,
       resultType: resultType ?? this.resultType,
       resultDetail: resultDetail ?? this.resultDetail,
       rbi: rbi ?? this.rbi,

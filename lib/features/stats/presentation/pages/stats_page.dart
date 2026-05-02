@@ -22,70 +22,40 @@ class StatsPage extends ConsumerWidget {
         children: [
           _Section(
             title: '打撃成績',
-            children: [
-              _BattingTile(
-                label: '自分側',
-                stats: batting[AppConstants.sideHome]!,
-              ),
-              _BattingTile(
-                label: '相手側',
-                stats: batting[AppConstants.sideAway]!,
-              ),
-            ],
+            child: _BattingTile(stats: batting),
           ),
           const SizedBox(height: 20),
           _Section(
             title: 'ピッチング成績',
-            children: [
-              _PitchingTile(
-                label: '自分側',
-                stats: pitching[AppConstants.sideHome]!,
-              ),
-              _PitchingTile(
-                label: '相手側',
-                stats: pitching[AppConstants.sideAway]!,
-              ),
-            ],
+            child: _PitchingTile(stats: pitching),
           ),
         ],
       ),
     );
   }
 
-  Map<String, _BattingStats> _battingStats(List<PlateAppearance> appearances) {
-    final stats = {
-      AppConstants.sideHome: _BattingStats.empty(),
-      AppConstants.sideAway: _BattingStats.empty(),
-    };
+  _BattingStats _battingStats(List<PlateAppearance> appearances) {
+    var stats = _BattingStats.empty();
     for (final appearance in appearances) {
-      stats[appearance.battingSide] = stats[appearance.battingSide]!.add(
-        appearance,
-      );
+      stats = stats.add(appearance);
     }
     return stats;
   }
 
-  Map<String, _PitchingStats> _pitchingStats(
-    List<PitchingAppearance> appearances,
-  ) {
-    final stats = {
-      AppConstants.sideHome: _PitchingStats.empty(),
-      AppConstants.sideAway: _PitchingStats.empty(),
-    };
+  _PitchingStats _pitchingStats(List<PitchingAppearance> appearances) {
+    var stats = _PitchingStats.empty();
     for (final appearance in appearances) {
-      stats[appearance.pitchingSide] = stats[appearance.pitchingSide]!.add(
-        appearance,
-      );
+      stats = stats.add(appearance);
     }
     return stats;
   }
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.children});
+  const _Section({required this.title, required this.child});
 
   final String title;
-  final List<Widget> children;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -100,23 +70,22 @@ class _Section extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        ...children,
+        child,
       ],
     );
   }
 }
 
 class _BattingTile extends StatelessWidget {
-  const _BattingTile({required this.label, required this.stats});
+  const _BattingTile({required this.stats});
 
-  final String label;
   final _BattingStats stats;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(label),
+        title: const Text('チーム打撃'),
         subtitle: Text(
           '打席 ${stats.pa} / 打数 ${stats.ab} / 安打 ${stats.hits} / 本塁打 ${stats.hr} / 三振 ${stats.so}',
         ),
@@ -127,16 +96,15 @@ class _BattingTile extends StatelessWidget {
 }
 
 class _PitchingTile extends StatelessWidget {
-  const _PitchingTile({required this.label, required this.stats});
+  const _PitchingTile({required this.stats});
 
-  final String label;
   final _PitchingStats stats;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(label),
+        title: const Text('チーム投手'),
         subtitle: Text(
           '登板 ${stats.games} / 投球回 ${stats.inningsLabel} / 自責 ${stats.earnedRuns} / 奪三振 ${stats.strikeouts}',
         ),
