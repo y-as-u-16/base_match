@@ -1,13 +1,20 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:base_match/core/local_db/local_database.dart';
+import 'package:base_match/core/local_db/local_database_provider.dart';
 import 'package:base_match/core/theme/app_theme.dart';
 import 'package:base_match/features/home/presentation/pages/home_page.dart';
 
 void main() {
   Widget buildSubject() {
+    final database = LocalDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+
     return ProviderScope(
+      overrides: [localDatabaseProvider.overrideWithValue(database)],
       child: MaterialApp(theme: AppTheme.light, home: const HomePage()),
     );
   }
