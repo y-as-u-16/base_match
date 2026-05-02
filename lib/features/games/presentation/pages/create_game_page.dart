@@ -20,7 +20,6 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   final _locationController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   int _selectedInnings = 7;
-  int? _gameNumber;
 
   static const _inningsOptions = [3, 5, 7, 9];
 
@@ -55,7 +54,6 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
               ? null
               : _locationController.text.trim(),
           innings: _selectedInnings,
-          gameNumber: _gameNumber,
         );
     if (!mounted) return;
     context.go('/games/${game.id}');
@@ -123,23 +121,6 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
                 selected: {_selectedInnings},
                 onSelectionChanged: (selected) {
                   setState(() => _selectedInnings = selected.first);
-                },
-              ),
-              const Gap(24),
-              Text('ダブルヘッダー', style: theme.textTheme.titleMedium),
-              const Gap(8),
-              SegmentedButton<int>(
-                segments: const [
-                  ButtonSegment(value: 0, label: Text('なし')),
-                  ButtonSegment(value: 1, label: Text('第1試合')),
-                  ButtonSegment(value: 2, label: Text('第2試合')),
-                ],
-                selected: {_gameNumber ?? 0},
-                onSelectionChanged: (selected) {
-                  setState(() {
-                    final value = selected.first;
-                    _gameNumber = value == 0 ? null : value;
-                  });
                 },
               ),
               const Gap(32),

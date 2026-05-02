@@ -18,7 +18,6 @@ class LocalGames extends Table {
   TextColumn get status => text()();
   DateTimeColumn get createdAt => dateTime()();
   IntColumn get innings => integer().nullable()();
-  IntColumn get gameNumber => integer().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

@@ -113,17 +113,6 @@ class $LocalGamesTable extends LocalGames
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _gameNumberMeta = const VerificationMeta(
-    'gameNumber',
-  );
-  @override
-  late final GeneratedColumn<int> gameNumber = GeneratedColumn<int>(
-    'game_number',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -136,7 +125,6 @@ class $LocalGamesTable extends LocalGames
     status,
     createdAt,
     innings,
-    gameNumber,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -225,12 +213,6 @@ class $LocalGamesTable extends LocalGames
         innings.isAcceptableOrUnknown(data['innings']!, _inningsMeta),
       );
     }
-    if (data.containsKey('game_number')) {
-      context.handle(
-        _gameNumberMeta,
-        gameNumber.isAcceptableOrUnknown(data['game_number']!, _gameNumberMeta),
-      );
-    }
     return context;
   }
 
@@ -280,10 +262,6 @@ class $LocalGamesTable extends LocalGames
         DriftSqlType.int,
         data['${effectivePrefix}innings'],
       ),
-      gameNumber: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}game_number'],
-      ),
     );
   }
 
@@ -304,7 +282,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
   final String status;
   final DateTime createdAt;
   final int? innings;
-  final int? gameNumber;
   const LocalGame({
     required this.id,
     required this.date,
@@ -316,7 +293,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     required this.status,
     required this.createdAt,
     this.innings,
-    this.gameNumber,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -338,9 +314,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || innings != null) {
       map['innings'] = Variable<int>(innings);
-    }
-    if (!nullToAbsent || gameNumber != null) {
-      map['game_number'] = Variable<int>(gameNumber);
     }
     return map;
   }
@@ -365,9 +338,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       innings: innings == null && nullToAbsent
           ? const Value.absent()
           : Value(innings),
-      gameNumber: gameNumber == null && nullToAbsent
-          ? const Value.absent()
-          : Value(gameNumber),
     );
   }
 
@@ -387,7 +357,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       status: serializer.fromJson<String>(json['status']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       innings: serializer.fromJson<int?>(json['innings']),
-      gameNumber: serializer.fromJson<int?>(json['gameNumber']),
     );
   }
   @override
@@ -404,7 +373,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       'status': serializer.toJson<String>(status),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'innings': serializer.toJson<int?>(innings),
-      'gameNumber': serializer.toJson<int?>(gameNumber),
     };
   }
 
@@ -419,7 +387,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     String? status,
     DateTime? createdAt,
     Value<int?> innings = const Value.absent(),
-    Value<int?> gameNumber = const Value.absent(),
   }) => LocalGame(
     id: id ?? this.id,
     date: date ?? this.date,
@@ -431,7 +398,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     status: status ?? this.status,
     createdAt: createdAt ?? this.createdAt,
     innings: innings.present ? innings.value : this.innings,
-    gameNumber: gameNumber.present ? gameNumber.value : this.gameNumber,
   );
   LocalGame copyWithCompanion(LocalGamesCompanion data) {
     return LocalGame(
@@ -449,9 +415,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       status: data.status.present ? data.status.value : this.status,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       innings: data.innings.present ? data.innings.value : this.innings,
-      gameNumber: data.gameNumber.present
-          ? data.gameNumber.value
-          : this.gameNumber,
     );
   }
 
@@ -467,8 +430,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
           ..write('awayScore: $awayScore, ')
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
-          ..write('innings: $innings, ')
-          ..write('gameNumber: $gameNumber')
+          ..write('innings: $innings')
           ..write(')'))
         .toString();
   }
@@ -485,7 +447,6 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     status,
     createdAt,
     innings,
-    gameNumber,
   );
   @override
   bool operator ==(Object other) =>
@@ -500,8 +461,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
           other.awayScore == this.awayScore &&
           other.status == this.status &&
           other.createdAt == this.createdAt &&
-          other.innings == this.innings &&
-          other.gameNumber == this.gameNumber);
+          other.innings == this.innings);
 }
 
 class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
@@ -515,7 +475,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
   final Value<String> status;
   final Value<DateTime> createdAt;
   final Value<int?> innings;
-  final Value<int?> gameNumber;
   final Value<int> rowid;
   const LocalGamesCompanion({
     this.id = const Value.absent(),
@@ -528,7 +487,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     this.status = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.innings = const Value.absent(),
-    this.gameNumber = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LocalGamesCompanion.insert({
@@ -542,7 +500,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     required String status,
     required DateTime createdAt,
     this.innings = const Value.absent(),
-    this.gameNumber = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        date = Value(date),
@@ -561,7 +518,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     Expression<String>? status,
     Expression<DateTime>? createdAt,
     Expression<int>? innings,
-    Expression<int>? gameNumber,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -575,7 +531,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
       if (status != null) 'status': status,
       if (createdAt != null) 'created_at': createdAt,
       if (innings != null) 'innings': innings,
-      if (gameNumber != null) 'game_number': gameNumber,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -591,7 +546,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     Value<String>? status,
     Value<DateTime>? createdAt,
     Value<int?>? innings,
-    Value<int?>? gameNumber,
     Value<int>? rowid,
   }) {
     return LocalGamesCompanion(
@@ -605,7 +559,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       innings: innings ?? this.innings,
-      gameNumber: gameNumber ?? this.gameNumber,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -643,9 +596,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     if (innings.present) {
       map['innings'] = Variable<int>(innings.value);
     }
-    if (gameNumber.present) {
-      map['game_number'] = Variable<int>(gameNumber.value);
-    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -665,7 +615,6 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('innings: $innings, ')
-          ..write('gameNumber: $gameNumber, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1797,7 +1746,6 @@ typedef $$LocalGamesTableCreateCompanionBuilder =
       required String status,
       required DateTime createdAt,
       Value<int?> innings,
-      Value<int?> gameNumber,
       Value<int> rowid,
     });
 typedef $$LocalGamesTableUpdateCompanionBuilder =
@@ -1812,7 +1760,6 @@ typedef $$LocalGamesTableUpdateCompanionBuilder =
       Value<String> status,
       Value<DateTime> createdAt,
       Value<int?> innings,
-      Value<int?> gameNumber,
       Value<int> rowid,
     });
 
@@ -1936,11 +1883,6 @@ class $$LocalGamesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get gameNumber => $composableBuilder(
-    column: $table.gameNumber,
-    builder: (column) => ColumnFilters(column),
-  );
-
   Expression<bool> localPlateAppearancesRefs(
     Expression<bool> Function($$LocalPlateAppearancesTableFilterComposer f) f,
   ) {
@@ -2053,11 +1995,6 @@ class $$LocalGamesTableOrderingComposer
     column: $table.innings,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<int> get gameNumber => $composableBuilder(
-    column: $table.gameNumber,
-    builder: (column) => ColumnOrderings(column),
-  );
 }
 
 class $$LocalGamesTableAnnotationComposer
@@ -2102,11 +2039,6 @@ class $$LocalGamesTableAnnotationComposer
 
   GeneratedColumn<int> get innings =>
       $composableBuilder(column: $table.innings, builder: (column) => column);
-
-  GeneratedColumn<int> get gameNumber => $composableBuilder(
-    column: $table.gameNumber,
-    builder: (column) => column,
-  );
 
   Expression<T> localPlateAppearancesRefs<T extends Object>(
     Expression<T> Function($$LocalPlateAppearancesTableAnnotationComposer a) f,
@@ -2203,7 +2135,6 @@ class $$LocalGamesTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int?> innings = const Value.absent(),
-                Value<int?> gameNumber = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalGamesCompanion(
                 id: id,
@@ -2216,7 +2147,6 @@ class $$LocalGamesTableTableManager
                 status: status,
                 createdAt: createdAt,
                 innings: innings,
-                gameNumber: gameNumber,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2231,7 +2161,6 @@ class $$LocalGamesTableTableManager
                 required String status,
                 required DateTime createdAt,
                 Value<int?> innings = const Value.absent(),
-                Value<int?> gameNumber = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalGamesCompanion.insert(
                 id: id,
@@ -2244,7 +2173,6 @@ class $$LocalGamesTableTableManager
                 status: status,
                 createdAt: createdAt,
                 innings: innings,
-                gameNumber: gameNumber,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

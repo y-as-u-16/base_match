@@ -10,7 +10,6 @@ class Game {
     required this.status,
     required this.createdAt,
     this.innings,
-    this.gameNumber,
   });
 
   final String id;
@@ -23,7 +22,6 @@ class Game {
   final String status;
   final DateTime createdAt;
   final int? innings;
-  final int? gameNumber;
 
   factory Game.fromJson(Map<String, dynamic> json) {
     return Game(
@@ -37,7 +35,6 @@ class Game {
       status: json['status'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       innings: json['innings'] as int?,
-      gameNumber: json['game_number'] as int?,
     );
   }
 
@@ -53,7 +50,6 @@ class Game {
       'status': status,
       'created_at': createdAt.toIso8601String(),
       'innings': innings,
-      'game_number': gameNumber,
     };
   }
 
@@ -68,7 +64,6 @@ class Game {
     String? status,
     DateTime? createdAt,
     int? innings,
-    int? gameNumber,
   }) {
     return Game(
       id: id ?? this.id,
@@ -81,7 +76,6 @@ class Game {
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       innings: innings ?? this.innings,
-      gameNumber: gameNumber ?? this.gameNumber,
     );
   }
 }

@@ -46,7 +46,7 @@ void main() {
       final game = Game.fromJson(json);
       final roundTripped = game.toJson();
 
-      // innings, gameNumber は元のJSONに含まれないがtoJsonでは出力される
+      // innings は元のJSONに含まれないがtoJsonでは出力される
       expect(roundTripped['id'], json['id']);
       expect(roundTripped['date'], json['date']);
       expect(roundTripped['location'], json['location']);

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:base_match/core/constants/app_constants.dart';
 import 'package:base_match/core/local_db/local_database.dart';
+import 'package:base_match/features/games/data/repositories/local_game_repository.dart';
 import 'package:base_match/features/games/presentation/view_models/game_view_model.dart';
 
 void main() {
@@ -18,7 +19,11 @@ void main() {
     });
 
     test('試合・打席・ピッチング記録をDBから再読込できる', () async {
-      final store = LocalGameStore(database);
+      final uuidPattern = RegExp(
+        r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+      );
+      final repository = LocalGameRepository(database);
+      final store = LocalGameStore(repository);
       final game = await store.createGame(
         date: DateTime.utc(2026, 5, 2),
         homeTeamName: '自チーム',
@@ -27,14 +32,14 @@ void main() {
         innings: 7,
       );
 
-      await store.addPlateAppearance(
+      final plateAppearance = await store.addPlateAppearance(
         gameId: game.id,
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailSingle,
         inning: 1,
         rbi: 2,
       );
-      await store.addPitchingAppearance(
+      final pitchingAppearance = await store.addPitchingAppearance(
         gameId: game.id,
         outsPitched: 9,
         runs: 1,
@@ -45,7 +50,11 @@ void main() {
         homeRunsAllowed: 0,
       );
 
-      final reloadedStore = LocalGameStore(database);
+      expect(game.id, matches(uuidPattern));
+      expect(plateAppearance.id, matches(uuidPattern));
+      expect(pitchingAppearance.id, matches(uuidPattern));
+
+      final reloadedStore = LocalGameStore(repository);
       await reloadedStore.load();
 
       expect(reloadedStore.state.games, hasLength(1));
