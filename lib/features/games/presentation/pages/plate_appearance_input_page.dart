@@ -62,7 +62,7 @@ class _PlateAppearanceInputPageState
     super.dispose();
   }
 
-  void _onSubmit() {
+  Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedResultType == null || _selectedResultDetail == null) {
       ScaffoldMessenger.of(
@@ -71,7 +71,7 @@ class _PlateAppearanceInputPageState
       return;
     }
 
-    ref
+    await ref
         .read(localGameStoreProvider.notifier)
         .addPlateAppearance(
           gameId: widget.gameId,
@@ -80,6 +80,7 @@ class _PlateAppearanceInputPageState
           resultDetail: _selectedResultDetail!,
           rbi: int.tryParse(_rbiController.text.trim()),
         );
+    if (!mounted) return;
     context.pop();
   }
 

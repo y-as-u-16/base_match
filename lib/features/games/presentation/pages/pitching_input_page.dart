@@ -36,9 +36,9 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
     super.dispose();
   }
 
-  void _onSubmit() {
+  Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
-    ref
+    await ref
         .read(localGameStoreProvider.notifier)
         .addPitchingAppearance(
           gameId: widget.gameId,
@@ -50,6 +50,7 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
           strikeouts: _intValue(_strikeoutsController),
           homeRunsAllowed: _intValue(_homeRunsAllowedController),
         );
+    if (!mounted) return;
     context.pop();
   }
 

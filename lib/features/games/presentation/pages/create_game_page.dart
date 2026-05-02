@@ -42,10 +42,10 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
-  void _onCreate() {
+  Future<void> _onCreate() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final game = ref
+    final game = await ref
         .read(localGameStoreProvider.notifier)
         .createGame(
           date: _selectedDate,
@@ -57,6 +57,7 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
           innings: _selectedInnings,
           gameNumber: _gameNumber,
         );
+    if (!mounted) return;
     context.go('/games/${game.id}');
   }
 
