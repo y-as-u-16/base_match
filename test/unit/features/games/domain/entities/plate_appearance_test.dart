@@ -8,12 +8,10 @@ void main() {
       'id': 'pa-1',
       'game_id': 'game-1',
       'inning': 3,
-      'batter_player_id': 'player-a',
-      'pitcher_player_id': 'player-b',
+      'batting_side': 'home',
       'result_type': 'hit',
       'result_detail': 'single',
       'rbi': 1,
-      'created_by': 'user-1',
       'created_at': now.toIso8601String(),
     };
 
@@ -23,12 +21,10 @@ void main() {
       expect(pa.id, 'pa-1');
       expect(pa.gameId, 'game-1');
       expect(pa.inning, 3);
-      expect(pa.batterPlayerId, 'player-a');
-      expect(pa.pitcherPlayerId, 'player-b');
+      expect(pa.battingSide, 'home');
       expect(pa.resultType, 'hit');
       expect(pa.resultDetail, 'single');
       expect(pa.rbi, 1);
-      expect(pa.createdBy, 'user-1');
       expect(pa.createdAt, now);
     });
 
@@ -56,12 +52,10 @@ void main() {
         'id': 'pa-2',
         'game_id': 'game-1',
         'inning': null,
-        'batter_player_id': 'player-a',
-        'pitcher_player_id': 'player-b',
+        'batting_side': 'away',
         'result_type': 'out',
         'result_detail': 'ground',
         'rbi': null,
-        'created_by': 'user-1',
         'created_at': now.toIso8601String(),
       };
       final pa = PlateAppearance.fromJson(jsonNoOptional);

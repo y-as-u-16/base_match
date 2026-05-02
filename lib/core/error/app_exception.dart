@@ -6,10 +6,6 @@ sealed class AppException implements Exception {
   String toString() => message;
 }
 
-class AuthException extends AppException {
-  const AuthException(super.message);
-}
-
 class NetworkException extends AppException {
   const NetworkException(super.message);
 }

@@ -11,20 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Supabase
-  supabase_flutter: ^2.8.0
-
   # State Management
   flutter_riverpod: ^2.6.1
 
   # Routing
   go_router: ^14.8.1
-
-  # Environment Variables
-  flutter_dotenv: ^5.2.1
-
-  # Sharing
-  share_plus: ^10.1.4
 
   # Serialization
   freezed_annotation: ^2.4.4
@@ -60,6 +51,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env
-    - .env.local
     - assets/splash.png

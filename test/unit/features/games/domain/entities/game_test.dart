@@ -8,12 +8,11 @@ void main() {
       'id': 'game-1',
       'date': now.toIso8601String(),
       'location': '河川敷グラウンド',
-      'home_team_id': 'team-a',
-      'away_team_id': 'team-b',
+      'home_team_name': '自分チーム',
+      'away_team_name': '相手チーム',
       'home_score': 5,
       'away_score': 3,
       'status': 'final',
-      'created_by': 'user-1',
       'created_at': now.toIso8601String(),
     };
 
@@ -23,12 +22,11 @@ void main() {
       expect(game.id, 'game-1');
       expect(game.date, now);
       expect(game.location, '河川敷グラウンド');
-      expect(game.homeTeamId, 'team-a');
-      expect(game.awayTeamId, 'team-b');
+      expect(game.homeTeamName, '自分チーム');
+      expect(game.awayTeamName, '相手チーム');
       expect(game.homeScore, 5);
       expect(game.awayScore, 3);
       expect(game.status, 'final');
-      expect(game.createdBy, 'user-1');
       expect(game.createdAt, now);
     });
 
@@ -37,8 +35,8 @@ void main() {
       final result = game.toJson();
 
       expect(result['id'], 'game-1');
-      expect(result['home_team_id'], 'team-a');
-      expect(result['away_team_id'], 'team-b');
+      expect(result['home_team_name'], '自分チーム');
+      expect(result['away_team_name'], '相手チーム');
       expect(result['home_score'], 5);
       expect(result['away_score'], 3);
       expect(result['status'], 'final');
@@ -52,12 +50,11 @@ void main() {
       expect(roundTripped['id'], json['id']);
       expect(roundTripped['date'], json['date']);
       expect(roundTripped['location'], json['location']);
-      expect(roundTripped['home_team_id'], json['home_team_id']);
-      expect(roundTripped['away_team_id'], json['away_team_id']);
+      expect(roundTripped['home_team_name'], json['home_team_name']);
+      expect(roundTripped['away_team_name'], json['away_team_name']);
       expect(roundTripped['home_score'], json['home_score']);
       expect(roundTripped['away_score'], json['away_score']);
       expect(roundTripped['status'], json['status']);
-      expect(roundTripped['created_by'], json['created_by']);
       expect(roundTripped['created_at'], json['created_at']);
     });
 
@@ -66,12 +63,11 @@ void main() {
         'id': 'game-2',
         'date': now.toIso8601String(),
         'location': null,
-        'home_team_id': 'team-a',
-        'away_team_id': 'team-b',
+        'home_team_name': '自分チーム',
+        'away_team_name': '相手チーム',
         'home_score': null,
         'away_score': null,
         'status': 'draft',
-        'created_by': 'user-1',
         'created_at': now.toIso8601String(),
       };
       final game = Game.fromJson(jsonDraft);
