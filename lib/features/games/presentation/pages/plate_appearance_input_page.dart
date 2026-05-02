@@ -18,56 +18,115 @@ class PlateAppearanceInputPage extends ConsumerStatefulWidget {
 
 class _PlateAppearanceInputPageState
     extends ConsumerState<PlateAppearanceInputPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _inningController = TextEditingController();
-  final _rbiController = TextEditingController();
-  String? _selectedResultType;
-  String? _selectedResultDetail;
+  int _inning = 1;
+  int _rbi = 0;
+  _ResultOption? _selectedResult;
 
-  static const _resultTypeOptions = [
-    (AppConstants.resultHit, 'ヒット'),
-    (AppConstants.resultOut, 'アウト'),
-    (AppConstants.resultWalk, '四死球'),
-    (AppConstants.resultError, 'エラー'),
+  static const _hitOptions = [
+    _ResultOption(
+      type: AppConstants.resultHit,
+      detail: AppConstants.detailSingle,
+      label: '単打',
+      icon: Icons.looks_one_outlined,
+    ),
+    _ResultOption(
+      type: AppConstants.resultHit,
+      detail: AppConstants.detailDouble,
+      label: '二塁打',
+      icon: Icons.looks_two_outlined,
+    ),
+    _ResultOption(
+      type: AppConstants.resultHit,
+      detail: AppConstants.detailTriple,
+      label: '三塁打',
+      icon: Icons.looks_3_outlined,
+    ),
+    _ResultOption(
+      type: AppConstants.resultHit,
+      detail: AppConstants.detailHr,
+      label: '本塁打',
+      icon: Icons.sports_baseball,
+    ),
   ];
 
-  static const _resultDetailMap = <String, List<(String, String)>>{
-    AppConstants.resultHit: [
-      (AppConstants.detailSingle, '単打'),
-      (AppConstants.detailDouble, '二塁打'),
-      (AppConstants.detailTriple, '三塁打'),
-      (AppConstants.detailHr, '本塁打'),
-    ],
-    AppConstants.resultOut: [
-      (AppConstants.detailK, '三振'),
-      (AppConstants.detailGround, 'ゴロ'),
-      (AppConstants.detailFly, 'フライ'),
-      (AppConstants.detailLine, 'ライナー'),
-      (AppConstants.detailDp, '併殺'),
-      (AppConstants.detailSacBunt, '犠打'),
-      (AppConstants.detailSacFly, '犠飛'),
-      (AppConstants.detailOther, 'その他'),
-    ],
-    AppConstants.resultWalk: [
-      (AppConstants.detailBb, '四球'),
-      (AppConstants.detailHbp, '死球'),
-    ],
-    AppConstants.resultError: [(AppConstants.detailE, 'エラー')],
-  };
+  static const _outOptions = [
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailK,
+      label: '三振',
+      icon: Icons.close,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailGround,
+      label: 'ゴロ',
+      icon: Icons.south_east,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailFly,
+      label: 'フライ',
+      icon: Icons.north_east,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailLine,
+      label: 'ライナー',
+      icon: Icons.trending_flat,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailDp,
+      label: '併殺',
+      icon: Icons.keyboard_double_arrow_right,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailSacBunt,
+      label: '犠打',
+      icon: Icons.arrow_forward,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailSacFly,
+      label: '犠飛',
+      icon: Icons.upload,
+    ),
+    _ResultOption(
+      type: AppConstants.resultOut,
+      detail: AppConstants.detailOther,
+      label: 'その他',
+      icon: Icons.more_horiz,
+    ),
+  ];
 
-  @override
-  void dispose() {
-    _inningController.dispose();
-    _rbiController.dispose();
-    super.dispose();
-  }
+  static const _onBaseOptions = [
+    _ResultOption(
+      type: AppConstants.resultWalk,
+      detail: AppConstants.detailBb,
+      label: '四球',
+      icon: Icons.radio_button_unchecked,
+    ),
+    _ResultOption(
+      type: AppConstants.resultWalk,
+      detail: AppConstants.detailHbp,
+      label: '死球',
+      icon: Icons.personal_injury_outlined,
+    ),
+    _ResultOption(
+      type: AppConstants.resultError,
+      detail: AppConstants.detailE,
+      label: 'エラー',
+      icon: Icons.error_outline,
+    ),
+  ];
 
   Future<void> _onSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_selectedResultType == null || _selectedResultDetail == null) {
+    final result = _selectedResult;
+    if (result == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('結果を選択してください')));
+      ).showSnackBar(const SnackBar(content: Text('打席結果を選択してください')));
       return;
     }
 
@@ -75,93 +134,222 @@ class _PlateAppearanceInputPageState
         .read(localGameStoreProvider.notifier)
         .addPlateAppearance(
           gameId: widget.gameId,
-          inning: int.tryParse(_inningController.text.trim()),
-          resultType: _selectedResultType!,
-          resultDetail: _selectedResultDetail!,
-          rbi: int.tryParse(_rbiController.text.trim()),
+          inning: _inning,
+          resultType: result.type,
+          resultDetail: result.detail,
+          rbi: _rbi,
         );
     if (!mounted) return;
     context.pop();
   }
 
+  void _selectResult(_ResultOption result) {
+    setState(() => _selectedResult = result);
+  }
+
+  void _setInning(int value) {
+    setState(() => _inning = value.clamp(1, 99));
+  }
+
+  void _setRbi(int value) {
+    setState(() => _rbi = value.clamp(0, 99));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final selectedLabel = _selectedResult?.label ?? '未選択';
 
     return Scaffold(
       appBar: AppBar(title: const Text('打席入力')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _inningController,
-                decoration: const InputDecoration(
-                  labelText: 'イニング（任意）',
-                  prefixIcon: Icon(Icons.format_list_numbered),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const Gap(24),
-              Text('結果タイプ', style: theme.textTheme.titleMedium),
-              const Gap(8),
-              Wrap(
-                spacing: 8,
-                children: _resultTypeOptions.map((option) {
-                  final (value, label) = option;
-                  return ChoiceChip(
-                    label: Text(label),
-                    selected: _selectedResultType == value,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedResultType = selected ? value : null;
-                        _selectedResultDetail = null;
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              if (_selectedResultType != null) ...[
-                const Gap(16),
-                Text('結果詳細', style: theme.textTheme.titleMedium),
-                const Gap(8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: (_resultDetailMap[_selectedResultType] ?? []).map((
-                    option,
-                  ) {
-                    final (value, label) = option;
-                    return ChoiceChip(
-                      label: Text(label),
-                      selected: _selectedResultDetail == value,
-                      onSelected: (selected) {
-                        setState(
-                          () => _selectedResultDetail = selected ? value : null,
-                        );
-                      },
-                    );
-                  }).toList(),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.fact_check_outlined),
+                const Gap(12),
+                Expanded(
+                  child: Text(
+                    '$_inning回 / $selectedLabel / 打点 $_rbi',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ],
-              const Gap(24),
-              TextFormField(
-                controller: _rbiController,
-                decoration: const InputDecoration(
-                  labelText: '打点（任意）',
-                  prefixIcon: Icon(Icons.scoreboard_outlined),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const Gap(32),
-              FilledButton(onPressed: _onSubmit, child: const Text('登録する')),
-            ],
+            ),
+          ),
+          const Gap(16),
+          _StepperRow(
+            label: 'イニング',
+            valueLabel: '$_inning回',
+            onDecrease: () => _setInning(_inning - 1),
+            onIncrease: () => _setInning(_inning + 1),
+          ),
+          const Gap(12),
+          _StepperRow(
+            label: '打点',
+            valueLabel: '$_rbi',
+            onDecrease: () => _setRbi(_rbi - 1),
+            onIncrease: () => _setRbi(_rbi + 1),
+          ),
+          const Gap(24),
+          _ResultSection(
+            title: 'ヒット',
+            options: _hitOptions,
+            selected: _selectedResult,
+            onSelected: _selectResult,
+          ),
+          const Gap(20),
+          _ResultSection(
+            title: 'アウト',
+            options: _outOptions,
+            selected: _selectedResult,
+            onSelected: _selectResult,
+          ),
+          const Gap(20),
+          _ResultSection(
+            title: '出塁・その他',
+            options: _onBaseOptions,
+            selected: _selectedResult,
+            onSelected: _selectResult,
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+          child: FilledButton.icon(
+            onPressed: _selectedResult == null ? null : _onSubmit,
+            icon: const Icon(Icons.save_outlined),
+            label: const Text('登録する'),
           ),
         ),
       ),
     );
   }
+}
+
+class _ResultSection extends StatelessWidget {
+  const _ResultSection({
+    required this.title,
+    required this.options,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final String title;
+  final List<_ResultOption> options;
+  final _ResultOption? selected;
+  final ValueChanged<_ResultOption> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Gap(8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = option == selected;
+            return ChoiceChip(
+              avatar: Icon(option.icon, size: 18),
+              label: Text(option.label),
+              selected: isSelected,
+              onSelected: (_) => onSelected(option),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _StepperRow extends StatelessWidget {
+  const _StepperRow({
+    required this.label,
+    required this.valueLabel,
+    required this.onDecrease,
+    required this.onIncrease,
+  });
+
+  final String label;
+  final String valueLabel;
+  final VoidCallback onDecrease;
+  final VoidCallback onIncrease;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          IconButton.filledTonal(
+            tooltip: '$labelを減らす',
+            onPressed: onDecrease,
+            icon: const Icon(Icons.remove),
+          ),
+          SizedBox(
+            width: 72,
+            child: Center(
+              child: Text(
+                valueLabel,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          IconButton.filledTonal(
+            tooltip: '$labelを増やす',
+            onPressed: onIncrease,
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ResultOption {
+  const _ResultOption({
+    required this.type,
+    required this.detail,
+    required this.label,
+    required this.icon,
+  });
+
+  final String type;
+  final String detail;
+  final String label;
+  final IconData icon;
 }

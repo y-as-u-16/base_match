@@ -15,97 +15,300 @@ class PitchingInputPage extends ConsumerStatefulWidget {
 }
 
 class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _outsController = TextEditingController();
-  final _runsController = TextEditingController();
-  final _earnedRunsController = TextEditingController();
-  final _hitsAllowedController = TextEditingController();
-  final _walksController = TextEditingController();
-  final _strikeoutsController = TextEditingController();
-  final _homeRunsAllowedController = TextEditingController();
-
-  @override
-  void dispose() {
-    _outsController.dispose();
-    _runsController.dispose();
-    _earnedRunsController.dispose();
-    _hitsAllowedController.dispose();
-    _walksController.dispose();
-    _strikeoutsController.dispose();
-    _homeRunsAllowedController.dispose();
-    super.dispose();
-  }
+  int _outsPitched = 3;
+  int _runs = 0;
+  int _earnedRuns = 0;
+  int _hitsAllowed = 0;
+  int _walks = 0;
+  int _strikeouts = 0;
+  int _homeRunsAllowed = 0;
 
   Future<void> _onSubmit() async {
-    if (!_formKey.currentState!.validate()) return;
     await ref
         .read(localGameStoreProvider.notifier)
         .addPitchingAppearance(
           gameId: widget.gameId,
-          outsPitched: int.parse(_outsController.text.trim()),
-          runs: _intValue(_runsController),
-          earnedRuns: _intValue(_earnedRunsController),
-          hitsAllowed: _intValue(_hitsAllowedController),
-          walks: _intValue(_walksController),
-          strikeouts: _intValue(_strikeoutsController),
-          homeRunsAllowed: _intValue(_homeRunsAllowedController),
+          outsPitched: _outsPitched,
+          runs: _runs,
+          earnedRuns: _earnedRuns,
+          hitsAllowed: _hitsAllowed,
+          walks: _walks,
+          strikeouts: _strikeouts,
+          homeRunsAllowed: _homeRunsAllowed,
         );
     if (!mounted) return;
     context.pop();
   }
 
-  int _intValue(TextEditingController controller) =>
-      int.tryParse(controller.text.trim()) ?? 0;
+  void _setOuts(int value) {
+    setState(() => _outsPitched = value.clamp(1, 99));
+  }
+
+  void _setRuns(int value) {
+    setState(() => _runs = value.clamp(0, 99));
+  }
+
+  void _setEarnedRuns(int value) {
+    setState(() => _earnedRuns = value.clamp(0, 99));
+  }
+
+  void _setHitsAllowed(int value) {
+    setState(() => _hitsAllowed = value.clamp(0, 99));
+  }
+
+  void _setWalks(int value) {
+    setState(() => _walks = value.clamp(0, 99));
+  }
+
+  void _setStrikeouts(int value) {
+    setState(() => _strikeouts = value.clamp(0, 99));
+  }
+
+  void _setHomeRunsAllowed(int value) {
+    setState(() => _homeRunsAllowed = value.clamp(0, 99));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text('ピッチング入力')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.query_stats),
+                const Gap(12),
+                Expanded(
+                  child: Text(
+                    '投球回 ${_outsLabel(_outsPitched)} / 失点 $_runs / 自責 $_earnedRuns',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Gap(16),
+          _OutsCounter(outsPitched: _outsPitched, onChanged: _setOuts),
+          const Gap(20),
+          _CounterGrid(
             children: [
-              _numberField(_outsController, '投球アウト数（1回 = 3）', required: true),
-              const Gap(12),
-              _numberField(_runsController, '失点'),
-              const Gap(12),
-              _numberField(_earnedRunsController, '自責点'),
-              const Gap(12),
-              _numberField(_hitsAllowedController, '被安打'),
-              const Gap(12),
-              _numberField(_walksController, '与四死球'),
-              const Gap(12),
-              _numberField(_strikeoutsController, '奪三振'),
-              const Gap(12),
-              _numberField(_homeRunsAllowedController, '被本塁打'),
-              const Gap(32),
-              FilledButton(onPressed: _onSubmit, child: const Text('登録する')),
+              _CounterTile(label: '失点', value: _runs, onChanged: _setRuns),
+              _CounterTile(
+                label: '自責点',
+                value: _earnedRuns,
+                onChanged: _setEarnedRuns,
+              ),
+              _CounterTile(
+                label: '被安打',
+                value: _hitsAllowed,
+                onChanged: _setHitsAllowed,
+              ),
+              _CounterTile(label: '与四死球', value: _walks, onChanged: _setWalks),
+              _CounterTile(
+                label: '奪三振',
+                value: _strikeouts,
+                onChanged: _setStrikeouts,
+              ),
+              _CounterTile(
+                label: '被本塁打',
+                value: _homeRunsAllowed,
+                onChanged: _setHomeRunsAllowed,
+              ),
             ],
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+          child: FilledButton.icon(
+            onPressed: _onSubmit,
+            icon: const Icon(Icons.save_outlined),
+            label: const Text('登録する'),
           ),
         ),
       ),
     );
   }
 
-  Widget _numberField(
-    TextEditingController controller,
-    String label, {
-    bool required = false,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(labelText: label),
-      keyboardType: TextInputType.number,
-      validator: required
-          ? (value) {
-              if (value == null || value.trim().isEmpty) return '入力してください';
-              if (int.tryParse(value.trim()) == null) return '数値で入力してください';
-              return null;
-            }
-          : null,
+  static String _outsLabel(int outs) {
+    final innings = outs ~/ 3;
+    final rest = outs % 3;
+    return rest == 0 ? '$innings回' : '$innings回$rest/3';
+  }
+}
+
+class _OutsCounter extends StatelessWidget {
+  const _OutsCounter({required this.outsPitched, required this.onChanged});
+
+  final int outsPitched;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '投球回',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const Gap(8),
+          Row(
+            children: [
+              IconButton.filledTonal(
+                tooltip: '1アウト減らす',
+                onPressed: () => onChanged(outsPitched - 1),
+                icon: const Icon(Icons.remove),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      _label(outsPitched),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text('$outsPitched アウト'),
+                  ],
+                ),
+              ),
+              IconButton.filledTonal(
+                tooltip: '1アウト増やす',
+                onPressed: () => onChanged(outsPitched + 1),
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          const Gap(8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              OutlinedButton(
+                onPressed: () => onChanged(outsPitched + 1),
+                child: const Text('+1/3回'),
+              ),
+              OutlinedButton(
+                onPressed: () => onChanged(outsPitched + 3),
+                child: const Text('+1回'),
+              ),
+              TextButton(
+                onPressed: () => onChanged(3),
+                child: const Text('1回に戻す'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _label(int outs) {
+    final innings = outs ~/ 3;
+    final rest = outs % 3;
+    return rest == 0 ? '$innings回' : '$innings回$rest/3';
+  }
+}
+
+class _CounterGrid extends StatelessWidget {
+  const _CounterGrid({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final itemWidth = constraints.maxWidth >= 520
+            ? (constraints.maxWidth - 12) / 2
+            : constraints.maxWidth;
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: children
+              .map((child) => SizedBox(width: itemWidth, child: child))
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
+class _CounterTile extends StatelessWidget {
+  const _CounterTile({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          IconButton.filledTonal(
+            tooltip: '$labelを減らす',
+            onPressed: () => onChanged(value - 1),
+            icon: const Icon(Icons.remove),
+          ),
+          SizedBox(
+            width: 48,
+            child: Center(
+              child: Text(
+                '$value',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          IconButton.filledTonal(
+            tooltip: '$labelを増やす',
+            onPressed: () => onChanged(value + 1),
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
     );
   }
 }
