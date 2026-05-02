@@ -127,13 +127,13 @@ abstract class AppLocalizations {
   /// No description provided for @homeHeadline.
   ///
   /// In ja, this message translates to:
-  /// **'ローカル記録'**
+  /// **'試合を記録しよう'**
   String get homeHeadline;
 
   /// No description provided for @homeDescription.
   ///
   /// In ja, this message translates to:
-  /// **'ログインなしで試合、打席、ピッチング成績を端末内に記録します。'**
+  /// **'対戦カード、打席、ピッチング成績をまとめて残せます。'**
   String get homeDescription;
 
   /// No description provided for @seasonSummaryTitle.
@@ -145,7 +145,7 @@ abstract class AppLocalizations {
   /// No description provided for @seasonSummarySubtitle.
   ///
   /// In ja, this message translates to:
-  /// **'{year}年のローカル記録'**
+  /// **'{year}年の記録'**
   String seasonSummarySubtitle(int year);
 
   /// No description provided for @seasonGamesMetricLabel.

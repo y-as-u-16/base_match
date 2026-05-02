@@ -5,10 +5,10 @@
   "navHome": "ホーム",
   "navRecord": "記録",
   "navStats": "成績",
-  "homeHeadline": "ローカル記録",
-  "homeDescription": "ログインなしで試合、打席、ピッチング成績を端末内に記録します。",
+  "homeHeadline": "試合を記録しよう",
+  "homeDescription": "対戦カード、打席、ピッチング成績をまとめて残せます。",
   "seasonSummaryTitle": "今季サマリー",
-  "seasonSummarySubtitle": "{year}年のローカル記録",
+  "seasonSummarySubtitle": "{year}年の記録",
   "@seasonSummarySubtitle": {
     "placeholders": {
       "year": {

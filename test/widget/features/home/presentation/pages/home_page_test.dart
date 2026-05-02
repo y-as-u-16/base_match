@@ -29,7 +29,7 @@ void main() {
   }
 
   group('HomePage', () {
-    testWidgets('ローカル記録の主要アクションを表示する', (tester) async {
+    testWidgets('ホームの主要アクションを表示する', (tester) async {
       await tester.pumpWidget(buildSubject());
 
       expect(find.text(l10n.brandName), findsOneWidget);

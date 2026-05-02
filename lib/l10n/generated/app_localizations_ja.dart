@@ -24,17 +24,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navStats => '成績';
 
   @override
-  String get homeHeadline => 'ローカル記録';
+  String get homeHeadline => '試合を記録しよう';
 
   @override
-  String get homeDescription => 'ログインなしで試合、打席、ピッチング成績を端末内に記録します。';
+  String get homeDescription => '対戦カード、打席、ピッチング成績をまとめて残せます。';
 
   @override
   String get seasonSummaryTitle => '今季サマリー';
 
   @override
   String seasonSummarySubtitle(int year) {
-    return '$year年のローカル記録';
+    return '$year年の記録';
   }
 
   @override
