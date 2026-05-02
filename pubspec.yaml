@@ -17,6 +17,12 @@ dependencies:
   # Routing
   go_router: ^14.8.1
 
+  # Local database
+  drift: ^2.22.1
+  sqlite3_flutter_libs: ^0.5.28
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
   # Serialization
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
@@ -36,6 +42,7 @@ dev_dependencies:
   mocktail: ^1.0.4
 
   # Code Generation
+  drift_dev: ^2.22.1
   freezed: ^2.5.8
   json_serializable: ^6.9.4
   build_runner: ^2.4.14
