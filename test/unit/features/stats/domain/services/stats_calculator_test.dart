@@ -7,7 +7,7 @@ import 'package:base_match/features/stats/domain/services/stats_calculator.dart'
 
 void main() {
   group('BattingStats', () {
-    test('空の打席リストではゼロ成績を返す', () {
+    test('打席リストが空の場合は打撃成績をゼロで返す', () {
       final stats = BattingStats.fromAppearances([]);
 
       expect(stats.pa, 0);
@@ -19,7 +19,7 @@ void main() {
       expect(stats.averageLabel, '.000');
     });
 
-    test('ヒット・アウト・エラーを打数として集計し、四死球は打数に含めない', () {
+    test('安打、凡打、失策は打数に含め、四球は除外する', () {
       final stats = BattingStats.fromAppearances([
         _plate(
           id: 'pa-1',
@@ -51,7 +51,7 @@ void main() {
       expect(stats.averageLabel, '.333');
     });
 
-    test('本塁打と打率1.000を正しく表示する', () {
+    test('本塁打を集計し、打率 1.000 を表示する', () {
       final stats = BattingStats.fromAppearances([
         _plate(
           id: 'pa-1',
@@ -74,7 +74,7 @@ void main() {
   });
 
   group('PitchingStats', () {
-    test('空の登板リストではゼロ成績を返す', () {
+    test('登板リストが空の場合は投球成績をゼロで返す', () {
       final stats = PitchingStats.fromAppearances([]);
 
       expect(stats.games, 0);
@@ -85,7 +85,7 @@ void main() {
       expect(stats.eraLabel, '-.--');
     });
 
-    test('複数登板の投球回・自責点・奪三振・防御率を集計する', () {
+    test('投球回、自責点、奪三振、防御率を集計する', () {
       final stats = PitchingStats.fromAppearances([
         _pitching(id: 'pit-1', outsPitched: 4, earnedRuns: 1, strikeouts: 2),
         _pitching(id: 'pit-2', outsPitched: 5, earnedRuns: 2, strikeouts: 4),

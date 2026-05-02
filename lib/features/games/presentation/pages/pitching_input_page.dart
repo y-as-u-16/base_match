@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../l10n/localization_helpers.dart';
 import '../view_models/game_view_model.dart';
 
 class PitchingInputPage extends ConsumerStatefulWidget {
@@ -71,9 +73,10 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ピッチング入力')),
+      appBar: AppBar(title: Text(l10n.pitchingInputTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
         children: [
@@ -89,7 +92,11 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
                 const Gap(12),
                 Expanded(
                   child: Text(
-                    '投球回 ${_outsLabel(_outsPitched)} / 失点 $_runs / 自責 $_earnedRuns',
+                    l10n.pitchingInputSummary(
+                      l10n.inningsFromOuts(_outsPitched),
+                      _runs,
+                      _earnedRuns,
+                    ),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -103,25 +110,33 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
           const Gap(20),
           _CounterGrid(
             children: [
-              _CounterTile(label: '失点', value: _runs, onChanged: _setRuns),
               _CounterTile(
-                label: '自責点',
+                label: l10n.runsLabel,
+                value: _runs,
+                onChanged: _setRuns,
+              ),
+              _CounterTile(
+                label: l10n.earnedRunsLabel,
                 value: _earnedRuns,
                 onChanged: _setEarnedRuns,
               ),
               _CounterTile(
-                label: '被安打',
+                label: l10n.hitsAllowedLabel,
                 value: _hitsAllowed,
                 onChanged: _setHitsAllowed,
               ),
-              _CounterTile(label: '与四死球', value: _walks, onChanged: _setWalks),
               _CounterTile(
-                label: '奪三振',
+                label: l10n.walksAllowedLabel,
+                value: _walks,
+                onChanged: _setWalks,
+              ),
+              _CounterTile(
+                label: l10n.strikeoutsLabel,
                 value: _strikeouts,
                 onChanged: _setStrikeouts,
               ),
               _CounterTile(
-                label: '被本塁打',
+                label: l10n.homeRunsAllowedLabel,
                 value: _homeRunsAllowed,
                 onChanged: _setHomeRunsAllowed,
               ),
@@ -135,17 +150,11 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
           child: FilledButton.icon(
             onPressed: _onSubmit,
             icon: const Icon(Icons.save_outlined),
-            label: const Text('登録する'),
+            label: Text(l10n.saveButton),
           ),
         ),
       ),
     );
-  }
-
-  static String _outsLabel(int outs) {
-    final innings = outs ~/ 3;
-    final rest = outs % 3;
-    return rest == 0 ? '$innings回' : '$innings回$rest/3';
   }
 }
 
@@ -158,6 +167,7 @@ class _OutsCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -168,7 +178,7 @@ class _OutsCounter extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '投球回',
+            l10n.pitchingInningsLabel,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w800,
             ),
@@ -177,7 +187,7 @@ class _OutsCounter extends StatelessWidget {
           Row(
             children: [
               IconButton.filledTonal(
-                tooltip: '1アウト減らす',
+                tooltip: l10n.decreaseOneOutTooltip,
                 onPressed: () => onChanged(outsPitched - 1),
                 icon: const Icon(Icons.remove),
               ),
@@ -185,17 +195,17 @@ class _OutsCounter extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      _label(outsPitched),
+                      l10n.inningsFromOuts(outsPitched),
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    Text('$outsPitched アウト'),
+                    Text(l10n.outsLabel(outsPitched)),
                   ],
                 ),
               ),
               IconButton.filledTonal(
-                tooltip: '1アウト増やす',
+                tooltip: l10n.increaseOneOutTooltip,
                 onPressed: () => onChanged(outsPitched + 1),
                 icon: const Icon(Icons.add),
               ),
@@ -208,27 +218,21 @@ class _OutsCounter extends StatelessWidget {
             children: [
               OutlinedButton(
                 onPressed: () => onChanged(outsPitched + 1),
-                child: const Text('+1/3回'),
+                child: Text(l10n.addOneThirdInningButton),
               ),
               OutlinedButton(
                 onPressed: () => onChanged(outsPitched + 3),
-                child: const Text('+1回'),
+                child: Text(l10n.addOneInningButton),
               ),
               TextButton(
                 onPressed: () => onChanged(3),
-                child: const Text('1回に戻す'),
+                child: Text(l10n.resetOneInningButton),
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  static String _label(int outs) {
-    final innings = outs ~/ 3;
-    final rest = outs % 3;
-    return rest == 0 ? '$innings回' : '$innings回$rest/3';
   }
 }
 
@@ -270,6 +274,7 @@ class _CounterTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -287,7 +292,7 @@ class _CounterTile extends StatelessWidget {
             ),
           ),
           IconButton.filledTonal(
-            tooltip: '$labelを減らす',
+            tooltip: l10n.decreaseLabelTooltip(label),
             onPressed: () => onChanged(value - 1),
             icon: const Icon(Icons.remove),
           ),
@@ -303,7 +308,7 @@ class _CounterTile extends StatelessWidget {
             ),
           ),
           IconButton.filledTonal(
-            tooltip: '$labelを増やす',
+            tooltip: l10n.increaseLabelTooltip(label),
             onPressed: () => onChanged(value + 1),
             icon: const Icon(Icons.add),
           ),

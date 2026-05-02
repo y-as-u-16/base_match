@@ -12,13 +12,13 @@ void main() {
     final date = DateTime.utc(2026, 5, 2);
     final createdAt = DateTime.utc(2026, 5, 2, 12);
 
-    test('LocalGame を Game entity に変換する', () {
+    test('LocalGame を Game エンティティに変換する', () {
       final row = LocalGame(
         id: '550e8400-e29b-41d4-a716-446655440000',
         date: date,
-        location: '河川敷',
-        homeTeamName: '自チーム',
-        awayTeamName: '相手チーム',
+        location: 'Riverside Field',
+        homeTeamName: 'Home Team',
+        awayTeamName: 'Away Team',
         homeScore: 5,
         awayScore: 3,
         status: AppConstants.statusFinal,
@@ -30,9 +30,9 @@ void main() {
 
       expect(entity.id, row.id);
       expect(entity.date, date);
-      expect(entity.location, '河川敷');
-      expect(entity.homeTeamName, '自チーム');
-      expect(entity.awayTeamName, '相手チーム');
+      expect(entity.location, 'Riverside Field');
+      expect(entity.homeTeamName, 'Home Team');
+      expect(entity.awayTeamName, 'Away Team');
       expect(entity.homeScore, 5);
       expect(entity.awayScore, 3);
       expect(entity.status, AppConstants.statusFinal);
@@ -40,13 +40,13 @@ void main() {
       expect(entity.innings, 7);
     });
 
-    test('Game entity を LocalGamesCompanion に変換する', () {
+    test('Game エンティティを LocalGamesCompanion に変換する', () {
       final entity = Game(
         id: '550e8400-e29b-41d4-a716-446655440000',
         date: date,
         location: null,
-        homeTeamName: '自チーム',
-        awayTeamName: '相手チーム',
+        homeTeamName: 'Home Team',
+        awayTeamName: 'Away Team',
         homeScore: 0,
         awayScore: 0,
         status: AppConstants.statusDraft,
@@ -59,8 +59,8 @@ void main() {
       expect(companion.id.value, entity.id);
       expect(companion.date.value, date);
       expect(companion.location.value, isNull);
-      expect(companion.homeTeamName.value, '自チーム');
-      expect(companion.awayTeamName.value, '相手チーム');
+      expect(companion.homeTeamName.value, 'Home Team');
+      expect(companion.awayTeamName.value, 'Away Team');
       expect(companion.homeScore.value, 0);
       expect(companion.awayScore.value, 0);
       expect(companion.status.value, AppConstants.statusDraft);
@@ -72,7 +72,7 @@ void main() {
   group('LocalPlateAppearanceMapper', () {
     final createdAt = DateTime.utc(2026, 5, 2, 12);
 
-    test('LocalPlateAppearance を PlateAppearance entity に変換する', () {
+    test('LocalPlateAppearance を PlateAppearance エンティティに変換する', () {
       final row = LocalPlateAppearance(
         id: '550e8400-e29b-41d4-a716-446655440010',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
@@ -94,7 +94,7 @@ void main() {
       expect(entity.createdAt, createdAt);
     });
 
-    test('PlateAppearance entity を LocalPlateAppearancesCompanion に変換する', () {
+    test('PlateAppearance エンティティを LocalPlateAppearancesCompanion に変換する', () {
       final entity = PlateAppearance(
         id: '550e8400-e29b-41d4-a716-446655440010',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
@@ -120,7 +120,7 @@ void main() {
   group('LocalPitchingAppearanceMapper', () {
     final createdAt = DateTime.utc(2026, 5, 2, 12);
 
-    test('LocalPitchingAppearance を PitchingAppearance entity に変換する', () {
+    test('LocalPitchingAppearance を PitchingAppearance エンティティに変換する', () {
       final row = LocalPitchingAppearance(
         id: '550e8400-e29b-41d4-a716-446655440020',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
@@ -149,7 +149,7 @@ void main() {
     });
 
     test(
-      'PitchingAppearance entity を LocalPitchingAppearancesCompanion に変換する',
+      'PitchingAppearance エンティティを LocalPitchingAppearancesCompanion に変換する',
       () {
         final entity = PitchingAppearance(
           id: '550e8400-e29b-41d4-a716-446655440020',

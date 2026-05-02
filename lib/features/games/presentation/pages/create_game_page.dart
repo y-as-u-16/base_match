@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../view_models/game_view_model.dart';
 
 class CreateGamePage extends ConsumerStatefulWidget {
@@ -63,9 +64,10 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd');
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('試合を作成')),
+      appBar: AppBar(title: Text(l10n.createGameTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
@@ -76,7 +78,7 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.calendar_today),
-                title: const Text('試合日'),
+                title: Text(l10n.gameDateLabel),
                 subtitle: Text(dateFormat.format(_selectedDate)),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: _pickDate,
@@ -84,39 +86,44 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
               const Gap(16),
               TextFormField(
                 controller: _homeTeamController,
-                decoration: const InputDecoration(
-                  labelText: '自チーム名',
-                  prefixIcon: Icon(Icons.home_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n.homeTeamNameLabel,
+                  prefixIcon: const Icon(Icons.home_outlined),
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? 'チーム名を入力してください'
+                    ? l10n.homeTeamNameRequired
                     : null,
               ),
               const Gap(16),
               TextFormField(
                 controller: _awayTeamController,
-                decoration: const InputDecoration(
-                  labelText: '相手チーム名',
-                  prefixIcon: Icon(Icons.groups_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n.awayTeamNameLabel,
+                  prefixIcon: const Icon(Icons.groups_outlined),
                 ),
                 validator: (value) => value == null || value.trim().isEmpty
-                    ? '相手チーム名を入力してください'
+                    ? l10n.awayTeamNameRequired
                     : null,
               ),
               const Gap(16),
               TextFormField(
                 controller: _locationController,
-                decoration: const InputDecoration(
-                  labelText: '球場（任意）',
-                  prefixIcon: Icon(Icons.stadium_outlined),
+                decoration: InputDecoration(
+                  labelText: l10n.locationOptionalLabel,
+                  prefixIcon: const Icon(Icons.stadium_outlined),
                 ),
               ),
               const Gap(24),
-              Text('イニング数', style: theme.textTheme.titleMedium),
+              Text(l10n.inningsCountLabel, style: theme.textTheme.titleMedium),
               const Gap(8),
               SegmentedButton<int>(
                 segments: _inningsOptions
-                    .map((i) => ButtonSegment(value: i, label: Text('$i回')))
+                    .map(
+                      (i) => ButtonSegment(
+                        value: i,
+                        label: Text(l10n.inningsShort(i)),
+                      ),
+                    )
                     .toList(),
                 selected: {_selectedInnings},
                 onSelectionChanged: (selected) {
@@ -124,7 +131,10 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
                 },
               ),
               const Gap(32),
-              FilledButton(onPressed: _onCreate, child: const Text('作成する')),
+              FilledButton(
+                onPressed: _onCreate,
+                child: Text(l10n.createButton),
+              ),
             ],
           ),
         ),

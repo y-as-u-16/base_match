@@ -5,52 +5,84 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:base_match/core/theme/app_theme.dart';
 import 'package:base_match/features/games/presentation/pages/pitching_input_page.dart';
 import 'package:base_match/features/games/presentation/pages/plate_appearance_input_page.dart';
+import 'package:base_match/l10n/generated/app_localizations.dart';
+import 'package:base_match/l10n/generated/app_localizations_ja.dart';
 
 void main() {
+  final l10n = AppLocalizationsJa();
+
   group('PlateAppearanceInputPage', () {
-    testWidgets('打席結果を選び、イニングと打点をボタンで変更できる', (tester) async {
+    testWidgets('操作すると打席結果、イニング、打点が更新される', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: PlateAppearanceInputPage(gameId: 'game-1')),
+        ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const PlateAppearanceInputPage(gameId: 'game-1'),
+          ),
         ),
       );
 
-      expect(find.text('打席入力'), findsOneWidget);
-      expect(find.text('1回 / 未選択 / 打点 0'), findsOneWidget);
-      expect(find.text('単打'), findsOneWidget);
-      expect(find.text('三振'), findsOneWidget);
+      expect(find.text(l10n.plateAppearanceInputTitle), findsOneWidget);
+      expect(
+        find.text(l10n.plateAppearanceSummary(1, l10n.notSelectedLabel, 0)),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.detailSingle), findsOneWidget);
+      expect(find.text(l10n.detailStrikeout), findsOneWidget);
 
-      await tester.tap(find.byTooltip('イニングを増やす'));
-      await tester.tap(find.byTooltip('打点を増やす'));
-      await tester.tap(find.widgetWithText(ChoiceChip, '単打'));
+      await tester.tap(
+        find.byTooltip(l10n.increaseLabelTooltip(l10n.inningLabel)),
+      );
+      await tester.tap(
+        find.byTooltip(l10n.increaseLabelTooltip(l10n.rbiLabel)),
+      );
+      await tester.tap(find.widgetWithText(ChoiceChip, l10n.detailSingle));
       await tester.pumpAndSettle();
 
-      expect(find.text('2回 / 単打 / 打点 1'), findsOneWidget);
+      expect(
+        find.text(l10n.plateAppearanceSummary(2, l10n.detailSingle, 1)),
+        findsOneWidget,
+      );
     });
   });
 
   group('PitchingInputPage', () {
-    testWidgets('投球回と投手成績をボタンで変更できる', (tester) async {
+    testWidgets('操作すると投球回と各カウンターが更新される', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
             theme: AppTheme.light,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             home: const PitchingInputPage(gameId: 'game-1'),
           ),
         ),
       );
 
-      expect(find.text('ピッチング入力'), findsOneWidget);
-      expect(find.text('投球回 1回 / 失点 0 / 自責 0'), findsOneWidget);
-      expect(find.text('3 アウト'), findsOneWidget);
+      expect(find.text(l10n.pitchingInputTitle), findsOneWidget);
+      expect(
+        find.text(l10n.pitchingInputSummary(l10n.inningsOnlyLabel(1), 0, 0)),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.outsLabel(3)), findsOneWidget);
 
-      await tester.tap(find.byTooltip('1アウト増やす'));
-      await tester.tap(find.byTooltip('失点を増やす'));
-      await tester.tap(find.byTooltip('自責点を増やす'));
+      await tester.tap(find.byTooltip(l10n.increaseOneOutTooltip));
+      await tester.tap(
+        find.byTooltip(l10n.increaseLabelTooltip(l10n.runsLabel)),
+      );
+      await tester.tap(
+        find.byTooltip(l10n.increaseLabelTooltip(l10n.earnedRunsLabel)),
+      );
       await tester.pumpAndSettle();
 
-      expect(find.text('投球回 1回1/3 / 失点 1 / 自責 1'), findsOneWidget);
-      expect(find.text('4 アウト'), findsOneWidget);
+      expect(
+        find.text(
+          l10n.pitchingInputSummary(l10n.inningsWithRestLabel(1, 1), 1, 1),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.outsLabel(4)), findsOneWidget);
     });
   });
 }

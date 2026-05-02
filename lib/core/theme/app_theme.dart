@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  // -- 野球テーマ カラーパレット --
-  // 球場の芝（深い緑）
+  // -- Baseball color palette --
+  // Field grass.
   static const _fieldGreen = Color(0xFF1B4332);
-  // グローブ・バットの革（ディープブラウン）
+  // Glove and bat leather.
   static const _leatherBrown = Color(0xFF5C4033);
-  // 野球ボールの縫い目（レッド）
+  // Ball stitching.
   static const _stitchRed = Color(0xFFC62828);
-  // ベースの白（オフホワイト）
+  // Base bag white.
   static const _baseWhite = Color(0xFFFFF8F0);
-  // トロフィー・ゴールド
+  // Trophy gold.
   static const _trophyGold = Color(0xFFD4A017);
 
   // -- Light Theme --
@@ -47,7 +47,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
 
-      // -- AppBar（球場の電光掲示板風） --
+      // -- AppBar --
       appBarTheme: AppBarTheme(
         centerTitle: true,
         backgroundColor: isLight ? _fieldGreen : colorScheme.surface,
@@ -63,7 +63,7 @@ class AppTheme {
         ),
       ),
 
-      // -- Card（野球カード風） --
+      // -- Card --
       cardTheme: CardThemeData(
         elevation: 1,
         shadowColor: colorScheme.shadow.withValues(alpha: 0.15),
@@ -99,7 +99,7 @@ class AppTheme {
         ),
       ),
 
-      // -- FilledButton（太めフォント、やや丸み） --
+      // -- FilledButton --
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
@@ -224,7 +224,7 @@ class AppTheme {
     );
   }
 
-  // テーマカラーをアプリ全体で参照するための定数
+  // Shared theme colors.
   static const Color fieldGreen = _fieldGreen;
   static const Color leatherBrown = _leatherBrown;
   static const Color stitchRed = _stitchRed;

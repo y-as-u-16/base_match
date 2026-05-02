@@ -19,7 +19,7 @@ void main() {
       await database.close();
     });
 
-    test('試合・打席・ピッチング記録をDBから再読込できる', () async {
+    test('試合、打席、投球記録を再読み込みする', () async {
       final uuidPattern = RegExp(
         r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
       );
@@ -27,9 +27,9 @@ void main() {
       final store = LocalGameStore(repository);
       final game = await store.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: '自チーム',
-        awayTeamName: '相手チーム',
-        location: '河川敷',
+        homeTeamName: 'Home Team',
+        awayTeamName: 'Away Team',
+        location: 'Riverside Field',
         innings: 7,
       );
 
@@ -59,13 +59,13 @@ void main() {
       await reloadedStore.load();
 
       expect(reloadedStore.state.games, hasLength(1));
-      expect(reloadedStore.state.games.single.homeTeamName, '自チーム');
+      expect(reloadedStore.state.games.single.homeTeamName, 'Home Team');
       expect(reloadedStore.state.games.single.homeScore, 2);
       expect(reloadedStore.state.plateAppearances, hasLength(1));
       expect(reloadedStore.state.pitchingAppearances, hasLength(1));
     });
 
-    test('存在しない試合IDへの打席追加は例外になり、状態を更新しない', () async {
+    test('存在しない試合 ID では例外を投げて状態を変更しない', () async {
       final repository = LocalGameRepository(database);
       final store = LocalGameStore(repository);
 
@@ -83,18 +83,18 @@ void main() {
       expect(store.state.games, isEmpty);
     });
 
-    test('gamesProvider は試合日が新しい順に並べる', () async {
+    test('gamesProvider は試合を日付の降順で返す', () async {
       final repository = LocalGameRepository(database);
       final store = LocalGameStore(repository);
       await store.createGame(
         date: DateTime.utc(2026, 5, 1),
-        homeTeamName: '自チーム',
-        awayTeamName: '相手チームA',
+        homeTeamName: 'Home Team',
+        awayTeamName: 'Away Team A',
       );
       await store.createGame(
         date: DateTime.utc(2026, 5, 3),
-        homeTeamName: '自チーム',
-        awayTeamName: '相手チームB',
+        homeTeamName: 'Home Team',
+        awayTeamName: 'Away Team B',
       );
 
       final container = ProviderContainer(
@@ -104,7 +104,10 @@ void main() {
 
       final games = container.read(gamesProvider);
 
-      expect(games.map((game) => game.awayTeamName), ['相手チームB', '相手チームA']);
+      expect(games.map((game) => game.awayTeamName), [
+        'Away Team B',
+        'Away Team A',
+      ]);
     });
   });
 }

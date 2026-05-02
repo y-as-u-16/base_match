@@ -28,12 +28,12 @@ class _SplashPageState extends ConsumerState<SplashPage>
   }
 
   Future<void> _initialize() async {
-    // MVP1 はローカル専用。外部サービス初期化は行わない。
+    // MVP1 is local-only, so there is no external service bootstrap here.
     await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
-    // アプリ初期化完了フラグをONにする → ルーターがホームへ遷移させる
+    // Mark initialization as complete so the router can leave splash.
     ref.read(isInitializedProvider.notifier).state = true;
   }
 

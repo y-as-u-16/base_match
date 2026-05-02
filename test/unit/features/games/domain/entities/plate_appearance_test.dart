@@ -14,7 +14,7 @@ void main() {
       'created_at': now.toIso8601String(),
     };
 
-    test('fromJson で正しくパースされる', () {
+    test('JSON から変換できる', () {
       final pa = PlateAppearance.fromJson(json);
 
       expect(pa.id, 'pa-1');
@@ -26,7 +26,7 @@ void main() {
       expect(pa.createdAt, now);
     });
 
-    test('toJson で正しくシリアライズされる', () {
+    test('JSON に変換できる', () {
       final pa = PlateAppearance.fromJson(json);
       final result = pa.toJson();
 
@@ -38,14 +38,14 @@ void main() {
       expect(result['rbi'], 1);
     });
 
-    test('fromJson -> toJson の往復で値が保持される', () {
+    test('fromJson から toJson の往復変換後も値を維持する', () {
       final pa = PlateAppearance.fromJson(json);
       final roundTripped = pa.toJson();
 
       expect(roundTripped, json);
     });
 
-    test('null許容フィールド (inning, rbi) が null の場合', () {
+    test('任意項目の null を受け入れる', () {
       final jsonNoOptional = {
         'id': 'pa-2',
         'game_id': 'game-1',
@@ -61,7 +61,7 @@ void main() {
       expect(pa.rbi, isNull);
     });
 
-    test('copyWith で特定フィールドのみ更新される', () {
+    test('copyWith は指定した項目だけを更新する', () {
       final pa = PlateAppearance.fromJson(json);
       final updated = pa.copyWith(resultType: 'out', resultDetail: 'fly');
 

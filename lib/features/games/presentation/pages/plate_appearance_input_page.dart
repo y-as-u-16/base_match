@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../../l10n/localization_helpers.dart';
 import '../view_models/game_view_model.dart';
 
 class PlateAppearanceInputPage extends ConsumerStatefulWidget {
@@ -26,25 +28,21 @@ class _PlateAppearanceInputPageState
     _ResultOption(
       type: AppConstants.resultHit,
       detail: AppConstants.detailSingle,
-      label: '単打',
       icon: Icons.looks_one_outlined,
     ),
     _ResultOption(
       type: AppConstants.resultHit,
       detail: AppConstants.detailDouble,
-      label: '二塁打',
       icon: Icons.looks_two_outlined,
     ),
     _ResultOption(
       type: AppConstants.resultHit,
       detail: AppConstants.detailTriple,
-      label: '三塁打',
       icon: Icons.looks_3_outlined,
     ),
     _ResultOption(
       type: AppConstants.resultHit,
       detail: AppConstants.detailHr,
-      label: '本塁打',
       icon: Icons.sports_baseball,
     ),
   ];
@@ -53,49 +51,41 @@ class _PlateAppearanceInputPageState
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailK,
-      label: '三振',
       icon: Icons.close,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailGround,
-      label: 'ゴロ',
       icon: Icons.south_east,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailFly,
-      label: 'フライ',
       icon: Icons.north_east,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailLine,
-      label: 'ライナー',
       icon: Icons.trending_flat,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailDp,
-      label: '併殺',
       icon: Icons.keyboard_double_arrow_right,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailSacBunt,
-      label: '犠打',
       icon: Icons.arrow_forward,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailSacFly,
-      label: '犠飛',
       icon: Icons.upload,
     ),
     _ResultOption(
       type: AppConstants.resultOut,
       detail: AppConstants.detailOther,
-      label: 'その他',
       icon: Icons.more_horiz,
     ),
   ];
@@ -104,19 +94,16 @@ class _PlateAppearanceInputPageState
     _ResultOption(
       type: AppConstants.resultWalk,
       detail: AppConstants.detailBb,
-      label: '四球',
       icon: Icons.radio_button_unchecked,
     ),
     _ResultOption(
       type: AppConstants.resultWalk,
       detail: AppConstants.detailHbp,
-      label: '死球',
       icon: Icons.personal_injury_outlined,
     ),
     _ResultOption(
       type: AppConstants.resultError,
       detail: AppConstants.detailE,
-      label: 'エラー',
       icon: Icons.error_outline,
     ),
   ];
@@ -124,9 +111,13 @@ class _PlateAppearanceInputPageState
   Future<void> _onSubmit() async {
     final result = _selectedResult;
     if (result == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('打席結果を選択してください')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).selectPlateAppearanceResultMessage,
+          ),
+        ),
+      );
       return;
     }
 
@@ -158,10 +149,13 @@ class _PlateAppearanceInputPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final selectedLabel = _selectedResult?.label ?? '未選択';
+    final l10n = AppLocalizations.of(context);
+    final selectedLabel = _selectedResult == null
+        ? l10n.notSelectedLabel
+        : l10n.resultDetailLabel(_selectedResult!.detail);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('打席入力')),
+      appBar: AppBar(title: Text(l10n.plateAppearanceInputTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
         children: [
@@ -177,7 +171,7 @@ class _PlateAppearanceInputPageState
                 const Gap(12),
                 Expanded(
                   child: Text(
-                    '$_inning回 / $selectedLabel / 打点 $_rbi',
+                    l10n.plateAppearanceSummary(_inning, selectedLabel, _rbi),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -188,35 +182,35 @@ class _PlateAppearanceInputPageState
           ),
           const Gap(16),
           _StepperRow(
-            label: 'イニング',
-            valueLabel: '$_inning回',
+            label: l10n.inningLabel,
+            valueLabel: l10n.inningsShort(_inning),
             onDecrease: () => _setInning(_inning - 1),
             onIncrease: () => _setInning(_inning + 1),
           ),
           const Gap(12),
           _StepperRow(
-            label: '打点',
+            label: l10n.rbiLabel,
             valueLabel: '$_rbi',
             onDecrease: () => _setRbi(_rbi - 1),
             onIncrease: () => _setRbi(_rbi + 1),
           ),
           const Gap(24),
           _ResultSection(
-            title: 'ヒット',
+            title: l10n.hitSectionTitle,
             options: _hitOptions,
             selected: _selectedResult,
             onSelected: _selectResult,
           ),
           const Gap(20),
           _ResultSection(
-            title: 'アウト',
+            title: l10n.outSectionTitle,
             options: _outOptions,
             selected: _selectedResult,
             onSelected: _selectResult,
           ),
           const Gap(20),
           _ResultSection(
-            title: '出塁・その他',
+            title: l10n.onBaseSectionTitle,
             options: _onBaseOptions,
             selected: _selectedResult,
             onSelected: _selectResult,
@@ -229,7 +223,7 @@ class _PlateAppearanceInputPageState
           child: FilledButton.icon(
             onPressed: _selectedResult == null ? null : _onSubmit,
             icon: const Icon(Icons.save_outlined),
-            label: const Text('登録する'),
+            label: Text(l10n.saveButton),
           ),
         ),
       ),
@@ -270,7 +264,9 @@ class _ResultSection extends StatelessWidget {
             final isSelected = option == selected;
             return ChoiceChip(
               avatar: Icon(option.icon, size: 18),
-              label: Text(option.label),
+              label: Text(
+                AppLocalizations.of(context).resultDetailLabel(option.detail),
+              ),
               selected: isSelected,
               onSelected: (_) => onSelected(option),
             );
@@ -314,7 +310,7 @@ class _StepperRow extends StatelessWidget {
             ),
           ),
           IconButton.filledTonal(
-            tooltip: '$labelを減らす',
+            tooltip: AppLocalizations.of(context).decreaseLabelTooltip(label),
             onPressed: onDecrease,
             icon: const Icon(Icons.remove),
           ),
@@ -330,7 +326,7 @@ class _StepperRow extends StatelessWidget {
             ),
           ),
           IconButton.filledTonal(
-            tooltip: '$labelを増やす',
+            tooltip: AppLocalizations.of(context).increaseLabelTooltip(label),
             onPressed: onIncrease,
             icon: const Icon(Icons.add),
           ),
@@ -344,12 +340,10 @@ class _ResultOption {
   const _ResultOption({
     required this.type,
     required this.detail,
-    required this.label,
     required this.icon,
   });
 
   final String type;
   final String detail;
-  final String label;
   final IconData icon;
 }

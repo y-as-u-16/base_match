@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../games/presentation/view_models/game_view_model.dart';
 
 class HomePage extends ConsumerWidget {
@@ -11,21 +12,22 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final games = ref.watch(gamesProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('base_match')),
+      appBar: AppBar(title: Text(l10n.brandName)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'ローカル記録',
+            l10n.homeHeadline,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'ログインなしで試合、打席、ピッチング成績を端末内に記録します。',
+            l10n.homeDescription,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -34,17 +36,17 @@ class HomePage extends ConsumerWidget {
           FilledButton.icon(
             onPressed: () => context.go('/games/create'),
             icon: const Icon(Icons.add),
-            label: const Text('試合を記録する'),
+            label: Text(l10n.recordGameButton),
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
             onPressed: () => context.go('/stats'),
             icon: const Icon(Icons.bar_chart),
-            label: const Text('成績を見る'),
+            label: Text(l10n.viewStatsButton),
           ),
           const SizedBox(height: 28),
           Text(
-            '直近の試合',
+            l10n.recentGamesTitle,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -55,7 +57,7 @@ class HomePage extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  'まだ試合がありません。最初の試合を記録してください。',
+                  l10n.homeEmptyGames,
                   style: theme.textTheme.bodyMedium,
                 ),
               ),

@@ -10,6 +10,7 @@ import '../../features/games/presentation/pages/plate_appearance_input_page.dart
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/stats/presentation/pages/stats_page.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 final isInitializedProvider = StateProvider<bool>((ref) => false);
 
@@ -140,18 +141,25 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _calculateSelectedIndex(context),
         onDestinationSelected: (index) => _onItemTapped(index, context),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), label: 'ホーム'),
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.sports_baseball_outlined),
-            label: '記録',
+            icon: const Icon(Icons.home_outlined),
+            label: l10n.navHome,
           ),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: '成績'),
+          NavigationDestination(
+            icon: const Icon(Icons.sports_baseball_outlined),
+            label: l10n.navRecord,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.bar_chart),
+            label: l10n.navStats,
+          ),
         ],
       ),
     );

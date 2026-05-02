@@ -4,7 +4,7 @@ import 'package:base_match/features/games/domain/entities/pitching_appearance.da
 
 void main() {
   group('PitchingAppearance', () {
-    test('コンストラクタで渡した値を保持する', () {
+    test('コンストラクタに渡した値を保持する', () {
       final createdAt = DateTime.utc(2026, 5, 2, 12);
       final appearance = PitchingAppearance(
         id: '550e8400-e29b-41d4-a716-446655440000',
