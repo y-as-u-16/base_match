@@ -43,6 +43,12 @@ class LocalGameRepository implements GameRepository {
     String? location,
     int? innings,
   }) async {
+    _validateGameInput(
+      homeTeamName: homeTeamName,
+      awayTeamName: awayTeamName,
+      innings: innings,
+    );
+
     final now = DateTime.now();
     final game = Game(
       id: _id(),
@@ -68,6 +74,17 @@ class LocalGameRepository implements GameRepository {
     int? inning,
     int? rbi,
   }) async {
+    _validatePlateAppearanceInput(
+      gameId: gameId,
+      resultType: resultType,
+      resultDetail: resultDetail,
+      inning: inning,
+      rbi: rbi,
+    );
+
+    final row = await _findGameRow(gameId);
+    if (row == null) return null;
+
     final appearance = PlateAppearance(
       id: _id(),
       gameId: gameId,
@@ -80,11 +97,6 @@ class LocalGameRepository implements GameRepository {
     await _database
         .into(_database.localPlateAppearances)
         .insert(appearance.toCompanion());
-
-    final row = await (_database.select(
-      _database.localGames,
-    )..where((table) => table.id.equals(gameId))).getSingleOrNull();
-    if (row == null) return null;
 
     final updatedScore = (row.homeScore ?? 0) + (rbi ?? 0);
     await (_database.update(_database.localGames)
@@ -105,6 +117,21 @@ class LocalGameRepository implements GameRepository {
     required int strikeouts,
     required int homeRunsAllowed,
   }) async {
+    _validatePitchingAppearanceInput(
+      gameId: gameId,
+      outsPitched: outsPitched,
+      runs: runs,
+      earnedRuns: earnedRuns,
+      hitsAllowed: hitsAllowed,
+      walks: walks,
+      strikeouts: strikeouts,
+      homeRunsAllowed: homeRunsAllowed,
+    );
+
+    if (await _findGameRow(gameId) == null) {
+      throw ArgumentError.value(gameId, 'gameId', 'Game does not exist.');
+    }
+
     final appearance = PitchingAppearance(
       id: _id(),
       gameId: gameId,
@@ -132,5 +159,90 @@ class LocalGameRepository implements GameRepository {
     );
   }
 
+  Future<LocalGame?> _findGameRow(String gameId) {
+    return (_database.select(
+      _database.localGames,
+    )..where((table) => table.id.equals(gameId))).getSingleOrNull();
+  }
+
   String _id() => _uuid.v4();
+
+  void _validateGameInput({
+    required String homeTeamName,
+    required String awayTeamName,
+    required int? innings,
+  }) {
+    if (homeTeamName.trim().isEmpty) {
+      throw ArgumentError.value(homeTeamName, 'homeTeamName', 'Required.');
+    }
+    if (awayTeamName.trim().isEmpty) {
+      throw ArgumentError.value(awayTeamName, 'awayTeamName', 'Required.');
+    }
+    if (innings != null && innings <= 0) {
+      throw ArgumentError.value(innings, 'innings', 'Must be positive.');
+    }
+  }
+
+  void _validatePlateAppearanceInput({
+    required String gameId,
+    required String resultType,
+    required String resultDetail,
+    required int? inning,
+    required int? rbi,
+  }) {
+    if (gameId.trim().isEmpty) {
+      throw ArgumentError.value(gameId, 'gameId', 'Required.');
+    }
+    if (resultType.trim().isEmpty) {
+      throw ArgumentError.value(resultType, 'resultType', 'Required.');
+    }
+    if (resultDetail.trim().isEmpty) {
+      throw ArgumentError.value(resultDetail, 'resultDetail', 'Required.');
+    }
+    if (inning != null && inning <= 0) {
+      throw ArgumentError.value(inning, 'inning', 'Must be positive.');
+    }
+    if (rbi != null && rbi < 0) {
+      throw ArgumentError.value(rbi, 'rbi', 'Must not be negative.');
+    }
+  }
+
+  void _validatePitchingAppearanceInput({
+    required String gameId,
+    required int outsPitched,
+    required int runs,
+    required int earnedRuns,
+    required int hitsAllowed,
+    required int walks,
+    required int strikeouts,
+    required int homeRunsAllowed,
+  }) {
+    if (gameId.trim().isEmpty) {
+      throw ArgumentError.value(gameId, 'gameId', 'Required.');
+    }
+    if (outsPitched <= 0) {
+      throw ArgumentError.value(
+        outsPitched,
+        'outsPitched',
+        'Must be positive.',
+      );
+    }
+    final values = {
+      'runs': runs,
+      'earnedRuns': earnedRuns,
+      'hitsAllowed': hitsAllowed,
+      'walks': walks,
+      'strikeouts': strikeouts,
+      'homeRunsAllowed': homeRunsAllowed,
+    };
+    for (final entry in values.entries) {
+      if (entry.value < 0) {
+        throw ArgumentError.value(
+          entry.value,
+          entry.key,
+          'Must not be negative.',
+        );
+      }
+    }
+  }
 }

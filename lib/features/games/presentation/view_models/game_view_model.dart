@@ -120,12 +120,13 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
       resultDetail: resultDetail,
       rbi: rbi,
     );
+    if (updatedGame == null) {
+      throw ArgumentError.value(gameId, 'gameId', 'Game does not exist.');
+    }
     final plateAppearances = await _repository.getPlateAppearances();
-    final games = updatedGame == null
-        ? state.games
-        : state.games
-              .map((game) => game.id == gameId ? updatedGame : game)
-              .toList();
+    final games = state.games
+        .map((game) => game.id == gameId ? updatedGame : game)
+        .toList();
     final appearance = plateAppearances.last;
 
     state = state.copyWith(games: games, plateAppearances: plateAppearances);

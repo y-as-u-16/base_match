@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:base_match/core/constants/app_constants.dart';
@@ -62,6 +63,48 @@ void main() {
       expect(reloadedStore.state.games.single.homeScore, 2);
       expect(reloadedStore.state.plateAppearances, hasLength(1));
       expect(reloadedStore.state.pitchingAppearances, hasLength(1));
+    });
+
+    test('存在しない試合IDへの打席追加は例外になり、状態を更新しない', () async {
+      final repository = LocalGameRepository(database);
+      final store = LocalGameStore(repository);
+
+      expect(
+        () => store.addPlateAppearance(
+          gameId: '550e8400-e29b-41d4-a716-446655440099',
+          resultType: AppConstants.resultHit,
+          resultDetail: AppConstants.detailSingle,
+          rbi: 1,
+        ),
+        throwsArgumentError,
+      );
+
+      expect(store.state.plateAppearances, isEmpty);
+      expect(store.state.games, isEmpty);
+    });
+
+    test('gamesProvider は試合日が新しい順に並べる', () async {
+      final repository = LocalGameRepository(database);
+      final store = LocalGameStore(repository);
+      await store.createGame(
+        date: DateTime.utc(2026, 5, 1),
+        homeTeamName: '自チーム',
+        awayTeamName: '相手チームA',
+      );
+      await store.createGame(
+        date: DateTime.utc(2026, 5, 3),
+        homeTeamName: '自チーム',
+        awayTeamName: '相手チームB',
+      );
+
+      final container = ProviderContainer(
+        overrides: [localGameStoreProvider.overrideWith((ref) => store)],
+      );
+      addTearDown(container.dispose);
+
+      final games = container.read(gamesProvider);
+
+      expect(games.map((game) => game.awayTeamName), ['相手チームB', '相手チームA']);
     });
   });
 }
