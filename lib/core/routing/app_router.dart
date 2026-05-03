@@ -7,6 +7,7 @@ import '../../features/games/presentation/pages/game_detail_page.dart';
 import '../../features/games/presentation/pages/games_page.dart';
 import '../../features/games/presentation/pages/pitching_input_page.dart';
 import '../../features/games/presentation/pages/plate_appearance_input_page.dart';
+import '../../features/games/presentation/pages/teams_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/stats/presentation/pages/stats_page.dart';
@@ -129,6 +130,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: const StatsPage(),
             ),
           ),
+          GoRoute(
+            path: '/teams',
+            pageBuilder: (context, state) => _fadeTransitionPage(
+              key: state.pageKey,
+              child: const TeamsPage(),
+            ),
+          ),
         ],
       ),
     ],
@@ -168,6 +176,7 @@ class _ScaffoldWithNavBar extends StatelessWidget {
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
     if (location.startsWith('/games')) return 1;
+    if (location.startsWith('/teams')) return 1;
     if (location.startsWith('/stats')) return 2;
     return 0;
   }

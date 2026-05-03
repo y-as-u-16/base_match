@@ -385,4 +385,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reloadButton => 'Reload';
+
+  @override
+  String get myTeamsTitle => 'My Teams';
+
+  @override
+  String get manageMyTeamsTooltip => 'Manage my teams';
+
+  @override
+  String get addMyTeamButton => 'Add team';
+
+  @override
+  String get emptyMyTeamsTitle => 'No teams yet';
+
+  @override
+  String get emptyMyTeamsSubtitle =>
+      'Add your first team to use it when recording games.';
+
+  @override
+  String get addMyTeamTitle => 'Add My Team';
+
+  @override
+  String get myTeamNameLabel => 'Team name';
+
+  @override
+  String get myTeamNameRequired => 'Enter a team name';
+
+  @override
+  String get defaultMyTeamBadge => 'Default';
+
+  @override
+  String get myTeamCreatedMessage => 'Team added';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get addButton => 'Add';
 }

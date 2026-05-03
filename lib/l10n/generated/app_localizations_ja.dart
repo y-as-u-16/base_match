@@ -382,4 +382,40 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get reloadButton => '再読み込み';
+
+  @override
+  String get myTeamsTitle => '自分のチーム';
+
+  @override
+  String get manageMyTeamsTooltip => '自チームを管理';
+
+  @override
+  String get addMyTeamButton => 'チームを追加';
+
+  @override
+  String get emptyMyTeamsTitle => '自分のチームがありません';
+
+  @override
+  String get emptyMyTeamsSubtitle => '最初のチームを追加すると、試合記録で使えるようになります。';
+
+  @override
+  String get addMyTeamTitle => '自チームを追加';
+
+  @override
+  String get myTeamNameLabel => 'チーム名';
+
+  @override
+  String get myTeamNameRequired => 'チーム名を入力してください';
+
+  @override
+  String get defaultMyTeamBadge => 'デフォルト';
+
+  @override
+  String get myTeamCreatedMessage => 'チームを追加しました';
+
+  @override
+  String get cancelButton => 'キャンセル';
+
+  @override
+  String get addButton => '追加';
 }

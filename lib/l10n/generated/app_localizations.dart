@@ -774,6 +774,78 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'再読み込み'**
   String get reloadButton;
+
+  /// No description provided for @myTeamsTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'自分のチーム'**
+  String get myTeamsTitle;
+
+  /// No description provided for @manageMyTeamsTooltip.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チームを管理'**
+  String get manageMyTeamsTooltip;
+
+  /// No description provided for @addMyTeamButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'チームを追加'**
+  String get addMyTeamButton;
+
+  /// No description provided for @emptyMyTeamsTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'自分のチームがありません'**
+  String get emptyMyTeamsTitle;
+
+  /// No description provided for @emptyMyTeamsSubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'最初のチームを追加すると、試合記録で使えるようになります。'**
+  String get emptyMyTeamsSubtitle;
+
+  /// No description provided for @addMyTeamTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チームを追加'**
+  String get addMyTeamTitle;
+
+  /// No description provided for @myTeamNameLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'チーム名'**
+  String get myTeamNameLabel;
+
+  /// No description provided for @myTeamNameRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'チーム名を入力してください'**
+  String get myTeamNameRequired;
+
+  /// No description provided for @defaultMyTeamBadge.
+  ///
+  /// In ja, this message translates to:
+  /// **'デフォルト'**
+  String get defaultMyTeamBadge;
+
+  /// No description provided for @myTeamCreatedMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'チームを追加しました'**
+  String get myTeamCreatedMessage;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cancelButton;
+
+  /// No description provided for @addButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'追加'**
+  String get addButton;
 }
 
 class _AppLocalizationsDelegate
