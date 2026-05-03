@@ -11,55 +11,88 @@ class StatsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(localGameStoreProvider);
-    final batting = BattingStats.fromAppearances(state.plateAppearances);
-    final pitching = PitchingStats.fromAppearances(state.pitchingAppearances);
+    final battingRows = NamedBattingStats.fromAppearances(
+      state.plateAppearances,
+    );
+    final pitchingRows = NamedPitchingStats.fromAppearances(
+      state.pitchingAppearances,
+    );
     final l10n = AppLocalizations.of(context);
+    final battingPanels = battingRows.isEmpty
+        ? [
+            NamedBattingStats(
+              playerName: l10n.noBattingStatsLabel,
+              stats: BattingStats.empty(),
+            ),
+          ]
+        : battingRows;
+    final pitchingPanels = pitchingRows.isEmpty
+        ? [
+            NamedPitchingStats(
+              playerName: l10n.noPitchingStatsLabel,
+              stats: PitchingStats.empty(),
+            ),
+          ]
+        : pitchingRows;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.statsTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
         children: [
-          _StatsPanel(
-            title: l10n.battingStatsTitle,
-            label: l10n.teamBattingTitle,
-            icon: Icons.sports_baseball_outlined,
-            accentColor: Theme.of(context).colorScheme.tertiary,
-            primaryLabel: l10n.seasonAverageMetricLabel,
-            primaryValue: batting.averageLabel,
-            supportingMetrics: [
-              _MetricData(label: '打席', value: '${batting.pa}'),
-              _MetricData(label: '打数', value: '${batting.ab}'),
-              _MetricData(label: '安打', value: '${batting.hits}'),
-              _MetricData(label: '本塁打', value: '${batting.hr}'),
-              _MetricData(label: '四球', value: '${batting.walks}'),
-              _MetricData(label: '三振', value: '${batting.so}'),
-            ],
-            chart: _BattingSparkline(
-              hits: batting.hits,
-              walks: batting.walks,
-              strikeouts: batting.so,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _StatsPanel(
-            title: l10n.pitchingStatsTitle,
-            label: l10n.teamPitchingTitle,
-            icon: Icons.speed_outlined,
-            accentColor: Theme.of(context).colorScheme.primary,
-            primaryLabel: l10n.seasonEraMetricLabel,
-            primaryValue: pitching.eraLabel,
-            supportingMetrics: [
-              _MetricData(label: '登板', value: '${pitching.games}'),
-              _MetricData(label: '投球回', value: pitching.inningsLabel),
-              _MetricData(label: '自責点', value: '${pitching.earnedRuns}'),
-              _MetricData(label: '奪三振', value: '${pitching.strikeouts}'),
-            ],
-            chart: _PitchingDiamond(
-              outsPitched: pitching.outsPitched,
-              strikeouts: pitching.strikeouts,
-            ),
-          ),
+          _SectionHeader(title: l10n.battingStatsTitle),
+          const SizedBox(height: 10),
+          ...battingPanels.map((row) {
+            final batting = row.stats;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _StatsPanel(
+                label: row.playerName,
+                icon: Icons.sports_baseball_outlined,
+                accentColor: Theme.of(context).colorScheme.tertiary,
+                primaryLabel: l10n.seasonAverageMetricLabel,
+                primaryValue: batting.averageLabel,
+                supportingMetrics: [
+                  _MetricData(label: '打席', value: '${batting.pa}'),
+                  _MetricData(label: '打数', value: '${batting.ab}'),
+                  _MetricData(label: '安打', value: '${batting.hits}'),
+                  _MetricData(label: '本塁打', value: '${batting.hr}'),
+                  _MetricData(label: '四球', value: '${batting.walks}'),
+                  _MetricData(label: '三振', value: '${batting.so}'),
+                ],
+                chart: _BattingSparkline(
+                  hits: batting.hits,
+                  walks: batting.walks,
+                  strikeouts: batting.so,
+                ),
+              ),
+            );
+          }),
+          _SectionHeader(title: l10n.pitchingStatsTitle),
+          const SizedBox(height: 10),
+          ...pitchingPanels.map((row) {
+            final pitching = row.stats;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _StatsPanel(
+                label: row.playerName,
+                icon: Icons.speed_outlined,
+                accentColor: Theme.of(context).colorScheme.primary,
+                primaryLabel: l10n.seasonEraMetricLabel,
+                primaryValue: pitching.eraLabel,
+                supportingMetrics: [
+                  _MetricData(label: '登板', value: '${pitching.games}'),
+                  _MetricData(label: '投球回', value: pitching.inningsLabel),
+                  _MetricData(label: '自責点', value: '${pitching.earnedRuns}'),
+                  _MetricData(label: '奪三振', value: '${pitching.strikeouts}'),
+                ],
+                chart: _PitchingDiamond(
+                  outsPitched: pitching.outsPitched,
+                  strikeouts: pitching.strikeouts,
+                ),
+              ),
+            );
+          }),
         ],
       ),
     );
@@ -75,7 +108,6 @@ class _MetricData {
 
 class _StatsPanel extends StatelessWidget {
   const _StatsPanel({
-    required this.title,
     required this.label,
     required this.icon,
     required this.accentColor,
@@ -85,7 +117,6 @@ class _StatsPanel extends StatelessWidget {
     required this.chart,
   });
 
-  final String title;
   final String label;
   final IconData icon;
   final Color accentColor;
@@ -102,8 +133,6 @@ class _StatsPanel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: title),
-        const SizedBox(height: 10),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),

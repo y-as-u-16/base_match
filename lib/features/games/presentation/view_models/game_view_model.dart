@@ -94,6 +94,8 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
     required String awayTeamName,
     String? location,
     int? innings,
+    int homeScore = 0,
+    int awayScore = 0,
   }) async {
     final game = await _repository.createGame(
       date: date,
@@ -101,6 +103,8 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
       homeTeamName: homeTeamName,
       awayTeamName: awayTeamName,
       innings: innings,
+      homeScore: homeScore,
+      awayScore: awayScore,
     );
     state = state.copyWith(games: [...state.games, game]);
     return game;
@@ -108,6 +112,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
 
   Future<PlateAppearance> addPlateAppearance({
     required String gameId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
     int? inning,
@@ -115,6 +120,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
   }) async {
     final updatedGame = await _repository.addPlateAppearance(
       gameId: gameId,
+      batterName: batterName,
       inning: inning,
       resultType: resultType,
       resultDetail: resultDetail,
@@ -135,6 +141,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
 
   Future<PitchingAppearance> addPitchingAppearance({
     required String gameId,
+    required String pitcherName,
     required int outsPitched,
     required int runs,
     required int earnedRuns,
@@ -145,6 +152,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
   }) async {
     final appearance = await _repository.addPitchingAppearance(
       gameId: gameId,
+      pitcherName: pitcherName,
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,

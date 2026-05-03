@@ -66,6 +66,10 @@
   "homeTeamNameRequired": "チーム名を入力してください",
   "awayTeamNameLabel": "相手チーム名",
   "awayTeamNameRequired": "相手チーム名を入力してください",
+  "homeScoreLabel": "自チーム得点",
+  "awayScoreLabel": "相手チーム得点",
+  "scoreRequired": "点数を入力してください",
+  "scoreMustBeNonNegative": "0以上の点数を入力してください",
   "locationOptionalLabel": "球場（任意）",
   "inningsCountLabel": "イニング数",
   "inningsShort": "{innings}回",
@@ -159,6 +163,8 @@
   "plateAppearanceInputTitle": "打席入力",
   "selectPlateAppearanceResultMessage": "打席結果を選択してください",
   "notSelectedLabel": "未選択",
+  "playerNameRequired": "選手名を入力してください",
+  "batterNameLabel": "打者名",
   "plateAppearanceSummary": "{inning}回 / {result} / 打点 {rbi}",
   "@plateAppearanceSummary": {
     "placeholders": {
@@ -196,6 +202,7 @@
     }
   },
   "pitchingInputTitle": "ピッチング入力",
+  "pitcherNameLabel": "投手名",
   "pitchingInputSummary": "投球回 {innings} / 失点 {runs} / 自責 {earnedRuns}",
   "@pitchingInputSummary": {
     "placeholders": {
@@ -233,7 +240,8 @@
   "statsTitle": "成績",
   "battingStatsTitle": "打撃成績",
   "pitchingStatsTitle": "ピッチング成績",
-  "teamBattingTitle": "チーム打撃",
+  "personalBattingTitle": "自分の打撃",
+  "noBattingStatsLabel": "打撃記録なし",
   "battingStatsSummary": "打席 {pa} / 打数 {ab} / 安打 {hits} / 本塁打 {hr} / 三振 {so}",
   "@battingStatsSummary": {
     "placeholders": {
@@ -254,7 +262,8 @@
       }
     }
   },
-  "teamPitchingTitle": "チーム投手",
+  "personalPitchingTitle": "自分の投球",
+  "noPitchingStatsLabel": "投球記録なし",
   "pitchingStatsSummary": "登板 {games} / 投球回 {innings} / 自責 {earnedRuns} / 奪三振 {strikeouts}",
   "@pitchingStatsSummary": {
     "placeholders": {

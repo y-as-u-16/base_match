@@ -102,11 +102,7 @@ class GameDetailPage extends ConsumerWidget {
               (appearance) => Card(
                 child: ListTile(
                   title: Text(
-                    _resultLabel(
-                      l10n,
-                      appearance.resultType,
-                      appearance.resultDetail,
-                    ),
+                    '${appearance.batterName} / ${_resultLabel(l10n, appearance.resultType, appearance.resultDetail)}',
                   ),
                   subtitle: Text(
                     l10n.plateAppearanceListSubtitle(
@@ -132,9 +128,7 @@ class GameDetailPage extends ConsumerWidget {
               (appearance) => Card(
                 child: ListTile(
                   title: Text(
-                    l10n.pitchingOutsTitle(
-                      l10n.inningsFromOuts(appearance.outsPitched),
-                    ),
+                    '${appearance.pitcherName} / ${l10n.pitchingOutsTitle(l10n.inningsFromOuts(appearance.outsPitched))}',
                   ),
                   subtitle: Text(
                     l10n.pitchingListSubtitle(

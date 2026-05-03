@@ -20,6 +20,7 @@ class PlateAppearanceInputPage extends ConsumerStatefulWidget {
 
 class _PlateAppearanceInputPageState
     extends ConsumerState<PlateAppearanceInputPage> {
+  final _batterNameController = TextEditingController(text: '自分');
   int _inning = 1;
   int _rbi = 0;
   _ResultOption? _selectedResult;
@@ -108,8 +109,23 @@ class _PlateAppearanceInputPageState
     ),
   ];
 
+  @override
+  void dispose() {
+    _batterNameController.dispose();
+    super.dispose();
+  }
+
   Future<void> _onSubmit() async {
     final result = _selectedResult;
+    final batterName = _batterNameController.text.trim();
+    if (batterName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).playerNameRequired),
+        ),
+      );
+      return;
+    }
     if (result == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -125,6 +141,7 @@ class _PlateAppearanceInputPageState
         .read(localGameStoreProvider.notifier)
         .addPlateAppearance(
           gameId: widget.gameId,
+          batterName: batterName,
           inning: _inning,
           resultType: result.type,
           resultDetail: result.detail,
@@ -181,6 +198,14 @@ class _PlateAppearanceInputPageState
             ),
           ),
           const Gap(16),
+          TextField(
+            controller: _batterNameController,
+            decoration: InputDecoration(
+              labelText: l10n.batterNameLabel,
+              prefixIcon: const Icon(Icons.person_outline),
+            ),
+          ),
+          const Gap(12),
           _StepperRow(
             label: l10n.inningLabel,
             valueLabel: l10n.inningsShort(_inning),

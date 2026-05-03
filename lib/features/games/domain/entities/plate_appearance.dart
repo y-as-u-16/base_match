@@ -2,6 +2,7 @@ class PlateAppearance {
   const PlateAppearance({
     required this.id,
     required this.gameId,
+    required this.batterName,
     this.inning,
     required this.resultType,
     required this.resultDetail,
@@ -11,6 +12,7 @@ class PlateAppearance {
 
   final String id;
   final String gameId;
+  final String batterName;
   final int? inning;
   final String resultType;
   final String resultDetail;
@@ -21,6 +23,7 @@ class PlateAppearance {
     return PlateAppearance(
       id: json['id'] as String,
       gameId: json['game_id'] as String,
+      batterName: json['batter_name'] as String,
       inning: json['inning'] as int?,
       resultType: json['result_type'] as String,
       resultDetail: json['result_detail'] as String,
@@ -33,6 +36,7 @@ class PlateAppearance {
     return {
       'id': id,
       'game_id': gameId,
+      'batter_name': batterName,
       'inning': inning,
       'result_type': resultType,
       'result_detail': resultDetail,
@@ -44,6 +48,7 @@ class PlateAppearance {
   PlateAppearance copyWith({
     String? id,
     String? gameId,
+    String? batterName,
     int? inning,
     String? resultType,
     String? resultDetail,
@@ -53,6 +58,7 @@ class PlateAppearance {
     return PlateAppearance(
       id: id ?? this.id,
       gameId: gameId ?? this.gameId,
+      batterName: batterName ?? this.batterName,
       inning: inning ?? this.inning,
       resultType: resultType ?? this.resultType,
       resultDetail: resultDetail ?? this.resultDetail,

@@ -31,10 +31,13 @@ void main() {
         awayTeamName: 'Away Team',
         location: 'Riverside Field',
         innings: 7,
+        homeScore: 4,
+        awayScore: 2,
       );
 
       final plateAppearance = await store.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailSingle,
         inning: 1,
@@ -42,6 +45,7 @@ void main() {
       );
       final pitchingAppearance = await store.addPitchingAppearance(
         gameId: game.id,
+        pitcherName: '自分',
         outsPitched: 9,
         runs: 1,
         earnedRuns: 1,
@@ -60,9 +64,12 @@ void main() {
 
       expect(reloadedStore.state.games, hasLength(1));
       expect(reloadedStore.state.games.single.homeTeamName, 'Home Team');
-      expect(reloadedStore.state.games.single.homeScore, 2);
+      expect(reloadedStore.state.games.single.homeScore, 4);
+      expect(reloadedStore.state.games.single.awayScore, 2);
       expect(reloadedStore.state.plateAppearances, hasLength(1));
+      expect(reloadedStore.state.plateAppearances.single.batterName, '自分');
       expect(reloadedStore.state.pitchingAppearances, hasLength(1));
+      expect(reloadedStore.state.pitchingAppearances.single.pitcherName, '自分');
     });
 
     test('存在しない試合 ID では例外を投げて状態を変更しない', () async {
@@ -72,6 +79,7 @@ void main() {
       expect(
         () => store.addPlateAppearance(
           gameId: '550e8400-e29b-41d4-a716-446655440099',
+          batterName: '自分',
           resultType: AppConstants.resultHit,
           resultDetail: AppConstants.detailSingle,
           rbi: 1,

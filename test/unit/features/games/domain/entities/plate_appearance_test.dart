@@ -7,6 +7,7 @@ void main() {
     final json = {
       'id': 'pa-1',
       'game_id': 'game-1',
+      'batter_name': '佐藤',
       'inning': 3,
       'result_type': 'hit',
       'result_detail': 'single',
@@ -19,6 +20,7 @@ void main() {
 
       expect(pa.id, 'pa-1');
       expect(pa.gameId, 'game-1');
+      expect(pa.batterName, '佐藤');
       expect(pa.inning, 3);
       expect(pa.resultType, 'hit');
       expect(pa.resultDetail, 'single');
@@ -32,6 +34,7 @@ void main() {
 
       expect(result['id'], 'pa-1');
       expect(result['game_id'], 'game-1');
+      expect(result['batter_name'], '佐藤');
       expect(result['inning'], 3);
       expect(result['result_type'], 'hit');
       expect(result['result_detail'], 'single');
@@ -49,6 +52,7 @@ void main() {
       final jsonNoOptional = {
         'id': 'pa-2',
         'game_id': 'game-1',
+        'batter_name': '佐藤',
         'inning': null,
         'result_type': 'out',
         'result_detail': 'ground',

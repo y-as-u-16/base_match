@@ -29,12 +29,14 @@ void main() {
       expect(await repository.getPitchingAppearances(), isEmpty);
     });
 
-    test('createGame は UUID v4 の ID とデフォルト値を保存する', () async {
+    test('createGame は UUID v4 の ID と入力したスコアを保存する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
         homeTeamName: 'Home Team',
         awayTeamName: 'Away Team',
         innings: 7,
+        homeScore: 5,
+        awayScore: 3,
       );
 
       final games = await repository.getGames();
@@ -44,8 +46,8 @@ void main() {
       expect(games, hasLength(1));
       expect(games.single.id, game.id);
       expect(games.single.location, isNull);
-      expect(games.single.homeScore, 0);
-      expect(games.single.awayScore, 0);
+      expect(games.single.homeScore, 5);
+      expect(games.single.awayScore, 3);
       expect(games.single.status, AppConstants.statusDraft);
       expect(games.single.innings, 7);
     });
@@ -95,15 +97,18 @@ void main() {
       expect(await repository.getGames(), isEmpty);
     });
 
-    test('addPlateAppearance は UUID v4 の ID を保存し打点を得点に加算する', () async {
+    test('addPlateAppearance は UUID v4 の ID と打者名を保存しスコアを変更しない', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
         homeTeamName: 'Home Team',
         awayTeamName: 'Away Team',
+        homeScore: 5,
+        awayScore: 3,
       );
 
       final updatedGame = await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailHr,
         inning: 3,
@@ -113,12 +118,14 @@ void main() {
       final appearances = await repository.getPlateAppearances();
       final games = await repository.getGames();
 
-      expect(updatedGame?.homeScore, 4);
-      expect(games.single.homeScore, 4);
+      expect(updatedGame?.homeScore, 5);
+      expect(games.single.homeScore, 5);
+      expect(games.single.awayScore, 3);
       expect(appearances, hasLength(1));
       expect(appearances.single.id, matches(uuidPattern));
       expect(appearances.single.id, isNot(startsWith('pa-')));
       expect(appearances.single.gameId, game.id);
+      expect(appearances.single.batterName, '自分');
       expect(appearances.single.inning, 3);
       expect(appearances.single.rbi, 4);
     });
@@ -132,6 +139,7 @@ void main() {
 
       final updatedGame = await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultOut,
         resultDetail: AppConstants.detailK,
       );
@@ -141,34 +149,39 @@ void main() {
       expect((await repository.getPlateAppearances()).single.rbi, isNull);
     });
 
-    test('addPlateAppearance は複数打席の打点を累積する', () async {
+    test('addPlateAppearance は複数打席の打点を保存してもスコアを変更しない', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
         homeTeamName: 'Home Team',
         awayTeamName: 'Away Team',
+        homeScore: 6,
+        awayScore: 2,
       );
 
       await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailSingle,
         rbi: 1,
       );
       final updatedGame = await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailDouble,
         rbi: 2,
       );
 
-      expect(updatedGame?.homeScore, 3);
-      expect((await repository.getGames()).single.homeScore, 3);
+      expect(updatedGame?.homeScore, 6);
+      expect((await repository.getGames()).single.homeScore, 6);
       expect(await repository.getPlateAppearances(), hasLength(2));
     });
 
     test('addPlateAppearance は存在しない試合 ID では保存せず null を返す', () async {
       final updatedGame = await repository.addPlateAppearance(
         gameId: '550e8400-e29b-41d4-a716-446655440099',
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailSingle,
         rbi: 1,
@@ -188,6 +201,7 @@ void main() {
       expect(
         () => repository.addPlateAppearance(
           gameId: game.id,
+          batterName: '自分',
           resultType: AppConstants.resultHit,
           resultDetail: AppConstants.detailSingle,
           rbi: -1,
@@ -208,6 +222,7 @@ void main() {
 
       final appearance = await repository.addPitchingAppearance(
         gameId: game.id,
+        pitcherName: '自分',
         outsPitched: 10,
         runs: 2,
         earnedRuns: 1,
@@ -224,6 +239,7 @@ void main() {
       expect(appearances, hasLength(1));
       expect(appearances.single.id, appearance.id);
       expect(appearances.single.gameId, game.id);
+      expect(appearances.single.pitcherName, '自分');
       expect(appearances.single.outsPitched, 10);
       expect(appearances.single.earnedRuns, 1);
       expect(appearances.single.homeRunsAllowed, 1);
@@ -238,6 +254,7 @@ void main() {
 
       final appearance = await repository.addPitchingAppearance(
         gameId: game.id,
+        pitcherName: '自分',
         outsPitched: 3,
         runs: 0,
         earnedRuns: 0,
@@ -260,6 +277,7 @@ void main() {
       expect(
         () => repository.addPitchingAppearance(
           gameId: '550e8400-e29b-41d4-a716-446655440099',
+          pitcherName: '自分',
           outsPitched: 3,
           runs: 0,
           earnedRuns: 0,
@@ -284,6 +302,7 @@ void main() {
       expect(
         () => repository.addPitchingAppearance(
           gameId: game.id,
+          pitcherName: '自分',
           outsPitched: 0,
           runs: 0,
           earnedRuns: 0,
@@ -308,6 +327,7 @@ void main() {
       expect(
         () => repository.addPitchingAppearance(
           gameId: game.id,
+          pitcherName: '自分',
           outsPitched: 3,
           runs: -1,
           earnedRuns: 0,

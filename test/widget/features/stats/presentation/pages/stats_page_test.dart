@@ -40,9 +40,9 @@ void main() {
 
       expect(find.text(l10n.statsTitle), findsOneWidget);
       expect(find.text(l10n.battingStatsTitle), findsOneWidget);
-      expect(find.text(l10n.teamBattingTitle), findsOneWidget);
+      expect(find.text(l10n.noBattingStatsLabel), findsOneWidget);
       expect(find.text(l10n.pitchingStatsTitle), findsOneWidget);
-      expect(find.text(l10n.teamPitchingTitle), findsOneWidget);
+      expect(find.text(l10n.noPitchingStatsLabel), findsOneWidget);
       expect(find.text('.000'), findsOneWidget);
       expect(find.text('-.--'), findsOneWidget);
     });
@@ -58,16 +58,19 @@ void main() {
       );
       await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailSingle,
       );
       await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailDouble,
       );
       await repository.addPlateAppearance(
         gameId: game.id,
+        batterName: '自分',
         resultType: AppConstants.resultOut,
         resultDetail: AppConstants.detailK,
       );
@@ -75,6 +78,7 @@ void main() {
       await tester.pumpWidget(buildSubjectWithDatabase(database));
       await tester.pumpAndSettle();
 
+      expect(find.text('自分'), findsOneWidget);
       expect(find.text('.667'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });

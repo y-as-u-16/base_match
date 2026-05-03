@@ -15,10 +15,13 @@ abstract class GameRepository {
     required String awayTeamName,
     String? location,
     int? innings,
+    int homeScore = 0,
+    int awayScore = 0,
   });
 
   Future<Game?> addPlateAppearance({
     required String gameId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
     int? inning,
@@ -27,6 +30,7 @@ abstract class GameRepository {
 
   Future<PitchingAppearance> addPitchingAppearance({
     required String gameId,
+    required String pitcherName,
     required int outsPitched,
     required int runs,
     required int earnedRuns,

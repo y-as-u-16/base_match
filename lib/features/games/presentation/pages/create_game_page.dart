@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,8 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   final _homeTeamController = TextEditingController();
   final _awayTeamController = TextEditingController();
   final _locationController = TextEditingController();
+  final _homeScoreController = TextEditingController(text: '0');
+  final _awayScoreController = TextEditingController(text: '0');
   DateTime _selectedDate = DateTime.now();
   int _selectedInnings = 7;
 
@@ -29,6 +32,8 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
     _homeTeamController.dispose();
     _awayTeamController.dispose();
     _locationController.dispose();
+    _homeScoreController.dispose();
+    _awayScoreController.dispose();
     super.dispose();
   }
 
@@ -45,6 +50,8 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   Future<void> _onCreate() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final homeScore = int.parse(_homeScoreController.text.trim());
+    final awayScore = int.parse(_awayScoreController.text.trim());
     final game = await ref
         .read(localGameStoreProvider.notifier)
         .createGame(
@@ -55,6 +62,8 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
               ? null
               : _locationController.text.trim(),
           innings: _selectedInnings,
+          homeScore: homeScore,
+          awayScore: awayScore,
         );
     if (!mounted) return;
     context.go('/games/${game.id}');
@@ -106,6 +115,36 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
                     : null,
               ),
               const Gap(16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _homeScoreController,
+                      decoration: InputDecoration(
+                        labelText: l10n.homeScoreLabel,
+                        prefixIcon: const Icon(Icons.scoreboard_outlined),
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: _scoreValidator,
+                    ),
+                  ),
+                  const Gap(12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _awayScoreController,
+                      decoration: InputDecoration(
+                        labelText: l10n.awayScoreLabel,
+                        prefixIcon: const Icon(Icons.scoreboard_outlined),
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: _scoreValidator,
+                    ),
+                  ),
+                ],
+              ),
+              const Gap(16),
               TextFormField(
                 controller: _locationController,
                 decoration: InputDecoration(
@@ -140,5 +179,15 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
         ),
       ),
     );
+  }
+
+  String? _scoreValidator(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return AppLocalizations.of(context).scoreRequired;
+    final score = int.tryParse(text);
+    if (score == null || score < 0) {
+      return AppLocalizations.of(context).scoreMustBeNonNegative;
+    }
+    return null;
   }
 }

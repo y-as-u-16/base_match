@@ -113,6 +113,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get awayTeamNameRequired => '相手チーム名を入力してください';
 
   @override
+  String get homeScoreLabel => '自チーム得点';
+
+  @override
+  String get awayScoreLabel => '相手チーム得点';
+
+  @override
+  String get scoreRequired => '点数を入力してください';
+
+  @override
+  String get scoreMustBeNonNegative => '0以上の点数を入力してください';
+
+  @override
   String get locationOptionalLabel => '球場（任意）';
 
   @override
@@ -242,6 +254,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notSelectedLabel => '未選択';
 
   @override
+  String get playerNameRequired => '選手名を入力してください';
+
+  @override
+  String get batterNameLabel => '打者名';
+
+  @override
   String plateAppearanceSummary(int inning, String result, int rbi) {
     return '$inning回 / $result / 打点 $rbi';
   }
@@ -276,6 +294,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pitchingInputTitle => 'ピッチング入力';
+
+  @override
+  String get pitcherNameLabel => '投手名';
 
   @override
   String pitchingInputSummary(String innings, int runs, int earnedRuns) {
@@ -333,7 +354,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pitchingStatsTitle => 'ピッチング成績';
 
   @override
-  String get teamBattingTitle => 'チーム打撃';
+  String get personalBattingTitle => '自分の打撃';
+
+  @override
+  String get noBattingStatsLabel => '打撃記録なし';
 
   @override
   String battingStatsSummary(int pa, int ab, int hits, int hr, int so) {
@@ -341,7 +365,10 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get teamPitchingTitle => 'チーム投手';
+  String get personalPitchingTitle => '自分の投球';
+
+  @override
+  String get noPitchingStatsLabel => '投球記録なし';
 
   @override
   String pitchingStatsSummary(

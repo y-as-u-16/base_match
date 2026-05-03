@@ -9,6 +9,7 @@ void main() {
       final appearance = PitchingAppearance(
         id: '550e8400-e29b-41d4-a716-446655440000',
         gameId: '550e8400-e29b-41d4-a716-446655440001',
+        pitcherName: '佐藤',
         outsPitched: 10,
         runs: 2,
         earnedRuns: 1,
@@ -21,6 +22,7 @@ void main() {
 
       expect(appearance.id, '550e8400-e29b-41d4-a716-446655440000');
       expect(appearance.gameId, '550e8400-e29b-41d4-a716-446655440001');
+      expect(appearance.pitcherName, '佐藤');
       expect(appearance.outsPitched, 10);
       expect(appearance.runs, 2);
       expect(appearance.earnedRuns, 1);

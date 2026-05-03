@@ -54,6 +54,37 @@ class BattingStats {
   }
 }
 
+class NamedBattingStats {
+  const NamedBattingStats({required this.playerName, required this.stats});
+
+  final String playerName;
+  final BattingStats stats;
+
+  static List<NamedBattingStats> fromAppearances(
+    Iterable<PlateAppearance> appearances,
+  ) {
+    final grouped = <String, List<PlateAppearance>>{};
+    for (final appearance in appearances) {
+      grouped.putIfAbsent(appearance.batterName, () => []).add(appearance);
+    }
+
+    final rows = grouped.entries
+        .map(
+          (entry) => NamedBattingStats(
+            playerName: entry.key,
+            stats: BattingStats.fromAppearances(entry.value),
+          ),
+        )
+        .toList();
+    rows.sort((a, b) {
+      final paCompare = b.stats.pa.compareTo(a.stats.pa);
+      if (paCompare != 0) return paCompare;
+      return a.playerName.compareTo(b.playerName);
+    });
+    return rows;
+  }
+}
+
 class PitchingStats {
   const PitchingStats({
     required this.games,
@@ -104,5 +135,36 @@ class PitchingStats {
       earnedRuns: earnedRuns + appearance.earnedRuns,
       strikeouts: strikeouts + appearance.strikeouts,
     );
+  }
+}
+
+class NamedPitchingStats {
+  const NamedPitchingStats({required this.playerName, required this.stats});
+
+  final String playerName;
+  final PitchingStats stats;
+
+  static List<NamedPitchingStats> fromAppearances(
+    Iterable<PitchingAppearance> appearances,
+  ) {
+    final grouped = <String, List<PitchingAppearance>>{};
+    for (final appearance in appearances) {
+      grouped.putIfAbsent(appearance.pitcherName, () => []).add(appearance);
+    }
+
+    final rows = grouped.entries
+        .map(
+          (entry) => NamedPitchingStats(
+            playerName: entry.key,
+            stats: PitchingStats.fromAppearances(entry.value),
+          ),
+        )
+        .toList();
+    rows.sort((a, b) {
+      final gamesCompare = b.stats.games.compareTo(a.stats.games);
+      if (gamesCompare != 0) return gamesCompare;
+      return a.playerName.compareTo(b.playerName);
+    });
+    return rows;
   }
 }

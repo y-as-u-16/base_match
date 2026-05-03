@@ -648,6 +648,18 @@ class $LocalPlateAppearancesTable extends LocalPlateAppearances
       'REFERENCES local_games (id)',
     ),
   );
+  static const VerificationMeta _batterNameMeta = const VerificationMeta(
+    'batterName',
+  );
+  @override
+  late final GeneratedColumn<String> batterName = GeneratedColumn<String>(
+    'batter_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('自分'),
+  );
   static const VerificationMeta _inningMeta = const VerificationMeta('inning');
   @override
   late final GeneratedColumn<int> inning = GeneratedColumn<int>(
@@ -703,6 +715,7 @@ class $LocalPlateAppearancesTable extends LocalPlateAppearances
   List<GeneratedColumn> get $columns => [
     id,
     gameId,
+    batterName,
     inning,
     resultType,
     resultDetail,
@@ -733,6 +746,12 @@ class $LocalPlateAppearancesTable extends LocalPlateAppearances
       );
     } else if (isInserting) {
       context.missing(_gameIdMeta);
+    }
+    if (data.containsKey('batter_name')) {
+      context.handle(
+        _batterNameMeta,
+        batterName.isAcceptableOrUnknown(data['batter_name']!, _batterNameMeta),
+      );
     }
     if (data.containsKey('inning')) {
       context.handle(
@@ -790,6 +809,10 @@ class $LocalPlateAppearancesTable extends LocalPlateAppearances
         DriftSqlType.string,
         data['${effectivePrefix}game_id'],
       )!,
+      batterName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}batter_name'],
+      )!,
       inning: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}inning'],
@@ -823,6 +846,7 @@ class LocalPlateAppearance extends DataClass
     implements Insertable<LocalPlateAppearance> {
   final String id;
   final String gameId;
+  final String batterName;
   final int? inning;
   final String resultType;
   final String resultDetail;
@@ -831,6 +855,7 @@ class LocalPlateAppearance extends DataClass
   const LocalPlateAppearance({
     required this.id,
     required this.gameId,
+    required this.batterName,
     this.inning,
     required this.resultType,
     required this.resultDetail,
@@ -842,6 +867,7 @@ class LocalPlateAppearance extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['game_id'] = Variable<String>(gameId);
+    map['batter_name'] = Variable<String>(batterName);
     if (!nullToAbsent || inning != null) {
       map['inning'] = Variable<int>(inning);
     }
@@ -858,6 +884,7 @@ class LocalPlateAppearance extends DataClass
     return LocalPlateAppearancesCompanion(
       id: Value(id),
       gameId: Value(gameId),
+      batterName: Value(batterName),
       inning: inning == null && nullToAbsent
           ? const Value.absent()
           : Value(inning),
@@ -876,6 +903,7 @@ class LocalPlateAppearance extends DataClass
     return LocalPlateAppearance(
       id: serializer.fromJson<String>(json['id']),
       gameId: serializer.fromJson<String>(json['gameId']),
+      batterName: serializer.fromJson<String>(json['batterName']),
       inning: serializer.fromJson<int?>(json['inning']),
       resultType: serializer.fromJson<String>(json['resultType']),
       resultDetail: serializer.fromJson<String>(json['resultDetail']),
@@ -889,6 +917,7 @@ class LocalPlateAppearance extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'gameId': serializer.toJson<String>(gameId),
+      'batterName': serializer.toJson<String>(batterName),
       'inning': serializer.toJson<int?>(inning),
       'resultType': serializer.toJson<String>(resultType),
       'resultDetail': serializer.toJson<String>(resultDetail),
@@ -900,6 +929,7 @@ class LocalPlateAppearance extends DataClass
   LocalPlateAppearance copyWith({
     String? id,
     String? gameId,
+    String? batterName,
     Value<int?> inning = const Value.absent(),
     String? resultType,
     String? resultDetail,
@@ -908,6 +938,7 @@ class LocalPlateAppearance extends DataClass
   }) => LocalPlateAppearance(
     id: id ?? this.id,
     gameId: gameId ?? this.gameId,
+    batterName: batterName ?? this.batterName,
     inning: inning.present ? inning.value : this.inning,
     resultType: resultType ?? this.resultType,
     resultDetail: resultDetail ?? this.resultDetail,
@@ -918,6 +949,9 @@ class LocalPlateAppearance extends DataClass
     return LocalPlateAppearance(
       id: data.id.present ? data.id.value : this.id,
       gameId: data.gameId.present ? data.gameId.value : this.gameId,
+      batterName: data.batterName.present
+          ? data.batterName.value
+          : this.batterName,
       inning: data.inning.present ? data.inning.value : this.inning,
       resultType: data.resultType.present
           ? data.resultType.value
@@ -935,6 +969,7 @@ class LocalPlateAppearance extends DataClass
     return (StringBuffer('LocalPlateAppearance(')
           ..write('id: $id, ')
           ..write('gameId: $gameId, ')
+          ..write('batterName: $batterName, ')
           ..write('inning: $inning, ')
           ..write('resultType: $resultType, ')
           ..write('resultDetail: $resultDetail, ')
@@ -945,14 +980,23 @@ class LocalPlateAppearance extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, gameId, inning, resultType, resultDetail, rbi, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    gameId,
+    batterName,
+    inning,
+    resultType,
+    resultDetail,
+    rbi,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalPlateAppearance &&
           other.id == this.id &&
           other.gameId == this.gameId &&
+          other.batterName == this.batterName &&
           other.inning == this.inning &&
           other.resultType == this.resultType &&
           other.resultDetail == this.resultDetail &&
@@ -964,6 +1008,7 @@ class LocalPlateAppearancesCompanion
     extends UpdateCompanion<LocalPlateAppearance> {
   final Value<String> id;
   final Value<String> gameId;
+  final Value<String> batterName;
   final Value<int?> inning;
   final Value<String> resultType;
   final Value<String> resultDetail;
@@ -973,6 +1018,7 @@ class LocalPlateAppearancesCompanion
   const LocalPlateAppearancesCompanion({
     this.id = const Value.absent(),
     this.gameId = const Value.absent(),
+    this.batterName = const Value.absent(),
     this.inning = const Value.absent(),
     this.resultType = const Value.absent(),
     this.resultDetail = const Value.absent(),
@@ -983,6 +1029,7 @@ class LocalPlateAppearancesCompanion
   LocalPlateAppearancesCompanion.insert({
     required String id,
     required String gameId,
+    this.batterName = const Value.absent(),
     this.inning = const Value.absent(),
     required String resultType,
     required String resultDetail,
@@ -997,6 +1044,7 @@ class LocalPlateAppearancesCompanion
   static Insertable<LocalPlateAppearance> custom({
     Expression<String>? id,
     Expression<String>? gameId,
+    Expression<String>? batterName,
     Expression<int>? inning,
     Expression<String>? resultType,
     Expression<String>? resultDetail,
@@ -1007,6 +1055,7 @@ class LocalPlateAppearancesCompanion
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (gameId != null) 'game_id': gameId,
+      if (batterName != null) 'batter_name': batterName,
       if (inning != null) 'inning': inning,
       if (resultType != null) 'result_type': resultType,
       if (resultDetail != null) 'result_detail': resultDetail,
@@ -1019,6 +1068,7 @@ class LocalPlateAppearancesCompanion
   LocalPlateAppearancesCompanion copyWith({
     Value<String>? id,
     Value<String>? gameId,
+    Value<String>? batterName,
     Value<int?>? inning,
     Value<String>? resultType,
     Value<String>? resultDetail,
@@ -1029,6 +1079,7 @@ class LocalPlateAppearancesCompanion
     return LocalPlateAppearancesCompanion(
       id: id ?? this.id,
       gameId: gameId ?? this.gameId,
+      batterName: batterName ?? this.batterName,
       inning: inning ?? this.inning,
       resultType: resultType ?? this.resultType,
       resultDetail: resultDetail ?? this.resultDetail,
@@ -1046,6 +1097,9 @@ class LocalPlateAppearancesCompanion
     }
     if (gameId.present) {
       map['game_id'] = Variable<String>(gameId.value);
+    }
+    if (batterName.present) {
+      map['batter_name'] = Variable<String>(batterName.value);
     }
     if (inning.present) {
       map['inning'] = Variable<int>(inning.value);
@@ -1073,6 +1127,7 @@ class LocalPlateAppearancesCompanion
     return (StringBuffer('LocalPlateAppearancesCompanion(')
           ..write('id: $id, ')
           ..write('gameId: $gameId, ')
+          ..write('batterName: $batterName, ')
           ..write('inning: $inning, ')
           ..write('resultType: $resultType, ')
           ..write('resultDetail: $resultDetail, ')
@@ -1110,6 +1165,18 @@ class $LocalPitchingAppearancesTable extends LocalPitchingAppearances
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES local_games (id)',
     ),
+  );
+  static const VerificationMeta _pitcherNameMeta = const VerificationMeta(
+    'pitcherName',
+  );
+  @override
+  late final GeneratedColumn<String> pitcherName = GeneratedColumn<String>(
+    'pitcher_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('自分'),
   );
   static const VerificationMeta _outsPitchedMeta = const VerificationMeta(
     'outsPitched',
@@ -1199,6 +1266,7 @@ class $LocalPitchingAppearancesTable extends LocalPitchingAppearances
   List<GeneratedColumn> get $columns => [
     id,
     gameId,
+    pitcherName,
     outsPitched,
     runs,
     earnedRuns,
@@ -1232,6 +1300,15 @@ class $LocalPitchingAppearancesTable extends LocalPitchingAppearances
       );
     } else if (isInserting) {
       context.missing(_gameIdMeta);
+    }
+    if (data.containsKey('pitcher_name')) {
+      context.handle(
+        _pitcherNameMeta,
+        pitcherName.isAcceptableOrUnknown(
+          data['pitcher_name']!,
+          _pitcherNameMeta,
+        ),
+      );
     }
     if (data.containsKey('outs_pitched')) {
       context.handle(
@@ -1326,6 +1403,10 @@ class $LocalPitchingAppearancesTable extends LocalPitchingAppearances
         DriftSqlType.string,
         data['${effectivePrefix}game_id'],
       )!,
+      pitcherName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pitcher_name'],
+      )!,
       outsPitched: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}outs_pitched'],
@@ -1371,6 +1452,7 @@ class LocalPitchingAppearance extends DataClass
     implements Insertable<LocalPitchingAppearance> {
   final String id;
   final String gameId;
+  final String pitcherName;
   final int outsPitched;
   final int runs;
   final int earnedRuns;
@@ -1382,6 +1464,7 @@ class LocalPitchingAppearance extends DataClass
   const LocalPitchingAppearance({
     required this.id,
     required this.gameId,
+    required this.pitcherName,
     required this.outsPitched,
     required this.runs,
     required this.earnedRuns,
@@ -1396,6 +1479,7 @@ class LocalPitchingAppearance extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['game_id'] = Variable<String>(gameId);
+    map['pitcher_name'] = Variable<String>(pitcherName);
     map['outs_pitched'] = Variable<int>(outsPitched);
     map['runs'] = Variable<int>(runs);
     map['earned_runs'] = Variable<int>(earnedRuns);
@@ -1411,6 +1495,7 @@ class LocalPitchingAppearance extends DataClass
     return LocalPitchingAppearancesCompanion(
       id: Value(id),
       gameId: Value(gameId),
+      pitcherName: Value(pitcherName),
       outsPitched: Value(outsPitched),
       runs: Value(runs),
       earnedRuns: Value(earnedRuns),
@@ -1430,6 +1515,7 @@ class LocalPitchingAppearance extends DataClass
     return LocalPitchingAppearance(
       id: serializer.fromJson<String>(json['id']),
       gameId: serializer.fromJson<String>(json['gameId']),
+      pitcherName: serializer.fromJson<String>(json['pitcherName']),
       outsPitched: serializer.fromJson<int>(json['outsPitched']),
       runs: serializer.fromJson<int>(json['runs']),
       earnedRuns: serializer.fromJson<int>(json['earnedRuns']),
@@ -1446,6 +1532,7 @@ class LocalPitchingAppearance extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'gameId': serializer.toJson<String>(gameId),
+      'pitcherName': serializer.toJson<String>(pitcherName),
       'outsPitched': serializer.toJson<int>(outsPitched),
       'runs': serializer.toJson<int>(runs),
       'earnedRuns': serializer.toJson<int>(earnedRuns),
@@ -1460,6 +1547,7 @@ class LocalPitchingAppearance extends DataClass
   LocalPitchingAppearance copyWith({
     String? id,
     String? gameId,
+    String? pitcherName,
     int? outsPitched,
     int? runs,
     int? earnedRuns,
@@ -1471,6 +1559,7 @@ class LocalPitchingAppearance extends DataClass
   }) => LocalPitchingAppearance(
     id: id ?? this.id,
     gameId: gameId ?? this.gameId,
+    pitcherName: pitcherName ?? this.pitcherName,
     outsPitched: outsPitched ?? this.outsPitched,
     runs: runs ?? this.runs,
     earnedRuns: earnedRuns ?? this.earnedRuns,
@@ -1486,6 +1575,9 @@ class LocalPitchingAppearance extends DataClass
     return LocalPitchingAppearance(
       id: data.id.present ? data.id.value : this.id,
       gameId: data.gameId.present ? data.gameId.value : this.gameId,
+      pitcherName: data.pitcherName.present
+          ? data.pitcherName.value
+          : this.pitcherName,
       outsPitched: data.outsPitched.present
           ? data.outsPitched.value
           : this.outsPitched,
@@ -1512,6 +1604,7 @@ class LocalPitchingAppearance extends DataClass
     return (StringBuffer('LocalPitchingAppearance(')
           ..write('id: $id, ')
           ..write('gameId: $gameId, ')
+          ..write('pitcherName: $pitcherName, ')
           ..write('outsPitched: $outsPitched, ')
           ..write('runs: $runs, ')
           ..write('earnedRuns: $earnedRuns, ')
@@ -1528,6 +1621,7 @@ class LocalPitchingAppearance extends DataClass
   int get hashCode => Object.hash(
     id,
     gameId,
+    pitcherName,
     outsPitched,
     runs,
     earnedRuns,
@@ -1543,6 +1637,7 @@ class LocalPitchingAppearance extends DataClass
       (other is LocalPitchingAppearance &&
           other.id == this.id &&
           other.gameId == this.gameId &&
+          other.pitcherName == this.pitcherName &&
           other.outsPitched == this.outsPitched &&
           other.runs == this.runs &&
           other.earnedRuns == this.earnedRuns &&
@@ -1557,6 +1652,7 @@ class LocalPitchingAppearancesCompanion
     extends UpdateCompanion<LocalPitchingAppearance> {
   final Value<String> id;
   final Value<String> gameId;
+  final Value<String> pitcherName;
   final Value<int> outsPitched;
   final Value<int> runs;
   final Value<int> earnedRuns;
@@ -1569,6 +1665,7 @@ class LocalPitchingAppearancesCompanion
   const LocalPitchingAppearancesCompanion({
     this.id = const Value.absent(),
     this.gameId = const Value.absent(),
+    this.pitcherName = const Value.absent(),
     this.outsPitched = const Value.absent(),
     this.runs = const Value.absent(),
     this.earnedRuns = const Value.absent(),
@@ -1582,6 +1679,7 @@ class LocalPitchingAppearancesCompanion
   LocalPitchingAppearancesCompanion.insert({
     required String id,
     required String gameId,
+    this.pitcherName = const Value.absent(),
     required int outsPitched,
     required int runs,
     required int earnedRuns,
@@ -1604,6 +1702,7 @@ class LocalPitchingAppearancesCompanion
   static Insertable<LocalPitchingAppearance> custom({
     Expression<String>? id,
     Expression<String>? gameId,
+    Expression<String>? pitcherName,
     Expression<int>? outsPitched,
     Expression<int>? runs,
     Expression<int>? earnedRuns,
@@ -1617,6 +1716,7 @@ class LocalPitchingAppearancesCompanion
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (gameId != null) 'game_id': gameId,
+      if (pitcherName != null) 'pitcher_name': pitcherName,
       if (outsPitched != null) 'outs_pitched': outsPitched,
       if (runs != null) 'runs': runs,
       if (earnedRuns != null) 'earned_runs': earnedRuns,
@@ -1632,6 +1732,7 @@ class LocalPitchingAppearancesCompanion
   LocalPitchingAppearancesCompanion copyWith({
     Value<String>? id,
     Value<String>? gameId,
+    Value<String>? pitcherName,
     Value<int>? outsPitched,
     Value<int>? runs,
     Value<int>? earnedRuns,
@@ -1645,6 +1746,7 @@ class LocalPitchingAppearancesCompanion
     return LocalPitchingAppearancesCompanion(
       id: id ?? this.id,
       gameId: gameId ?? this.gameId,
+      pitcherName: pitcherName ?? this.pitcherName,
       outsPitched: outsPitched ?? this.outsPitched,
       runs: runs ?? this.runs,
       earnedRuns: earnedRuns ?? this.earnedRuns,
@@ -1665,6 +1767,9 @@ class LocalPitchingAppearancesCompanion
     }
     if (gameId.present) {
       map['game_id'] = Variable<String>(gameId.value);
+    }
+    if (pitcherName.present) {
+      map['pitcher_name'] = Variable<String>(pitcherName.value);
     }
     if (outsPitched.present) {
       map['outs_pitched'] = Variable<int>(outsPitched.value);
@@ -1701,6 +1806,7 @@ class LocalPitchingAppearancesCompanion
     return (StringBuffer('LocalPitchingAppearancesCompanion(')
           ..write('id: $id, ')
           ..write('gameId: $gameId, ')
+          ..write('pitcherName: $pitcherName, ')
           ..write('outsPitched: $outsPitched, ')
           ..write('runs: $runs, ')
           ..write('earnedRuns: $earnedRuns, ')
@@ -2269,6 +2375,7 @@ typedef $$LocalPlateAppearancesTableCreateCompanionBuilder =
     LocalPlateAppearancesCompanion Function({
       required String id,
       required String gameId,
+      Value<String> batterName,
       Value<int?> inning,
       required String resultType,
       required String resultDetail,
@@ -2280,6 +2387,7 @@ typedef $$LocalPlateAppearancesTableUpdateCompanionBuilder =
     LocalPlateAppearancesCompanion Function({
       Value<String> id,
       Value<String> gameId,
+      Value<String> batterName,
       Value<int?> inning,
       Value<String> resultType,
       Value<String> resultDetail,
@@ -2332,6 +2440,11 @@ class $$LocalPlateAppearancesTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get batterName => $composableBuilder(
+    column: $table.batterName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2398,6 +2511,11 @@ class $$LocalPlateAppearancesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get batterName => $composableBuilder(
+    column: $table.batterName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get inning => $composableBuilder(
     column: $table.inning,
     builder: (column) => ColumnOrderings(column),
@@ -2458,6 +2576,11 @@ class $$LocalPlateAppearancesTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get batterName => $composableBuilder(
+    column: $table.batterName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get inning =>
       $composableBuilder(column: $table.inning, builder: (column) => column);
@@ -2543,6 +2666,7 @@ class $$LocalPlateAppearancesTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> gameId = const Value.absent(),
+                Value<String> batterName = const Value.absent(),
                 Value<int?> inning = const Value.absent(),
                 Value<String> resultType = const Value.absent(),
                 Value<String> resultDetail = const Value.absent(),
@@ -2552,6 +2676,7 @@ class $$LocalPlateAppearancesTableTableManager
               }) => LocalPlateAppearancesCompanion(
                 id: id,
                 gameId: gameId,
+                batterName: batterName,
                 inning: inning,
                 resultType: resultType,
                 resultDetail: resultDetail,
@@ -2563,6 +2688,7 @@ class $$LocalPlateAppearancesTableTableManager
               ({
                 required String id,
                 required String gameId,
+                Value<String> batterName = const Value.absent(),
                 Value<int?> inning = const Value.absent(),
                 required String resultType,
                 required String resultDetail,
@@ -2572,6 +2698,7 @@ class $$LocalPlateAppearancesTableTableManager
               }) => LocalPlateAppearancesCompanion.insert(
                 id: id,
                 gameId: gameId,
+                batterName: batterName,
                 inning: inning,
                 resultType: resultType,
                 resultDetail: resultDetail,
@@ -2652,6 +2779,7 @@ typedef $$LocalPitchingAppearancesTableCreateCompanionBuilder =
     LocalPitchingAppearancesCompanion Function({
       required String id,
       required String gameId,
+      Value<String> pitcherName,
       required int outsPitched,
       required int runs,
       required int earnedRuns,
@@ -2666,6 +2794,7 @@ typedef $$LocalPitchingAppearancesTableUpdateCompanionBuilder =
     LocalPitchingAppearancesCompanion Function({
       Value<String> id,
       Value<String> gameId,
+      Value<String> pitcherName,
       Value<int> outsPitched,
       Value<int> runs,
       Value<int> earnedRuns,
@@ -2724,6 +2853,11 @@ class $$LocalPitchingAppearancesTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pitcherName => $composableBuilder(
+    column: $table.pitcherName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2805,6 +2939,11 @@ class $$LocalPitchingAppearancesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get pitcherName => $composableBuilder(
+    column: $table.pitcherName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get outsPitched => $composableBuilder(
     column: $table.outsPitched,
     builder: (column) => ColumnOrderings(column),
@@ -2880,6 +3019,11 @@ class $$LocalPitchingAppearancesTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get pitcherName => $composableBuilder(
+    column: $table.pitcherName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get outsPitched => $composableBuilder(
     column: $table.outsPitched,
@@ -2980,6 +3124,7 @@ class $$LocalPitchingAppearancesTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> gameId = const Value.absent(),
+                Value<String> pitcherName = const Value.absent(),
                 Value<int> outsPitched = const Value.absent(),
                 Value<int> runs = const Value.absent(),
                 Value<int> earnedRuns = const Value.absent(),
@@ -2992,6 +3137,7 @@ class $$LocalPitchingAppearancesTableTableManager
               }) => LocalPitchingAppearancesCompanion(
                 id: id,
                 gameId: gameId,
+                pitcherName: pitcherName,
                 outsPitched: outsPitched,
                 runs: runs,
                 earnedRuns: earnedRuns,
@@ -3006,6 +3152,7 @@ class $$LocalPitchingAppearancesTableTableManager
               ({
                 required String id,
                 required String gameId,
+                Value<String> pitcherName = const Value.absent(),
                 required int outsPitched,
                 required int runs,
                 required int earnedRuns,
@@ -3018,6 +3165,7 @@ class $$LocalPitchingAppearancesTableTableManager
               }) => LocalPitchingAppearancesCompanion.insert(
                 id: id,
                 gameId: gameId,
+                pitcherName: pitcherName,
                 outsPitched: outsPitched,
                 runs: runs,
                 earnedRuns: earnedRuns,

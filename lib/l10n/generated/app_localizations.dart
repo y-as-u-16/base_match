@@ -286,6 +286,30 @@ abstract class AppLocalizations {
   /// **'相手チーム名を入力してください'**
   String get awayTeamNameRequired;
 
+  /// No description provided for @homeScoreLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チーム得点'**
+  String get homeScoreLabel;
+
+  /// No description provided for @awayScoreLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'相手チーム得点'**
+  String get awayScoreLabel;
+
+  /// No description provided for @scoreRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'点数を入力してください'**
+  String get scoreRequired;
+
+  /// No description provided for @scoreMustBeNonNegative.
+  ///
+  /// In ja, this message translates to:
+  /// **'0以上の点数を入力してください'**
+  String get scoreMustBeNonNegative;
+
   /// No description provided for @locationOptionalLabel.
   ///
   /// In ja, this message translates to:
@@ -520,6 +544,18 @@ abstract class AppLocalizations {
   /// **'未選択'**
   String get notSelectedLabel;
 
+  /// No description provided for @playerNameRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'選手名を入力してください'**
+  String get playerNameRequired;
+
+  /// No description provided for @batterNameLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'打者名'**
+  String get batterNameLabel;
+
   /// No description provided for @plateAppearanceSummary.
   ///
   /// In ja, this message translates to:
@@ -579,6 +615,12 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'ピッチング入力'**
   String get pitchingInputTitle;
+
+  /// No description provided for @pitcherNameLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'投手名'**
+  String get pitcherNameLabel;
 
   /// No description provided for @pitchingInputSummary.
   ///
@@ -682,11 +724,17 @@ abstract class AppLocalizations {
   /// **'ピッチング成績'**
   String get pitchingStatsTitle;
 
-  /// No description provided for @teamBattingTitle.
+  /// No description provided for @personalBattingTitle.
   ///
   /// In ja, this message translates to:
-  /// **'チーム打撃'**
-  String get teamBattingTitle;
+  /// **'自分の打撃'**
+  String get personalBattingTitle;
+
+  /// No description provided for @noBattingStatsLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'打撃記録なし'**
+  String get noBattingStatsLabel;
 
   /// No description provided for @battingStatsSummary.
   ///
@@ -694,11 +742,17 @@ abstract class AppLocalizations {
   /// **'打席 {pa} / 打数 {ab} / 安打 {hits} / 本塁打 {hr} / 三振 {so}'**
   String battingStatsSummary(int pa, int ab, int hits, int hr, int so);
 
-  /// No description provided for @teamPitchingTitle.
+  /// No description provided for @personalPitchingTitle.
   ///
   /// In ja, this message translates to:
-  /// **'チーム投手'**
-  String get teamPitchingTitle;
+  /// **'自分の投球'**
+  String get personalPitchingTitle;
+
+  /// No description provided for @noPitchingStatsLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'投球記録なし'**
+  String get noPitchingStatsLabel;
 
   /// No description provided for @pitchingStatsSummary.
   ///

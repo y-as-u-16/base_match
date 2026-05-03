@@ -2,6 +2,7 @@ class PitchingAppearance {
   const PitchingAppearance({
     required this.id,
     required this.gameId,
+    required this.pitcherName,
     required this.outsPitched,
     required this.runs,
     required this.earnedRuns,
@@ -14,6 +15,7 @@ class PitchingAppearance {
 
   final String id;
   final String gameId;
+  final String pitcherName;
   final int outsPitched;
   final int runs;
   final int earnedRuns;

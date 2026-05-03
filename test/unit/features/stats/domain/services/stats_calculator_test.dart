@@ -71,6 +71,35 @@ void main() {
       expect(stats.hr, 1);
       expect(stats.averageLabel, '1.000');
     });
+
+    test('打者名ごとに個人別打撃成績を分ける', () {
+      final rows = NamedBattingStats.fromAppearances([
+        _plate(
+          id: 'pa-1',
+          batterName: '佐藤',
+          resultType: AppConstants.resultHit,
+          resultDetail: AppConstants.detailSingle,
+        ),
+        _plate(
+          id: 'pa-2',
+          batterName: '田中',
+          resultType: AppConstants.resultOut,
+          resultDetail: AppConstants.detailK,
+        ),
+        _plate(
+          id: 'pa-3',
+          batterName: '佐藤',
+          resultType: AppConstants.resultWalk,
+          resultDetail: AppConstants.detailBb,
+        ),
+      ]);
+
+      expect(rows.map((row) => row.playerName), ['佐藤', '田中']);
+      expect(rows.first.stats.pa, 2);
+      expect(rows.first.stats.hits, 1);
+      expect(rows.last.stats.pa, 1);
+      expect(rows.last.stats.so, 1);
+    });
   });
 
   group('PitchingStats', () {
@@ -106,17 +135,51 @@ void main() {
 
       expect(stats.inningsLabel, '1.1');
     });
+
+    test('投手名ごとに個人別投球成績を分ける', () {
+      final rows = NamedPitchingStats.fromAppearances([
+        _pitching(
+          id: 'pit-1',
+          pitcherName: '佐藤',
+          outsPitched: 3,
+          earnedRuns: 1,
+          strikeouts: 2,
+        ),
+        _pitching(
+          id: 'pit-2',
+          pitcherName: '田中',
+          outsPitched: 6,
+          earnedRuns: 0,
+          strikeouts: 3,
+        ),
+        _pitching(
+          id: 'pit-3',
+          pitcherName: '佐藤',
+          outsPitched: 3,
+          earnedRuns: 1,
+          strikeouts: 1,
+        ),
+      ]);
+
+      expect(rows.map((row) => row.playerName), ['佐藤', '田中']);
+      expect(rows.first.stats.games, 2);
+      expect(rows.first.stats.earnedRuns, 2);
+      expect(rows.last.stats.games, 1);
+      expect(rows.last.stats.strikeouts, 3);
+    });
   });
 }
 
 PlateAppearance _plate({
   required String id,
+  String batterName = '自分',
   required String resultType,
   required String resultDetail,
 }) {
   return PlateAppearance(
     id: id,
     gameId: 'game-1',
+    batterName: batterName,
     resultType: resultType,
     resultDetail: resultDetail,
     createdAt: DateTime.utc(2026, 5, 2),
@@ -125,6 +188,7 @@ PlateAppearance _plate({
 
 PitchingAppearance _pitching({
   required String id,
+  String pitcherName = '自分',
   required int outsPitched,
   int earnedRuns = 0,
   int strikeouts = 0,
@@ -132,6 +196,7 @@ PitchingAppearance _pitching({
   return PitchingAppearance(
     id: id,
     gameId: 'game-1',
+    pitcherName: pitcherName,
     outsPitched: outsPitched,
     runs: earnedRuns,
     earnedRuns: earnedRuns,

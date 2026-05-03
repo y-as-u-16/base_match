@@ -17,6 +17,7 @@ class PitchingInputPage extends ConsumerStatefulWidget {
 }
 
 class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
+  final _pitcherNameController = TextEditingController(text: '自分');
   int _outsPitched = 3;
   int _runs = 0;
   int _earnedRuns = 0;
@@ -25,11 +26,28 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
   int _strikeouts = 0;
   int _homeRunsAllowed = 0;
 
+  @override
+  void dispose() {
+    _pitcherNameController.dispose();
+    super.dispose();
+  }
+
   Future<void> _onSubmit() async {
+    final pitcherName = _pitcherNameController.text.trim();
+    if (pitcherName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).playerNameRequired),
+        ),
+      );
+      return;
+    }
+
     await ref
         .read(localGameStoreProvider.notifier)
         .addPitchingAppearance(
           gameId: widget.gameId,
+          pitcherName: pitcherName,
           outsPitched: _outsPitched,
           runs: _runs,
           earnedRuns: _earnedRuns,
@@ -106,6 +124,14 @@ class _PitchingInputPageState extends ConsumerState<PitchingInputPage> {
             ),
           ),
           const Gap(16),
+          TextField(
+            controller: _pitcherNameController,
+            decoration: InputDecoration(
+              labelText: l10n.pitcherNameLabel,
+              prefixIcon: const Icon(Icons.person_outline),
+            ),
+          ),
+          const Gap(12),
           _OutsCounter(outsPitched: _outsPitched, onChanged: _setOuts),
           const Gap(20),
           _CounterGrid(

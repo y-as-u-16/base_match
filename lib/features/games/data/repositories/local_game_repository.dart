@@ -42,11 +42,15 @@ class LocalGameRepository implements GameRepository {
     required String awayTeamName,
     String? location,
     int? innings,
+    int homeScore = 0,
+    int awayScore = 0,
   }) async {
     _validateGameInput(
       homeTeamName: homeTeamName,
       awayTeamName: awayTeamName,
       innings: innings,
+      homeScore: homeScore,
+      awayScore: awayScore,
     );
 
     final now = DateTime.now();
@@ -59,8 +63,8 @@ class LocalGameRepository implements GameRepository {
       status: AppConstants.statusDraft,
       createdAt: now,
       innings: innings,
-      homeScore: 0,
-      awayScore: 0,
+      homeScore: homeScore,
+      awayScore: awayScore,
     );
     await _database.into(_database.localGames).insert(game.toCompanion());
     return game;
@@ -69,6 +73,7 @@ class LocalGameRepository implements GameRepository {
   @override
   Future<Game?> addPlateAppearance({
     required String gameId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
     int? inning,
@@ -76,6 +81,7 @@ class LocalGameRepository implements GameRepository {
   }) async {
     _validatePlateAppearanceInput(
       gameId: gameId,
+      batterName: batterName,
       resultType: resultType,
       resultDetail: resultDetail,
       inning: inning,
@@ -88,6 +94,7 @@ class LocalGameRepository implements GameRepository {
     final appearance = PlateAppearance(
       id: _id(),
       gameId: gameId,
+      batterName: batterName.trim(),
       inning: inning,
       resultType: resultType,
       resultDetail: resultDetail,
@@ -98,17 +105,13 @@ class LocalGameRepository implements GameRepository {
         .into(_database.localPlateAppearances)
         .insert(appearance.toCompanion());
 
-    final updatedScore = (row.homeScore ?? 0) + (rbi ?? 0);
-    await (_database.update(_database.localGames)
-          ..where((table) => table.id.equals(gameId)))
-        .write(LocalGamesCompanion(homeScore: Value(updatedScore)));
-
-    return row.toEntity().copyWith(homeScore: updatedScore);
+    return row.toEntity();
   }
 
   @override
   Future<PitchingAppearance> addPitchingAppearance({
     required String gameId,
+    required String pitcherName,
     required int outsPitched,
     required int runs,
     required int earnedRuns,
@@ -119,6 +122,7 @@ class LocalGameRepository implements GameRepository {
   }) async {
     _validatePitchingAppearanceInput(
       gameId: gameId,
+      pitcherName: pitcherName,
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,
@@ -135,6 +139,7 @@ class LocalGameRepository implements GameRepository {
     final appearance = PitchingAppearance(
       id: _id(),
       gameId: gameId,
+      pitcherName: pitcherName.trim(),
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,
@@ -171,6 +176,8 @@ class LocalGameRepository implements GameRepository {
     required String homeTeamName,
     required String awayTeamName,
     required int? innings,
+    required int homeScore,
+    required int awayScore,
   }) {
     if (homeTeamName.trim().isEmpty) {
       throw ArgumentError.value(homeTeamName, 'homeTeamName', 'Required.');
@@ -181,10 +188,25 @@ class LocalGameRepository implements GameRepository {
     if (innings != null && innings <= 0) {
       throw ArgumentError.value(innings, 'innings', 'Must be positive.');
     }
+    if (homeScore < 0) {
+      throw ArgumentError.value(
+        homeScore,
+        'homeScore',
+        'Must not be negative.',
+      );
+    }
+    if (awayScore < 0) {
+      throw ArgumentError.value(
+        awayScore,
+        'awayScore',
+        'Must not be negative.',
+      );
+    }
   }
 
   void _validatePlateAppearanceInput({
     required String gameId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
     required int? inning,
@@ -192,6 +214,9 @@ class LocalGameRepository implements GameRepository {
   }) {
     if (gameId.trim().isEmpty) {
       throw ArgumentError.value(gameId, 'gameId', 'Required.');
+    }
+    if (batterName.trim().isEmpty) {
+      throw ArgumentError.value(batterName, 'batterName', 'Required.');
     }
     if (resultType.trim().isEmpty) {
       throw ArgumentError.value(resultType, 'resultType', 'Required.');
@@ -209,6 +234,7 @@ class LocalGameRepository implements GameRepository {
 
   void _validatePitchingAppearanceInput({
     required String gameId,
+    required String pitcherName,
     required int outsPitched,
     required int runs,
     required int earnedRuns,
@@ -219,6 +245,9 @@ class LocalGameRepository implements GameRepository {
   }) {
     if (gameId.trim().isEmpty) {
       throw ArgumentError.value(gameId, 'gameId', 'Required.');
+    }
+    if (pitcherName.trim().isEmpty) {
+      throw ArgumentError.value(pitcherName, 'pitcherName', 'Required.');
     }
     if (outsPitched <= 0) {
       throw ArgumentError.value(

@@ -76,6 +76,7 @@ void main() {
       final row = LocalPlateAppearance(
         id: '550e8400-e29b-41d4-a716-446655440010',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
+        batterName: '佐藤',
         inning: 3,
         resultType: AppConstants.resultHit,
         resultDetail: AppConstants.detailDouble,
@@ -87,6 +88,7 @@ void main() {
 
       expect(entity.id, row.id);
       expect(entity.gameId, row.gameId);
+      expect(entity.batterName, '佐藤');
       expect(entity.inning, 3);
       expect(entity.resultType, AppConstants.resultHit);
       expect(entity.resultDetail, AppConstants.detailDouble);
@@ -98,6 +100,7 @@ void main() {
       final entity = PlateAppearance(
         id: '550e8400-e29b-41d4-a716-446655440010',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
+        batterName: '佐藤',
         inning: null,
         resultType: AppConstants.resultWalk,
         resultDetail: AppConstants.detailBb,
@@ -109,6 +112,7 @@ void main() {
 
       expect(companion.id.value, entity.id);
       expect(companion.gameId.value, entity.gameId);
+      expect(companion.batterName.value, '佐藤');
       expect(companion.inning.value, isNull);
       expect(companion.resultType.value, AppConstants.resultWalk);
       expect(companion.resultDetail.value, AppConstants.detailBb);
@@ -124,6 +128,7 @@ void main() {
       final row = LocalPitchingAppearance(
         id: '550e8400-e29b-41d4-a716-446655440020',
         gameId: '550e8400-e29b-41d4-a716-446655440000',
+        pitcherName: '佐藤',
         outsPitched: 9,
         runs: 2,
         earnedRuns: 1,
@@ -138,6 +143,7 @@ void main() {
 
       expect(entity.id, row.id);
       expect(entity.gameId, row.gameId);
+      expect(entity.pitcherName, '佐藤');
       expect(entity.outsPitched, 9);
       expect(entity.runs, 2);
       expect(entity.earnedRuns, 1);
@@ -154,6 +160,7 @@ void main() {
         final entity = PitchingAppearance(
           id: '550e8400-e29b-41d4-a716-446655440020',
           gameId: '550e8400-e29b-41d4-a716-446655440000',
+          pitcherName: '佐藤',
           outsPitched: 9,
           runs: 2,
           earnedRuns: 1,
@@ -168,6 +175,7 @@ void main() {
 
         expect(companion.id.value, entity.id);
         expect(companion.gameId.value, entity.gameId);
+        expect(companion.pitcherName.value, '佐藤');
         expect(companion.outsPitched.value, 9);
         expect(companion.runs.value, 2);
         expect(companion.earnedRuns.value, 1);

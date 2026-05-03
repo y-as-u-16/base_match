@@ -44,6 +44,7 @@ extension LocalPlateAppearanceMapper on LocalPlateAppearance {
     return PlateAppearance(
       id: id,
       gameId: gameId,
+      batterName: batterName,
       inning: inning,
       resultType: resultType,
       resultDetail: resultDetail,
@@ -58,6 +59,7 @@ extension PlateAppearanceMapper on PlateAppearance {
     return LocalPlateAppearancesCompanion.insert(
       id: id,
       gameId: gameId,
+      batterName: Value(batterName),
       inning: Value(inning),
       resultType: resultType,
       resultDetail: resultDetail,
@@ -72,6 +74,7 @@ extension LocalPitchingAppearanceMapper on LocalPitchingAppearance {
     return PitchingAppearance(
       id: id,
       gameId: gameId,
+      pitcherName: pitcherName,
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,
@@ -89,6 +92,7 @@ extension PitchingAppearanceMapper on PitchingAppearance {
     return LocalPitchingAppearancesCompanion.insert(
       id: id,
       gameId: gameId,
+      pitcherName: Value(pitcherName),
       outsPitched: outsPitched,
       runs: runs,
       earnedRuns: earnedRuns,

@@ -26,6 +26,7 @@ class LocalGames extends Table {
 class LocalPlateAppearances extends Table {
   TextColumn get id => text()();
   TextColumn get gameId => text().references(LocalGames, #id)();
+  TextColumn get batterName => text().withDefault(const Constant('自分'))();
   IntColumn get inning => integer().nullable()();
   TextColumn get resultType => text()();
   TextColumn get resultDetail => text()();
@@ -39,6 +40,7 @@ class LocalPlateAppearances extends Table {
 class LocalPitchingAppearances extends Table {
   TextColumn get id => text()();
   TextColumn get gameId => text().references(LocalGames, #id)();
+  TextColumn get pitcherName => text().withDefault(const Constant('自分'))();
   IntColumn get outsPitched => integer()();
   IntColumn get runs => integer()();
   IntColumn get earnedRuns => integer()();
@@ -61,7 +63,25 @@ class LocalDatabase extends _$LocalDatabase {
   LocalDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: (migrator, from, to) async {
+        if (from < 2) {
+          await migrator.addColumn(
+            localPlateAppearances,
+            localPlateAppearances.batterName,
+          );
+          await migrator.addColumn(
+            localPitchingAppearances,
+            localPitchingAppearances.pitcherName,
+          );
+        }
+      },
+    );
+  }
 }
 
 LazyDatabase _openConnection() {
