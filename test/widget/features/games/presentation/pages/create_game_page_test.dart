@@ -44,7 +44,7 @@ void main() {
   }
 
   group('CreateGamePage', () {
-    testWidgets('自チームがない場合は試合作成画面から追加できる', (tester) async {
+    testWidgets('自チームがない場合は試合作成画面から追加してそのまま試合を作成できる', (tester) async {
       final database = LocalDatabase.forTesting(NativeDatabase.memory());
       addTearDown(database.close);
 
@@ -70,6 +70,28 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(l10n.myTeamCreatedMessage), findsOneWidget);
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+        find.widgetWithText(TextFormField, l10n.awayTeamNameLabel),
+        'Osaka Tigers',
+      );
+      await tester.ensureVisible(
+        find.widgetWithText(FilledButton, l10n.createButton),
+      );
+      await tester.tap(find.widgetWithText(FilledButton, l10n.createButton));
+      await tester.pumpAndSettle();
+
+      expect(find.text('created-game'), findsOneWidget);
+
+      final teams = await database.select(database.localMyTeams).get();
+      final games = await database.select(database.localGames).get();
+      expect(teams, hasLength(1));
+      expect(teams.single.name, 'Tokyo Bears');
+      expect(games, hasLength(1));
+      expect(games.single.myTeamId, teams.single.id);
+      expect(games.single.awayTeamName, 'Osaka Tigers');
     });
 
     testWidgets('選択した自チーム ID で試合を作成する', (tester) async {
