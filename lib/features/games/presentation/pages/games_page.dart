@@ -20,7 +20,7 @@ class GamesPage extends ConsumerWidget {
         title: Text(l10n.recordTitle),
         actions: [
           IconButton(
-            onPressed: () => context.go('/teams'),
+            onPressed: () => context.push('/teams'),
             icon: const Icon(Icons.groups_outlined),
             tooltip: l10n.manageMyTeamsTooltip,
           ),

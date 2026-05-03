@@ -2,10 +2,12 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:base_match/core/local_db/local_database.dart';
 import 'package:base_match/core/local_db/local_database_provider.dart';
 import 'package:base_match/core/theme/app_theme.dart';
+import 'package:base_match/features/games/presentation/pages/games_page.dart';
 import 'package:base_match/features/games/presentation/pages/teams_page.dart';
 import 'package:base_match/l10n/generated/app_localizations.dart';
 import 'package:base_match/l10n/generated/app_localizations_ja.dart';
@@ -25,6 +27,31 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const TeamsPage(),
+      ),
+    );
+  }
+
+  Widget buildRoutedSubject() {
+    final database = LocalDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+
+    final router = GoRouter(
+      initialLocation: '/games',
+      routes: [
+        GoRoute(path: '/games', builder: (context, state) => const GamesPage()),
+        GoRoute(path: '/teams', builder: (context, state) => const TeamsPage()),
+      ],
+    );
+    addTearDown(router.dispose);
+
+    return ProviderScope(
+      overrides: [localDatabaseProvider.overrideWithValue(database)],
+      child: MaterialApp.router(
+        theme: AppTheme.light,
+        locale: const Locale('ja'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        routerConfig: router,
       ),
     );
   }
@@ -61,6 +88,24 @@ void main() {
       expect(find.text('Tokyo Bears'), findsOneWidget);
       expect(find.text(l10n.defaultMyTeamBadge), findsOneWidget);
       expect(find.text(l10n.myTeamCreatedMessage), findsOneWidget);
+    });
+
+    testWidgets('記録画面から自チーム画面に進んだ後に戻れる', (tester) async {
+      await tester.pumpWidget(buildRoutedSubject());
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.recordTitle), findsOneWidget);
+
+      await tester.tap(find.byTooltip(l10n.manageMyTeamsTooltip));
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.myTeamsTitle), findsOneWidget);
+      expect(find.byType(BackButton), findsOneWidget);
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.recordTitle), findsOneWidget);
     });
   });
 }

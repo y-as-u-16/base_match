@@ -132,7 +132,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/teams',
-            pageBuilder: (context, state) => _fadeTransitionPage(
+            pageBuilder: (context, state) => _slideRightTransitionPage(
               key: state.pageKey,
               child: const TeamsPage(),
             ),
