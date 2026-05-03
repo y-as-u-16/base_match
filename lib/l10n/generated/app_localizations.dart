@@ -236,6 +236,48 @@ abstract class AppLocalizations {
   /// **'試合を追加'**
   String get addGameButton;
 
+  /// No description provided for @gamesListViewLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'リスト'**
+  String get gamesListViewLabel;
+
+  /// No description provided for @gamesCalendarViewLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'カレンダー'**
+  String get gamesCalendarViewLabel;
+
+  /// No description provided for @gamesCalendarPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'カレンダー表示は次の手順で追加します'**
+  String get gamesCalendarPlaceholder;
+
+  /// No description provided for @selectedDateGamesTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択日の試合'**
+  String get selectedDateGamesTitle;
+
+  /// No description provided for @noGamesOnSelectedDate.
+  ///
+  /// In ja, this message translates to:
+  /// **'この日の試合はありません'**
+  String get noGamesOnSelectedDate;
+
+  /// No description provided for @previousMonthTooltip.
+  ///
+  /// In ja, this message translates to:
+  /// **'前の月'**
+  String get previousMonthTooltip;
+
+  /// No description provided for @nextMonthTooltip.
+  ///
+  /// In ja, this message translates to:
+  /// **'次の月'**
+  String get nextMonthTooltip;
+
   /// No description provided for @emptyGamesTitle.
   ///
   /// In ja, this message translates to:

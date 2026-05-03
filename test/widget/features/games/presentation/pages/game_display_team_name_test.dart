@@ -64,6 +64,65 @@ void main() {
     expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
   });
 
+  testWidgets('記録一覧はリストとカレンダーを切り替えられる', (tester) async {
+    final seed = await createDatabaseWithGame();
+    addTearDown(seed.database.close);
+
+    await tester.pumpWidget(buildSubject(seed.database, const GamesPage()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('リスト'), findsOneWidget);
+    expect(find.text('カレンダー'), findsOneWidget);
+    expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
+
+    await tester.tap(find.text('カレンダー'));
+    await tester.pumpAndSettle();
+
+    final now = DateTime.now();
+    expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
+    expect(find.text('日'), findsOneWidget);
+    expect(find.text('1'), findsWidgets);
+    expect(find.text('1試合'), findsOneWidget);
+
+    final targetDay = now.day == 1 ? 2 : 1;
+    final targetDayKey = ValueKey(
+      'calendar-day-${now.year}-${now.month}-$targetDay',
+    );
+
+    BoxDecoration dayDecoration() {
+      return tester.widget<DecoratedBox>(find.byKey(targetDayKey)).decoration
+          as BoxDecoration;
+    }
+
+    expect(
+      dayDecoration().color,
+      AppTheme.light.colorScheme.surfaceContainerLowest,
+    );
+
+    await tester.tap(find.byKey(targetDayKey));
+    await tester.pumpAndSettle();
+
+    expect(dayDecoration().color, AppTheme.light.colorScheme.primaryContainer);
+    expect(find.text('この日の試合はありません'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('calendar-day-2026-5-3')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('次の月'));
+    await tester.pumpAndSettle();
+
+    final nextMonth = DateTime(now.year, now.month + 1);
+    expect(find.text('${nextMonth.year}年${nextMonth.month}月'), findsOneWidget);
+    expect(find.text('この日の試合はありません'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('前の月'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
+  });
+
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {
     final seed = await createDatabaseWithGame();
     addTearDown(seed.database.close);

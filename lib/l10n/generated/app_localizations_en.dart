@@ -87,6 +87,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addGameButton => 'Add game';
 
   @override
+  String get gamesListViewLabel => 'List';
+
+  @override
+  String get gamesCalendarViewLabel => 'Calendar';
+
+  @override
+  String get gamesCalendarPlaceholder =>
+      'Calendar view will be added in the next step.';
+
+  @override
+  String get selectedDateGamesTitle => 'Selected date games';
+
+  @override
+  String get noGamesOnSelectedDate => 'No games on this date';
+
+  @override
+  String get previousMonthTooltip => 'Previous month';
+
+  @override
+  String get nextMonthTooltip => 'Next month';
+
+  @override
   String get emptyGamesTitle => 'No games yet';
 
   @override

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Flutter Mobile UI Design"
+  short_description: "Flutter mobile UI/UX improvements"
+  default_prompt: "Use $flutter-mobile-ui-design to improve a Flutter mobile screen's UI/UX while preserving existing behavior."
+
+policy:
+  allow_implicit_invocation: true
