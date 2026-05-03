@@ -83,6 +83,26 @@ void main() {
     expect(find.text('日'), findsOneWidget);
     expect(find.text('1'), findsWidgets);
     expect(find.text('1試合'), findsOneWidget);
+
+    final targetDay = now.day == 1 ? 2 : 1;
+    final targetDayKey = ValueKey(
+      'calendar-day-${now.year}-${now.month}-$targetDay',
+    );
+
+    BoxDecoration dayDecoration() {
+      return tester.widget<DecoratedBox>(find.byKey(targetDayKey)).decoration
+          as BoxDecoration;
+    }
+
+    expect(
+      dayDecoration().color,
+      AppTheme.light.colorScheme.surfaceContainerLowest,
+    );
+
+    await tester.tap(find.byKey(targetDayKey));
+    await tester.pumpAndSettle();
+
+    expect(dayDecoration().color, AppTheme.light.colorScheme.primaryContainer);
   });
 
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {

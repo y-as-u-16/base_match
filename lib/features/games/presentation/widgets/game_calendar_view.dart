@@ -5,7 +5,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/game.dart';
 import '../../domain/entities/my_team.dart';
 
-class GameCalendarView extends StatelessWidget {
+class GameCalendarView extends StatefulWidget {
   const GameCalendarView({
     super.key,
     required this.games,
@@ -16,6 +16,19 @@ class GameCalendarView extends StatelessWidget {
   final Map<String, MyTeam> myTeamById;
 
   @override
+  State<GameCalendarView> createState() => _GameCalendarViewState();
+}
+
+class _GameCalendarViewState extends State<GameCalendarView> {
+  late DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = _dateKey(DateTime.now());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -24,7 +37,7 @@ class GameCalendarView extends StatelessWidget {
     final today = DateTime.now();
     final month = DateTime(today.year, today.month);
     final calendarDays = _buildCalendarDays(month);
-    final gameCountsByDate = _countGamesByDate(games);
+    final gameCountsByDate = _countGamesByDate(widget.games);
     final weekdayLabels = _weekdayLabels(localeName);
 
     return SingleChildScrollView(
@@ -82,6 +95,12 @@ class GameCalendarView extends StatelessWidget {
                 day: day,
                 gameCount: gameCount,
                 gameCountLabel: l10n.seasonGamesCount(gameCount),
+                isSelected: DateUtils.isSameDay(day, _selectedDate),
+                onTap: () {
+                  setState(() {
+                    _selectedDate = _dateKey(day);
+                  });
+                },
               );
             },
           ),
@@ -133,59 +152,81 @@ class _CalendarDayCell extends StatelessWidget {
     required this.day,
     required this.gameCount,
     required this.gameCountLabel,
+    required this.isSelected,
+    required this.onTap,
   });
 
   final DateTime day;
   final int gameCount;
   final String gameCountLabel;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isToday = DateUtils.isSameDay(day, DateTime.now());
+    final foregroundColor = isSelected
+        ? colorScheme.onPrimaryContainer
+        : colorScheme.onSurface;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: isToday
-            ? colorScheme.primaryContainer
-            : colorScheme.surfaceContainerLowest,
-        border: Border.all(
-          color: isToday ? colorScheme.primary : colorScheme.outlineVariant,
+    return Semantics(
+      selected: isSelected,
+      button: true,
+      child: DecoratedBox(
+        key: ValueKey('calendar-day-${day.year}-${day.month}-${day.day}'),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.primaryContainer
+              : colorScheme.surfaceContainerLowest,
+          border: Border.all(
+            color: isSelected
+                ? colorScheme.primary
+                : isToday
+                ? colorScheme.primary.withValues(alpha: 0.45)
+                : colorScheme.outlineVariant,
+            width: isSelected ? 1.5 : 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '${day.day}',
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: isToday
-                    ? colorScheme.onPrimaryContainer
-                    : colorScheme.onSurface,
-                fontWeight: FontWeight.w800,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${day.day}',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: foregroundColor,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  if (gameCount > 0) ...[
+                    const SizedBox(height: 3),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        gameCountLabel,
+                        maxLines: 1,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: isSelected
+                              ? colorScheme.onPrimaryContainer
+                              : colorScheme.primary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-            if (gameCount > 0) ...[
-              const SizedBox(height: 3),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  gameCountLabel,
-                  maxLines: 1,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: isToday
-                        ? colorScheme.onPrimaryContainer
-                        : colorScheme.primary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
