@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/my_team.dart';
-import 'teams_page.dart';
 import '../view_models/game_view_model.dart';
 import '../view_models/my_team_view_model.dart';
+import '../widgets/create_my_team_sheet.dart';
 
 class CreateGamePage extends ConsumerStatefulWidget {
   const CreateGamePage({super.key});

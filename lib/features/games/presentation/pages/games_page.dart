@@ -18,16 +18,7 @@ class GamesPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.recordTitle),
-        actions: [
-          IconButton(
-            onPressed: () => context.push('/teams'),
-            icon: const Icon(Icons.groups_outlined),
-            tooltip: l10n.manageMyTeamsTooltip,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(l10n.recordTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.go('/games/create'),
         icon: const Icon(Icons.add),
