@@ -412,6 +412,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myTeamNameRequired => 'Enter a team name';
 
   @override
+  String get myTeamSelectLabel => 'My team';
+
+  @override
+  String get selectMyTeamRequired => 'Select your team';
+
+  @override
+  String get noMyTeamsForGameTitle => 'Add your team';
+
+  @override
+  String get noMyTeamsForGameSubtitle =>
+      'You need to add your team before creating a game.';
+
+  @override
   String get defaultMyTeamBadge => 'Default';
 
   @override

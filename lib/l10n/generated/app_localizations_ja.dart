@@ -408,6 +408,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get myTeamNameRequired => 'チーム名を入力してください';
 
   @override
+  String get myTeamSelectLabel => '自チーム';
+
+  @override
+  String get selectMyTeamRequired => '自チームを選択してください';
+
+  @override
+  String get noMyTeamsForGameTitle => '自チームを追加してください';
+
+  @override
+  String get noMyTeamsForGameSubtitle => '試合を作成するには、先に自分のチームが必要です。';
+
+  @override
   String get defaultMyTeamBadge => 'デフォルト';
 
   @override

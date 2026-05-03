@@ -5,6 +5,15 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/my_team.dart';
 import '../view_models/my_team_view_model.dart';
 
+Future<MyTeam?> showCreateMyTeamSheet(BuildContext context) {
+  return showModalBottomSheet<MyTeam>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (context) => const _CreateMyTeamSheet(),
+  );
+}
+
 class TeamsPage extends ConsumerWidget {
   const TeamsPage({super.key});
 
@@ -16,12 +25,14 @@ class TeamsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.myTeamsTitle)),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showCreateTeamSheet(context),
+        onPressed: () => _showCreateTeamSheetWithMessage(context),
         icon: const Icon(Icons.add),
         label: Text(l10n.addMyTeamButton),
       ),
       body: teams.isEmpty
-          ? _EmptyMyTeams(onCreate: () => _showCreateTeamSheet(context))
+          ? _EmptyMyTeams(
+              onCreate: () => _showCreateTeamSheetWithMessage(context),
+            )
           : ListView.separated(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               itemCount: teams.length,
@@ -34,14 +45,9 @@ class TeamsPage extends ConsumerWidget {
     );
   }
 
-  Future<void> _showCreateTeamSheet(BuildContext context) async {
-    final created = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (context) => const _CreateMyTeamSheet(),
-    );
-    if (created != true || !context.mounted) return;
+  Future<void> _showCreateTeamSheetWithMessage(BuildContext context) async {
+    final created = await showCreateMyTeamSheet(context);
+    if (created == null || !context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -234,11 +240,11 @@ class _CreateMyTeamSheetState extends ConsumerState<_CreateMyTeamSheet> {
 
     setState(() => _isSaving = true);
     try {
-      await ref
+      final team = await ref
           .read(myTeamStoreProvider.notifier)
           .createMyTeam(name: _nameController.text);
       if (!mounted) return;
-      Navigator.of(context).pop(true);
+      Navigator.of(context).pop(team);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

@@ -823,6 +823,30 @@ abstract class AppLocalizations {
   /// **'チーム名を入力してください'**
   String get myTeamNameRequired;
 
+  /// No description provided for @myTeamSelectLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チーム'**
+  String get myTeamSelectLabel;
+
+  /// No description provided for @selectMyTeamRequired.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チームを選択してください'**
+  String get selectMyTeamRequired;
+
+  /// No description provided for @noMyTeamsForGameTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'自チームを追加してください'**
+  String get noMyTeamsForGameTitle;
+
+  /// No description provided for @noMyTeamsForGameSubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'試合を作成するには、先に自分のチームが必要です。'**
+  String get noMyTeamsForGameSubtitle;
+
   /// No description provided for @defaultMyTeamBadge.
   ///
   /// In ja, this message translates to:
