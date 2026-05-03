@@ -18,34 +18,31 @@ class RecordEmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLowest,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surfaceContainerLow,
+                colorScheme.primary.withValues(alpha: 0.07),
+              ],
+            ),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: colorScheme.outlineVariant),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.62),
+            ),
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 24, 22, 22),
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Icon(
-                      Icons.sports_baseball_outlined,
-                      color: colorScheme.onPrimaryContainer,
-                      size: 34,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18),
+                const _EmptyScoreboardPreview(),
+                const SizedBox(height: 20),
                 Text(
                   l10n.emptyGamesTitle,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleLarge?.copyWith(
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -58,18 +55,147 @@ class RecordEmptyState extends StatelessWidget {
                     height: 1.45,
                   ),
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
                     onPressed: onCreate,
                     icon: const Icon(Icons.add),
                     label: Text(l10n.createGameButton),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyScoreboardPreview extends StatelessWidget {
+  const _EmptyScoreboardPreview();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(alpha: 0.78),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.64),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _PreviewScoreCell(
+                    label: 'HOME',
+                    color: colorScheme.primaryContainer,
+                    foregroundColor: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _PreviewScoreCell(
+                    label: 'AWAY',
+                    color: colorScheme.surfaceContainerLowest,
+                    foregroundColor: colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.sports_baseball_outlined,
+                  size: 18,
+                  color: colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.36),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const SizedBox(height: 8),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '0 - 0',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PreviewScoreCell extends StatelessWidget {
+  const _PreviewScoreCell({
+    required this.label,
+    required this.color,
+    required this.foregroundColor,
+  });
+
+  final String label;
+  final Color color;
+  final Color foregroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+        child: Column(
+          children: [
+            Text(
+              label,
+              maxLines: 1,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: foregroundColor,
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '0',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: foregroundColor,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
         ),
       ),
     );

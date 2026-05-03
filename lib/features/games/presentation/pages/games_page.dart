@@ -33,32 +33,58 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         icon: const Icon(Icons.add),
         label: Text(l10n.addGameButton),
       ),
-      body: games.isEmpty
-          ? RecordEmptyState(onCreate: () => context.go('/games/create'))
-          : Column(
-              children: [
-                GamesViewModeSelector(
-                  viewMode: _viewMode,
-                  onChanged: (viewMode) {
-                    setState(() {
-                      _viewMode = viewMode;
-                    });
-                  },
-                ),
-                Expanded(
-                  child: switch (_viewMode) {
-                    GamesViewMode.list => GameListView(
-                      games: games,
-                      myTeamById: myTeamById,
-                    ),
-                    GamesViewMode.calendar => GameCalendarView(
-                      games: games,
-                      myTeamById: myTeamById,
-                    ),
-                  },
-                ),
-              ],
-            ),
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(
+                context,
+              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.44),
+              Theme.of(context).colorScheme.surface,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox.expand(
+            child: games.isEmpty
+                ? RecordEmptyState(onCreate: () => context.go('/games/create'))
+                : Column(
+                    children: [
+                      GamesViewModeSelector(
+                        viewMode: _viewMode,
+                        onChanged: (viewMode) {
+                          setState(() {
+                            _viewMode = viewMode;
+                          });
+                        },
+                      ),
+                      Expanded(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 220),
+                          switchInCurve: Curves.easeOutCubic,
+                          switchOutCurve: Curves.easeInCubic,
+                          child: switch (_viewMode) {
+                            GamesViewMode.list => GameListView(
+                              key: const ValueKey('games-list-view'),
+                              games: games,
+                              myTeamById: myTeamById,
+                            ),
+                            GamesViewMode.calendar => GameCalendarView(
+                              key: const ValueKey('games-calendar-view'),
+                              games: games,
+                              myTeamById: myTeamById,
+                            ),
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }

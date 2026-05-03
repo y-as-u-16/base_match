@@ -23,9 +23,9 @@ class GameListView extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 96),
       itemCount: games.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final game = games[index];
         return GameRecordCard(

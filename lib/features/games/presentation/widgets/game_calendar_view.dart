@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/game.dart';
 import '../../domain/entities/my_team.dart';
-import 'game_record_card.dart';
+import 'game_calendar_header.dart';
+import 'game_calendar_month_grid.dart';
+import 'selected_date_game_section.dart';
 
 class GameCalendarView extends StatefulWidget {
   const GameCalendarView({
@@ -49,90 +50,62 @@ class _GameCalendarViewState extends State<GameCalendarView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              IconButton(
-                tooltip: l10n.previousMonthTooltip,
-                onPressed: () => _changeMonth(-1),
-                icon: const Icon(Icons.chevron_left),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  colorScheme.primary.withValues(alpha: 0.16),
+                  colorScheme.surfaceContainerLowest,
+                  colorScheme.tertiaryContainer.withValues(alpha: 0.20),
+                ],
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.calendar_month_outlined,
-                      color: colorScheme.primary,
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        DateFormat.yMMMM(localeName).format(_focusedMonth),
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                  ],
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.55),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.shadow.withValues(alpha: 0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
                 ),
-              ),
-              IconButton(
-                tooltip: l10n.nextMonthTooltip,
-                onPressed: () => _changeMonth(1),
-                icon: const Icon(Icons.chevron_right),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              for (final label in weekdayLabels)
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      label,
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              mainAxisSpacing: 6,
-              crossAxisSpacing: 6,
+              ],
             ),
-            itemCount: calendarDays.length,
-            itemBuilder: (context, index) {
-              final day = calendarDays[index];
-              if (day == null) {
-                return const SizedBox.shrink();
-              }
-
-              final gameCount = gameCountsByDate[_dateKey(day)] ?? 0;
-              return _CalendarDayCell(
-                day: day,
-                gameCount: gameCount,
-                gameCountLabel: l10n.seasonGamesCount(gameCount),
-                isSelected: DateUtils.isSameDay(day, _selectedDate),
-                onTap: () {
-                  setState(() {
-                    _selectedDate = _dateKey(day);
-                  });
-                },
-              );
-            },
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  GameCalendarHeader(
+                    focusedMonthLabel: DateFormat.yMMMM(
+                      localeName,
+                    ).format(_focusedMonth),
+                    previousMonthTooltip: l10n.previousMonthTooltip,
+                    nextMonthTooltip: l10n.nextMonthTooltip,
+                    onPreviousMonth: () => _changeMonth(-1),
+                    onNextMonth: () => _changeMonth(1),
+                  ),
+                  const SizedBox(height: 12),
+                  CalendarMonthGrid(
+                    days: calendarDays,
+                    weekdayLabels: weekdayLabels,
+                    gameCountsByDate: gameCountsByDate,
+                    selectedDate: _selectedDate,
+                    gameCountLabelBuilder: l10n.seasonGamesCount,
+                    onDateSelected: (day) {
+                      setState(() {
+                        _selectedDate = _dateKey(day);
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 18),
-          _SelectedDateGameList(
+          SelectedDateGameSection(
             selectedDate: _selectedDate,
             games: selectedGames,
             myTeamById: widget.myTeamById,
@@ -191,171 +164,5 @@ class _GameCalendarViewState extends State<GameCalendarView> {
       for (var i = 0; i < DateTime.daysPerWeek; i++)
         DateFormat.E(localeName).format(sunday.add(Duration(days: i))),
     ];
-  }
-}
-
-class _SelectedDateGameList extends StatelessWidget {
-  const _SelectedDateGameList({
-    required this.selectedDate,
-    required this.games,
-    required this.myTeamById,
-  });
-
-  final DateTime selectedDate;
-  final List<Game> games;
-  final Map<String, MyTeam> myTeamById;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
-    final localeName = Localizations.localeOf(context).toLanguageTag();
-    final dateFormat = DateFormat('yyyy/MM/dd');
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Text(
-              l10n.selectedDateGamesTitle,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              DateFormat.yMMMd(localeName).format(selectedDate),
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        if (games.isEmpty)
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLowest,
-              border: Border.all(color: colorScheme.outlineVariant),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Text(
-                l10n.noGamesOnSelectedDate,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          )
-        else
-          ...games.map(
-            (game) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: GameRecordCard(
-                title:
-                    '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
-                date: dateFormat.format(game.date),
-                location: game.location,
-                homeScore: game.homeScore ?? 0,
-                awayScore: game.awayScore ?? 0,
-                onTap: () => context.go('/games/${game.id}'),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _CalendarDayCell extends StatelessWidget {
-  const _CalendarDayCell({
-    required this.day,
-    required this.gameCount,
-    required this.gameCountLabel,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final DateTime day;
-  final int gameCount;
-  final String gameCountLabel;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isToday = DateUtils.isSameDay(day, DateTime.now());
-    final foregroundColor = isSelected
-        ? colorScheme.onPrimaryContainer
-        : colorScheme.onSurface;
-
-    return Semantics(
-      selected: isSelected,
-      button: true,
-      child: DecoratedBox(
-        key: ValueKey('calendar-day-${day.year}-${day.month}-${day.day}'),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.primaryContainer
-              : colorScheme.surfaceContainerLowest,
-          border: Border.all(
-            color: isSelected
-                ? colorScheme.primary
-                : isToday
-                ? colorScheme.primary.withValues(alpha: 0.45)
-                : colorScheme.outlineVariant,
-            width: isSelected ? 1.5 : 1,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${day.day}',
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: foregroundColor,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  if (gameCount > 0) ...[
-                    const SizedBox(height: 3),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        gameCountLabel,
-                        maxLines: 1,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: isSelected
-                              ? colorScheme.onPrimaryContainer
-                              : colorScheme.primary,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
