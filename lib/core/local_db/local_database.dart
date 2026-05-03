@@ -7,11 +7,25 @@ import 'package:path_provider/path_provider.dart';
 
 part 'local_database.g.dart';
 
+class LocalMyTeams extends Table {
+  TextColumn get id => text()();
+  TextColumn get name => text()();
+  TextColumn get colorKey => text().nullable()();
+  BoolColumn get isDefault => boolean()();
+  IntColumn get displayOrder => integer()();
+  DateTimeColumn get archivedAt => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 class LocalGames extends Table {
   TextColumn get id => text()();
   DateTimeColumn get date => dateTime()();
   TextColumn get location => text().nullable()();
-  TextColumn get homeTeamName => text()();
+  TextColumn get myTeamId => text().references(LocalMyTeams, #id)();
   TextColumn get awayTeamName => text()();
   IntColumn get homeScore => integer().nullable()();
   IntColumn get awayScore => integer().nullable()();
@@ -55,7 +69,12 @@ class LocalPitchingAppearances extends Table {
 }
 
 @DriftDatabase(
-  tables: [LocalGames, LocalPlateAppearances, LocalPitchingAppearances],
+  tables: [
+    LocalMyTeams,
+    LocalGames,
+    LocalPlateAppearances,
+    LocalPitchingAppearances,
+  ],
 )
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
@@ -63,12 +82,26 @@ class LocalDatabase extends _$LocalDatabase {
   LocalDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
       onUpgrade: (migrator, from, to) async {
+        if (from < 3) {
+          await customStatement(
+            'DROP TABLE IF EXISTS local_pitching_appearances',
+          );
+          await customStatement('DROP TABLE IF EXISTS local_plate_appearances');
+          await customStatement('DROP TABLE IF EXISTS local_games');
+          await customStatement('DROP TABLE IF EXISTS local_my_teams');
+          await migrator.createTable(localMyTeams);
+          await migrator.createTable(localGames);
+          await migrator.createTable(localPlateAppearances);
+          await migrator.createTable(localPitchingAppearances);
+          return;
+        }
+
         if (from < 2) {
           await migrator.addColumn(
             localPlateAppearances,

@@ -3,6 +3,528 @@
 part of 'local_database.dart';
 
 // ignore_for_file: type=lint
+class $LocalMyTeamsTable extends LocalMyTeams
+    with TableInfo<$LocalMyTeamsTable, LocalMyTeam> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalMyTeamsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorKeyMeta = const VerificationMeta(
+    'colorKey',
+  );
+  @override
+  late final GeneratedColumn<String> colorKey = GeneratedColumn<String>(
+    'color_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isDefaultMeta = const VerificationMeta(
+    'isDefault',
+  );
+  @override
+  late final GeneratedColumn<bool> isDefault = GeneratedColumn<bool>(
+    'is_default',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_default" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _displayOrderMeta = const VerificationMeta(
+    'displayOrder',
+  );
+  @override
+  late final GeneratedColumn<int> displayOrder = GeneratedColumn<int>(
+    'display_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _archivedAtMeta = const VerificationMeta(
+    'archivedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> archivedAt = GeneratedColumn<DateTime>(
+    'archived_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    colorKey,
+    isDefault,
+    displayOrder,
+    archivedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_my_teams';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalMyTeam> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('color_key')) {
+      context.handle(
+        _colorKeyMeta,
+        colorKey.isAcceptableOrUnknown(data['color_key']!, _colorKeyMeta),
+      );
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(
+        _isDefaultMeta,
+        isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isDefaultMeta);
+    }
+    if (data.containsKey('display_order')) {
+      context.handle(
+        _displayOrderMeta,
+        displayOrder.isAcceptableOrUnknown(
+          data['display_order']!,
+          _displayOrderMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_displayOrderMeta);
+    }
+    if (data.containsKey('archived_at')) {
+      context.handle(
+        _archivedAtMeta,
+        archivedAt.isAcceptableOrUnknown(data['archived_at']!, _archivedAtMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalMyTeam map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalMyTeam(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      colorKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color_key'],
+      ),
+      isDefault: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_default'],
+      )!,
+      displayOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}display_order'],
+      )!,
+      archivedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}archived_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalMyTeamsTable createAlias(String alias) {
+    return $LocalMyTeamsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalMyTeam extends DataClass implements Insertable<LocalMyTeam> {
+  final String id;
+  final String name;
+  final String? colorKey;
+  final bool isDefault;
+  final int displayOrder;
+  final DateTime? archivedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const LocalMyTeam({
+    required this.id,
+    required this.name,
+    this.colorKey,
+    required this.isDefault,
+    required this.displayOrder,
+    this.archivedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || colorKey != null) {
+      map['color_key'] = Variable<String>(colorKey);
+    }
+    map['is_default'] = Variable<bool>(isDefault);
+    map['display_order'] = Variable<int>(displayOrder);
+    if (!nullToAbsent || archivedAt != null) {
+      map['archived_at'] = Variable<DateTime>(archivedAt);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalMyTeamsCompanion toCompanion(bool nullToAbsent) {
+    return LocalMyTeamsCompanion(
+      id: Value(id),
+      name: Value(name),
+      colorKey: colorKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(colorKey),
+      isDefault: Value(isDefault),
+      displayOrder: Value(displayOrder),
+      archivedAt: archivedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(archivedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LocalMyTeam.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalMyTeam(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      colorKey: serializer.fromJson<String?>(json['colorKey']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      displayOrder: serializer.fromJson<int>(json['displayOrder']),
+      archivedAt: serializer.fromJson<DateTime?>(json['archivedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'colorKey': serializer.toJson<String?>(colorKey),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'displayOrder': serializer.toJson<int>(displayOrder),
+      'archivedAt': serializer.toJson<DateTime?>(archivedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LocalMyTeam copyWith({
+    String? id,
+    String? name,
+    Value<String?> colorKey = const Value.absent(),
+    bool? isDefault,
+    int? displayOrder,
+    Value<DateTime?> archivedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => LocalMyTeam(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    colorKey: colorKey.present ? colorKey.value : this.colorKey,
+    isDefault: isDefault ?? this.isDefault,
+    displayOrder: displayOrder ?? this.displayOrder,
+    archivedAt: archivedAt.present ? archivedAt.value : this.archivedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LocalMyTeam copyWithCompanion(LocalMyTeamsCompanion data) {
+    return LocalMyTeam(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      colorKey: data.colorKey.present ? data.colorKey.value : this.colorKey,
+      isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+      displayOrder: data.displayOrder.present
+          ? data.displayOrder.value
+          : this.displayOrder,
+      archivedAt: data.archivedAt.present
+          ? data.archivedAt.value
+          : this.archivedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalMyTeam(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('displayOrder: $displayOrder, ')
+          ..write('archivedAt: $archivedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    colorKey,
+    isDefault,
+    displayOrder,
+    archivedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalMyTeam &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.colorKey == this.colorKey &&
+          other.isDefault == this.isDefault &&
+          other.displayOrder == this.displayOrder &&
+          other.archivedAt == this.archivedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalMyTeamsCompanion extends UpdateCompanion<LocalMyTeam> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> colorKey;
+  final Value<bool> isDefault;
+  final Value<int> displayOrder;
+  final Value<DateTime?> archivedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalMyTeamsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.colorKey = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.displayOrder = const Value.absent(),
+    this.archivedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalMyTeamsCompanion.insert({
+    required String id,
+    required String name,
+    this.colorKey = const Value.absent(),
+    required bool isDefault,
+    required int displayOrder,
+    this.archivedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       isDefault = Value(isDefault),
+       displayOrder = Value(displayOrder),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<LocalMyTeam> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? colorKey,
+    Expression<bool>? isDefault,
+    Expression<int>? displayOrder,
+    Expression<DateTime>? archivedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (colorKey != null) 'color_key': colorKey,
+      if (isDefault != null) 'is_default': isDefault,
+      if (displayOrder != null) 'display_order': displayOrder,
+      if (archivedAt != null) 'archived_at': archivedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalMyTeamsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? colorKey,
+    Value<bool>? isDefault,
+    Value<int>? displayOrder,
+    Value<DateTime?>? archivedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalMyTeamsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      colorKey: colorKey ?? this.colorKey,
+      isDefault: isDefault ?? this.isDefault,
+      displayOrder: displayOrder ?? this.displayOrder,
+      archivedAt: archivedAt ?? this.archivedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (colorKey.present) {
+      map['color_key'] = Variable<String>(colorKey.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (displayOrder.present) {
+      map['display_order'] = Variable<int>(displayOrder.value);
+    }
+    if (archivedAt.present) {
+      map['archived_at'] = Variable<DateTime>(archivedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalMyTeamsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('colorKey: $colorKey, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('displayOrder: $displayOrder, ')
+          ..write('archivedAt: $archivedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $LocalGamesTable extends LocalGames
     with TableInfo<$LocalGamesTable, LocalGame> {
   @override
@@ -38,16 +560,19 @@ class $LocalGamesTable extends LocalGames
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _homeTeamNameMeta = const VerificationMeta(
-    'homeTeamName',
+  static const VerificationMeta _myTeamIdMeta = const VerificationMeta(
+    'myTeamId',
   );
   @override
-  late final GeneratedColumn<String> homeTeamName = GeneratedColumn<String>(
-    'home_team_name',
+  late final GeneratedColumn<String> myTeamId = GeneratedColumn<String>(
+    'my_team_id',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES local_my_teams (id)',
+    ),
   );
   static const VerificationMeta _awayTeamNameMeta = const VerificationMeta(
     'awayTeamName',
@@ -118,7 +643,7 @@ class $LocalGamesTable extends LocalGames
     id,
     date,
     location,
-    homeTeamName,
+    myTeamId,
     awayTeamName,
     homeScore,
     awayScore,
@@ -157,16 +682,13 @@ class $LocalGamesTable extends LocalGames
         location.isAcceptableOrUnknown(data['location']!, _locationMeta),
       );
     }
-    if (data.containsKey('home_team_name')) {
+    if (data.containsKey('my_team_id')) {
       context.handle(
-        _homeTeamNameMeta,
-        homeTeamName.isAcceptableOrUnknown(
-          data['home_team_name']!,
-          _homeTeamNameMeta,
-        ),
+        _myTeamIdMeta,
+        myTeamId.isAcceptableOrUnknown(data['my_team_id']!, _myTeamIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_homeTeamNameMeta);
+      context.missing(_myTeamIdMeta);
     }
     if (data.containsKey('away_team_name')) {
       context.handle(
@@ -234,9 +756,9 @@ class $LocalGamesTable extends LocalGames
         DriftSqlType.string,
         data['${effectivePrefix}location'],
       ),
-      homeTeamName: attachedDatabase.typeMapping.read(
+      myTeamId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}home_team_name'],
+        data['${effectivePrefix}my_team_id'],
       )!,
       awayTeamName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -275,7 +797,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
   final String id;
   final DateTime date;
   final String? location;
-  final String homeTeamName;
+  final String myTeamId;
   final String awayTeamName;
   final int? homeScore;
   final int? awayScore;
@@ -286,7 +808,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     required this.id,
     required this.date,
     this.location,
-    required this.homeTeamName,
+    required this.myTeamId,
     required this.awayTeamName,
     this.homeScore,
     this.awayScore,
@@ -302,7 +824,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     if (!nullToAbsent || location != null) {
       map['location'] = Variable<String>(location);
     }
-    map['home_team_name'] = Variable<String>(homeTeamName);
+    map['my_team_id'] = Variable<String>(myTeamId);
     map['away_team_name'] = Variable<String>(awayTeamName);
     if (!nullToAbsent || homeScore != null) {
       map['home_score'] = Variable<int>(homeScore);
@@ -325,7 +847,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       location: location == null && nullToAbsent
           ? const Value.absent()
           : Value(location),
-      homeTeamName: Value(homeTeamName),
+      myTeamId: Value(myTeamId),
       awayTeamName: Value(awayTeamName),
       homeScore: homeScore == null && nullToAbsent
           ? const Value.absent()
@@ -350,7 +872,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       id: serializer.fromJson<String>(json['id']),
       date: serializer.fromJson<DateTime>(json['date']),
       location: serializer.fromJson<String?>(json['location']),
-      homeTeamName: serializer.fromJson<String>(json['homeTeamName']),
+      myTeamId: serializer.fromJson<String>(json['myTeamId']),
       awayTeamName: serializer.fromJson<String>(json['awayTeamName']),
       homeScore: serializer.fromJson<int?>(json['homeScore']),
       awayScore: serializer.fromJson<int?>(json['awayScore']),
@@ -366,7 +888,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       'id': serializer.toJson<String>(id),
       'date': serializer.toJson<DateTime>(date),
       'location': serializer.toJson<String?>(location),
-      'homeTeamName': serializer.toJson<String>(homeTeamName),
+      'myTeamId': serializer.toJson<String>(myTeamId),
       'awayTeamName': serializer.toJson<String>(awayTeamName),
       'homeScore': serializer.toJson<int?>(homeScore),
       'awayScore': serializer.toJson<int?>(awayScore),
@@ -380,7 +902,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     String? id,
     DateTime? date,
     Value<String?> location = const Value.absent(),
-    String? homeTeamName,
+    String? myTeamId,
     String? awayTeamName,
     Value<int?> homeScore = const Value.absent(),
     Value<int?> awayScore = const Value.absent(),
@@ -391,7 +913,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     id: id ?? this.id,
     date: date ?? this.date,
     location: location.present ? location.value : this.location,
-    homeTeamName: homeTeamName ?? this.homeTeamName,
+    myTeamId: myTeamId ?? this.myTeamId,
     awayTeamName: awayTeamName ?? this.awayTeamName,
     homeScore: homeScore.present ? homeScore.value : this.homeScore,
     awayScore: awayScore.present ? awayScore.value : this.awayScore,
@@ -404,9 +926,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
       id: data.id.present ? data.id.value : this.id,
       date: data.date.present ? data.date.value : this.date,
       location: data.location.present ? data.location.value : this.location,
-      homeTeamName: data.homeTeamName.present
-          ? data.homeTeamName.value
-          : this.homeTeamName,
+      myTeamId: data.myTeamId.present ? data.myTeamId.value : this.myTeamId,
       awayTeamName: data.awayTeamName.present
           ? data.awayTeamName.value
           : this.awayTeamName,
@@ -424,7 +944,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('location: $location, ')
-          ..write('homeTeamName: $homeTeamName, ')
+          ..write('myTeamId: $myTeamId, ')
           ..write('awayTeamName: $awayTeamName, ')
           ..write('homeScore: $homeScore, ')
           ..write('awayScore: $awayScore, ')
@@ -440,7 +960,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
     id,
     date,
     location,
-    homeTeamName,
+    myTeamId,
     awayTeamName,
     homeScore,
     awayScore,
@@ -455,7 +975,7 @@ class LocalGame extends DataClass implements Insertable<LocalGame> {
           other.id == this.id &&
           other.date == this.date &&
           other.location == this.location &&
-          other.homeTeamName == this.homeTeamName &&
+          other.myTeamId == this.myTeamId &&
           other.awayTeamName == this.awayTeamName &&
           other.homeScore == this.homeScore &&
           other.awayScore == this.awayScore &&
@@ -468,7 +988,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
   final Value<String> id;
   final Value<DateTime> date;
   final Value<String?> location;
-  final Value<String> homeTeamName;
+  final Value<String> myTeamId;
   final Value<String> awayTeamName;
   final Value<int?> homeScore;
   final Value<int?> awayScore;
@@ -480,7 +1000,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     this.id = const Value.absent(),
     this.date = const Value.absent(),
     this.location = const Value.absent(),
-    this.homeTeamName = const Value.absent(),
+    this.myTeamId = const Value.absent(),
     this.awayTeamName = const Value.absent(),
     this.homeScore = const Value.absent(),
     this.awayScore = const Value.absent(),
@@ -493,7 +1013,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     required String id,
     required DateTime date,
     this.location = const Value.absent(),
-    required String homeTeamName,
+    required String myTeamId,
     required String awayTeamName,
     this.homeScore = const Value.absent(),
     this.awayScore = const Value.absent(),
@@ -503,7 +1023,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        date = Value(date),
-       homeTeamName = Value(homeTeamName),
+       myTeamId = Value(myTeamId),
        awayTeamName = Value(awayTeamName),
        status = Value(status),
        createdAt = Value(createdAt);
@@ -511,7 +1031,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     Expression<String>? id,
     Expression<DateTime>? date,
     Expression<String>? location,
-    Expression<String>? homeTeamName,
+    Expression<String>? myTeamId,
     Expression<String>? awayTeamName,
     Expression<int>? homeScore,
     Expression<int>? awayScore,
@@ -524,7 +1044,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
       if (id != null) 'id': id,
       if (date != null) 'date': date,
       if (location != null) 'location': location,
-      if (homeTeamName != null) 'home_team_name': homeTeamName,
+      if (myTeamId != null) 'my_team_id': myTeamId,
       if (awayTeamName != null) 'away_team_name': awayTeamName,
       if (homeScore != null) 'home_score': homeScore,
       if (awayScore != null) 'away_score': awayScore,
@@ -539,7 +1059,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     Value<String>? id,
     Value<DateTime>? date,
     Value<String?>? location,
-    Value<String>? homeTeamName,
+    Value<String>? myTeamId,
     Value<String>? awayTeamName,
     Value<int?>? homeScore,
     Value<int?>? awayScore,
@@ -552,7 +1072,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
       id: id ?? this.id,
       date: date ?? this.date,
       location: location ?? this.location,
-      homeTeamName: homeTeamName ?? this.homeTeamName,
+      myTeamId: myTeamId ?? this.myTeamId,
       awayTeamName: awayTeamName ?? this.awayTeamName,
       homeScore: homeScore ?? this.homeScore,
       awayScore: awayScore ?? this.awayScore,
@@ -575,8 +1095,8 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
     if (location.present) {
       map['location'] = Variable<String>(location.value);
     }
-    if (homeTeamName.present) {
-      map['home_team_name'] = Variable<String>(homeTeamName.value);
+    if (myTeamId.present) {
+      map['my_team_id'] = Variable<String>(myTeamId.value);
     }
     if (awayTeamName.present) {
       map['away_team_name'] = Variable<String>(awayTeamName.value);
@@ -608,7 +1128,7 @@ class LocalGamesCompanion extends UpdateCompanion<LocalGame> {
           ..write('id: $id, ')
           ..write('date: $date, ')
           ..write('location: $location, ')
-          ..write('homeTeamName: $homeTeamName, ')
+          ..write('myTeamId: $myTeamId, ')
           ..write('awayTeamName: $awayTeamName, ')
           ..write('homeScore: $homeScore, ')
           ..write('awayScore: $awayScore, ')
@@ -1824,6 +2344,7 @@ class LocalPitchingAppearancesCompanion
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(e);
   $LocalDatabaseManager get managers => $LocalDatabaseManager(this);
+  late final $LocalMyTeamsTable localMyTeams = $LocalMyTeamsTable(this);
   late final $LocalGamesTable localGames = $LocalGamesTable(this);
   late final $LocalPlateAppearancesTable localPlateAppearances =
       $LocalPlateAppearancesTable(this);
@@ -1834,18 +2355,381 @@ abstract class _$LocalDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+    localMyTeams,
     localGames,
     localPlateAppearances,
     localPitchingAppearances,
   ];
 }
 
+typedef $$LocalMyTeamsTableCreateCompanionBuilder =
+    LocalMyTeamsCompanion Function({
+      required String id,
+      required String name,
+      Value<String?> colorKey,
+      required bool isDefault,
+      required int displayOrder,
+      Value<DateTime?> archivedAt,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalMyTeamsTableUpdateCompanionBuilder =
+    LocalMyTeamsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String?> colorKey,
+      Value<bool> isDefault,
+      Value<int> displayOrder,
+      Value<DateTime?> archivedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$LocalMyTeamsTableReferences
+    extends BaseReferences<_$LocalDatabase, $LocalMyTeamsTable, LocalMyTeam> {
+  $$LocalMyTeamsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$LocalGamesTable, List<LocalGame>>
+  _localGamesRefsTable(_$LocalDatabase db) => MultiTypedResultKey.fromTable(
+    db.localGames,
+    aliasName: $_aliasNameGenerator(db.localMyTeams.id, db.localGames.myTeamId),
+  );
+
+  $$LocalGamesTableProcessedTableManager get localGamesRefs {
+    final manager = $$LocalGamesTableTableManager(
+      $_db,
+      $_db.localGames,
+    ).filter((f) => f.myTeamId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_localGamesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$LocalMyTeamsTableFilterComposer
+    extends Composer<_$LocalDatabase, $LocalMyTeamsTable> {
+  $$LocalMyTeamsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get archivedAt => $composableBuilder(
+    column: $table.archivedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> localGamesRefs(
+    Expression<bool> Function($$LocalGamesTableFilterComposer f) f,
+  ) {
+    final $$LocalGamesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localGames,
+      getReferencedColumn: (t) => t.myTeamId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalGamesTableFilterComposer(
+            $db: $db,
+            $table: $db.localGames,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LocalMyTeamsTableOrderingComposer
+    extends Composer<_$LocalDatabase, $LocalMyTeamsTable> {
+  $$LocalMyTeamsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get colorKey => $composableBuilder(
+    column: $table.colorKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get archivedAt => $composableBuilder(
+    column: $table.archivedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalMyTeamsTableAnnotationComposer
+    extends Composer<_$LocalDatabase, $LocalMyTeamsTable> {
+  $$LocalMyTeamsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get colorKey =>
+      $composableBuilder(column: $table.colorKey, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDefault =>
+      $composableBuilder(column: $table.isDefault, builder: (column) => column);
+
+  GeneratedColumn<int> get displayOrder => $composableBuilder(
+    column: $table.displayOrder,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get archivedAt => $composableBuilder(
+    column: $table.archivedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> localGamesRefs<T extends Object>(
+    Expression<T> Function($$LocalGamesTableAnnotationComposer a) f,
+  ) {
+    final $$LocalGamesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localGames,
+      getReferencedColumn: (t) => t.myTeamId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalGamesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.localGames,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LocalMyTeamsTableTableManager
+    extends
+        RootTableManager<
+          _$LocalDatabase,
+          $LocalMyTeamsTable,
+          LocalMyTeam,
+          $$LocalMyTeamsTableFilterComposer,
+          $$LocalMyTeamsTableOrderingComposer,
+          $$LocalMyTeamsTableAnnotationComposer,
+          $$LocalMyTeamsTableCreateCompanionBuilder,
+          $$LocalMyTeamsTableUpdateCompanionBuilder,
+          (LocalMyTeam, $$LocalMyTeamsTableReferences),
+          LocalMyTeam,
+          PrefetchHooks Function({bool localGamesRefs})
+        > {
+  $$LocalMyTeamsTableTableManager(_$LocalDatabase db, $LocalMyTeamsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalMyTeamsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalMyTeamsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalMyTeamsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> colorKey = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<int> displayOrder = const Value.absent(),
+                Value<DateTime?> archivedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalMyTeamsCompanion(
+                id: id,
+                name: name,
+                colorKey: colorKey,
+                isDefault: isDefault,
+                displayOrder: displayOrder,
+                archivedAt: archivedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<String?> colorKey = const Value.absent(),
+                required bool isDefault,
+                required int displayOrder,
+                Value<DateTime?> archivedAt = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalMyTeamsCompanion.insert(
+                id: id,
+                name: name,
+                colorKey: colorKey,
+                isDefault: isDefault,
+                displayOrder: displayOrder,
+                archivedAt: archivedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LocalMyTeamsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({localGamesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (localGamesRefs) db.localGames],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (localGamesRefs)
+                    await $_getPrefetchedData<
+                      LocalMyTeam,
+                      $LocalMyTeamsTable,
+                      LocalGame
+                    >(
+                      currentTable: table,
+                      referencedTable: $$LocalMyTeamsTableReferences
+                          ._localGamesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$LocalMyTeamsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).localGamesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.myTeamId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$LocalMyTeamsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$LocalDatabase,
+      $LocalMyTeamsTable,
+      LocalMyTeam,
+      $$LocalMyTeamsTableFilterComposer,
+      $$LocalMyTeamsTableOrderingComposer,
+      $$LocalMyTeamsTableAnnotationComposer,
+      $$LocalMyTeamsTableCreateCompanionBuilder,
+      $$LocalMyTeamsTableUpdateCompanionBuilder,
+      (LocalMyTeam, $$LocalMyTeamsTableReferences),
+      LocalMyTeam,
+      PrefetchHooks Function({bool localGamesRefs})
+    >;
 typedef $$LocalGamesTableCreateCompanionBuilder =
     LocalGamesCompanion Function({
       required String id,
       required DateTime date,
       Value<String?> location,
-      required String homeTeamName,
+      required String myTeamId,
       required String awayTeamName,
       Value<int?> homeScore,
       Value<int?> awayScore,
@@ -1859,7 +2743,7 @@ typedef $$LocalGamesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<DateTime> date,
       Value<String?> location,
-      Value<String> homeTeamName,
+      Value<String> myTeamId,
       Value<String> awayTeamName,
       Value<int?> homeScore,
       Value<int?> awayScore,
@@ -1872,6 +2756,25 @@ typedef $$LocalGamesTableUpdateCompanionBuilder =
 final class $$LocalGamesTableReferences
     extends BaseReferences<_$LocalDatabase, $LocalGamesTable, LocalGame> {
   $$LocalGamesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $LocalMyTeamsTable _myTeamIdTable(_$LocalDatabase db) =>
+      db.localMyTeams.createAlias(
+        $_aliasNameGenerator(db.localGames.myTeamId, db.localMyTeams.id),
+      );
+
+  $$LocalMyTeamsTableProcessedTableManager get myTeamId {
+    final $_column = $_itemColumn<String>('my_team_id')!;
+
+    final manager = $$LocalMyTeamsTableTableManager(
+      $_db,
+      $_db.localMyTeams,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_myTeamIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
 
   static MultiTypedResultKey<
     $LocalPlateAppearancesTable,
@@ -1954,11 +2857,6 @@ class $$LocalGamesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get homeTeamName => $composableBuilder(
-    column: $table.homeTeamName,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get awayTeamName => $composableBuilder(
     column: $table.awayTeamName,
     builder: (column) => ColumnFilters(column),
@@ -1988,6 +2886,29 @@ class $$LocalGamesTableFilterComposer
     column: $table.innings,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$LocalMyTeamsTableFilterComposer get myTeamId {
+    final $$LocalMyTeamsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.myTeamId,
+      referencedTable: $db.localMyTeams,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalMyTeamsTableFilterComposer(
+            $db: $db,
+            $table: $db.localMyTeams,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<bool> localPlateAppearancesRefs(
     Expression<bool> Function($$LocalPlateAppearancesTableFilterComposer f) f,
@@ -2067,11 +2988,6 @@ class $$LocalGamesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get homeTeamName => $composableBuilder(
-    column: $table.homeTeamName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get awayTeamName => $composableBuilder(
     column: $table.awayTeamName,
     builder: (column) => ColumnOrderings(column),
@@ -2101,6 +3017,29 @@ class $$LocalGamesTableOrderingComposer
     column: $table.innings,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$LocalMyTeamsTableOrderingComposer get myTeamId {
+    final $$LocalMyTeamsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.myTeamId,
+      referencedTable: $db.localMyTeams,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalMyTeamsTableOrderingComposer(
+            $db: $db,
+            $table: $db.localMyTeams,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$LocalGamesTableAnnotationComposer
@@ -2121,11 +3060,6 @@ class $$LocalGamesTableAnnotationComposer
   GeneratedColumn<String> get location =>
       $composableBuilder(column: $table.location, builder: (column) => column);
 
-  GeneratedColumn<String> get homeTeamName => $composableBuilder(
-    column: $table.homeTeamName,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get awayTeamName => $composableBuilder(
     column: $table.awayTeamName,
     builder: (column) => column,
@@ -2145,6 +3079,29 @@ class $$LocalGamesTableAnnotationComposer
 
   GeneratedColumn<int> get innings =>
       $composableBuilder(column: $table.innings, builder: (column) => column);
+
+  $$LocalMyTeamsTableAnnotationComposer get myTeamId {
+    final $$LocalMyTeamsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.myTeamId,
+      referencedTable: $db.localMyTeams,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalMyTeamsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.localMyTeams,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   Expression<T> localPlateAppearancesRefs<T extends Object>(
     Expression<T> Function($$LocalPlateAppearancesTableAnnotationComposer a) f,
@@ -2214,6 +3171,7 @@ class $$LocalGamesTableTableManager
           (LocalGame, $$LocalGamesTableReferences),
           LocalGame,
           PrefetchHooks Function({
+            bool myTeamId,
             bool localPlateAppearancesRefs,
             bool localPitchingAppearancesRefs,
           })
@@ -2234,7 +3192,7 @@ class $$LocalGamesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<String?> location = const Value.absent(),
-                Value<String> homeTeamName = const Value.absent(),
+                Value<String> myTeamId = const Value.absent(),
                 Value<String> awayTeamName = const Value.absent(),
                 Value<int?> homeScore = const Value.absent(),
                 Value<int?> awayScore = const Value.absent(),
@@ -2246,7 +3204,7 @@ class $$LocalGamesTableTableManager
                 id: id,
                 date: date,
                 location: location,
-                homeTeamName: homeTeamName,
+                myTeamId: myTeamId,
                 awayTeamName: awayTeamName,
                 homeScore: homeScore,
                 awayScore: awayScore,
@@ -2260,7 +3218,7 @@ class $$LocalGamesTableTableManager
                 required String id,
                 required DateTime date,
                 Value<String?> location = const Value.absent(),
-                required String homeTeamName,
+                required String myTeamId,
                 required String awayTeamName,
                 Value<int?> homeScore = const Value.absent(),
                 Value<int?> awayScore = const Value.absent(),
@@ -2272,7 +3230,7 @@ class $$LocalGamesTableTableManager
                 id: id,
                 date: date,
                 location: location,
-                homeTeamName: homeTeamName,
+                myTeamId: myTeamId,
                 awayTeamName: awayTeamName,
                 homeScore: homeScore,
                 awayScore: awayScore,
@@ -2291,6 +3249,7 @@ class $$LocalGamesTableTableManager
               .toList(),
           prefetchHooksCallback:
               ({
+                myTeamId = false,
                 localPlateAppearancesRefs = false,
                 localPitchingAppearancesRefs = false,
               }) {
@@ -2301,7 +3260,39 @@ class $$LocalGamesTableTableManager
                     if (localPitchingAppearancesRefs)
                       db.localPitchingAppearances,
                   ],
-                  addJoins: null,
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (myTeamId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.myTeamId,
+                                    referencedTable: $$LocalGamesTableReferences
+                                        ._myTeamIdTable(db),
+                                    referencedColumn:
+                                        $$LocalGamesTableReferences
+                                            ._myTeamIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
                   getPrefetchedDataCallback: (items) async {
                     return [
                       if (localPlateAppearancesRefs)
@@ -2367,6 +3358,7 @@ typedef $$LocalGamesTableProcessedTableManager =
       (LocalGame, $$LocalGamesTableReferences),
       LocalGame,
       PrefetchHooks Function({
+        bool myTeamId,
         bool localPlateAppearancesRefs,
         bool localPitchingAppearancesRefs,
       })
@@ -3249,6 +4241,8 @@ typedef $$LocalPitchingAppearancesTableProcessedTableManager =
 class $LocalDatabaseManager {
   final _$LocalDatabase _db;
   $LocalDatabaseManager(this._db);
+  $$LocalMyTeamsTableTableManager get localMyTeams =>
+      $$LocalMyTeamsTableTableManager(_db, _db.localMyTeams);
   $$LocalGamesTableTableManager get localGames =>
       $$LocalGamesTableTableManager(_db, _db.localGames);
   $$LocalPlateAppearancesTableTableManager get localPlateAppearances =>
