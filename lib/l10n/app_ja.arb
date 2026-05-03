@@ -296,6 +296,7 @@
   "noMyTeamsForGameSubtitle": "試合を作成するには、先に自分のチームが必要です。",
   "defaultMyTeamBadge": "デフォルト",
   "myTeamCreatedMessage": "チームを追加しました",
+  "unknownMyTeamLabel": "不明なチーム",
   "cancelButton": "キャンセル",
   "addButton": "追加"
 }

@@ -63,6 +63,21 @@ void main() {
       expect(teams.single.name, 'Home Team');
     });
 
+    test('myTeamByIdProvider は ID で引ける Map を返す', () async {
+      final repository = LocalMyTeamRepository(database);
+      final store = MyTeamStore(repository);
+      final team = await store.createMyTeam(name: 'Home Team');
+
+      final container = ProviderContainer(
+        overrides: [myTeamStoreProvider.overrideWith((ref) => store)],
+      );
+      addTearDown(container.dispose);
+
+      final teamById = container.read(myTeamByIdProvider);
+
+      expect(teamById[team.id]?.name, 'Home Team');
+    });
+
     test('defaultMyTeamProvider は default の自チームを返す', () async {
       final repository = LocalMyTeamRepository(database);
       final store = MyTeamStore(repository);

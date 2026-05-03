@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../view_models/game_view_model.dart';
+import '../view_models/my_team_view_model.dart';
 
 class GamesPage extends ConsumerWidget {
   const GamesPage({super.key});
@@ -12,6 +13,7 @@ class GamesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final games = ref.watch(gamesProvider);
+    final myTeamById = ref.watch(myTeamByIdProvider);
     final dateFormat = DateFormat('yyyy/MM/dd');
     final l10n = AppLocalizations.of(context);
 
@@ -40,7 +42,8 @@ class GamesPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final game = games[index];
                 return _GameRecordCard(
-                  title: '${game.myTeamId} vs ${game.awayTeamName}',
+                  title:
+                      '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
                   date: dateFormat.format(game.date),
                   location: game.location,
                   homeScore: game.homeScore ?? 0,

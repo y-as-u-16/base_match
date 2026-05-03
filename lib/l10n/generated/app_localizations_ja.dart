@@ -426,6 +426,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get myTeamCreatedMessage => 'チームを追加しました';
 
   @override
+  String get unknownMyTeamLabel => '不明なチーム';
+
+  @override
   String get cancelButton => 'キャンセル';
 
   @override

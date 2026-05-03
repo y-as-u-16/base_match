@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../games/presentation/view_models/game_view_model.dart';
+import '../../../games/presentation/view_models/my_team_view_model.dart';
 import '../models/season_summary.dart';
 import '../widgets/season_summary_card.dart';
 
@@ -15,6 +16,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final games = ref.watch(gamesProvider);
     final localGameState = ref.watch(localGameStoreProvider);
+    final myTeamById = ref.watch(myTeamByIdProvider);
     final l10n = AppLocalizations.of(context);
     final summary = SeasonSummary.fromRecords(
       games: games,
@@ -51,7 +53,8 @@ class HomePage extends ConsumerWidget {
                         (game) => Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: _RecentGameCard(
-                            title: '${game.myTeamId} vs ${game.awayTeamName}',
+                            title:
+                                '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
                             date: game.date,
                             location: game.location,
                             homeScore: game.homeScore ?? 0,

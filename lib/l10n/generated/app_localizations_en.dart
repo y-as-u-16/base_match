@@ -431,6 +431,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myTeamCreatedMessage => 'Team added';
 
   @override
+  String get unknownMyTeamLabel => 'Unknown team';
+
+  @override
   String get cancelButton => 'Cancel';
 
   @override

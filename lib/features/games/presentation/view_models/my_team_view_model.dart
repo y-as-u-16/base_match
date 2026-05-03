@@ -25,6 +25,11 @@ final myTeamsProvider = Provider<List<MyTeam>>((ref) {
   return ref.watch(myTeamStoreProvider).teams;
 });
 
+final myTeamByIdProvider = Provider<Map<String, MyTeam>>((ref) {
+  final teams = ref.watch(myTeamsProvider);
+  return {for (final team in teams) team.id: team};
+});
+
 final defaultMyTeamProvider = Provider<MyTeam?>((ref) {
   final teams = ref.watch(myTeamStoreProvider).teams;
   return teams.where((team) => team.isDefault).firstOrNull;

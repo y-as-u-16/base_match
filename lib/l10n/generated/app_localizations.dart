@@ -859,6 +859,12 @@ abstract class AppLocalizations {
   /// **'チームを追加しました'**
   String get myTeamCreatedMessage;
 
+  /// No description provided for @unknownMyTeamLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'不明なチーム'**
+  String get unknownMyTeamLabel;
+
   /// No description provided for @cancelButton.
   ///
   /// In ja, this message translates to:

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../l10n/localization_helpers.dart';
 import '../view_models/game_view_model.dart';
+import '../view_models/my_team_view_model.dart';
 
 class GameDetailPage extends ConsumerWidget {
   const GameDetailPage({super.key, required this.gameId});
@@ -17,6 +18,7 @@ class GameDetailPage extends ConsumerWidget {
     final game = ref.watch(gameDetailProvider(gameId));
     final plateAppearances = ref.watch(plateAppearancesProvider(gameId));
     final pitchingAppearances = ref.watch(pitchingAppearancesProvider(gameId));
+    final myTeamById = ref.watch(myTeamByIdProvider);
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd');
     final l10n = AppLocalizations.of(context);
@@ -27,6 +29,9 @@ class GameDetailPage extends ConsumerWidget {
         body: Center(child: Text(l10n.gameNotFound)),
       );
     }
+
+    final myTeamName =
+        myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.gameDetailTitle)),
@@ -40,7 +45,7 @@ class GameDetailPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${game.myTeamId} vs ${game.awayTeamName}',
+                    '$myTeamName vs ${game.awayTeamName}',
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -51,10 +56,7 @@ class GameDetailPage extends ConsumerWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      _ScoreBox(
-                        label: game.myTeamId,
-                        score: game.homeScore ?? 0,
-                      ),
+                      _ScoreBox(label: myTeamName, score: game.homeScore ?? 0),
                       const SizedBox(width: 12),
                       _ScoreBox(
                         label: game.awayTeamName,

@@ -296,6 +296,7 @@
   "noMyTeamsForGameSubtitle": "You need to add your team before creating a game.",
   "defaultMyTeamBadge": "Default",
   "myTeamCreatedMessage": "Team added",
+  "unknownMyTeamLabel": "Unknown team",
   "cancelButton": "Cancel",
   "addButton": "Add"
 }
