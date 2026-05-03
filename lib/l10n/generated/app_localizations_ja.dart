@@ -95,6 +95,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get gamesCalendarPlaceholder => 'カレンダー表示は次の手順で追加します';
 
   @override
+  String get selectedDateGamesTitle => '選択日の試合';
+
+  @override
+  String get noGamesOnSelectedDate => 'この日の試合はありません';
+
+  @override
   String get emptyGamesTitle => 'まだ試合がありません';
 
   @override

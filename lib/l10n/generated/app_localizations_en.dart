@@ -97,6 +97,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Calendar view will be added in the next step.';
 
   @override
+  String get selectedDateGamesTitle => 'Selected date games';
+
+  @override
+  String get noGamesOnSelectedDate => 'No games on this date';
+
+  @override
   String get emptyGamesTitle => 'No games yet';
 
   @override

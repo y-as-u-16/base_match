@@ -254,6 +254,18 @@ abstract class AppLocalizations {
   /// **'カレンダー表示は次の手順で追加します'**
   String get gamesCalendarPlaceholder;
 
+  /// No description provided for @selectedDateGamesTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択日の試合'**
+  String get selectedDateGamesTitle;
+
+  /// No description provided for @noGamesOnSelectedDate.
+  ///
+  /// In ja, this message translates to:
+  /// **'この日の試合はありません'**
+  String get noGamesOnSelectedDate;
+
   /// No description provided for @emptyGamesTitle.
   ///
   /// In ja, this message translates to:

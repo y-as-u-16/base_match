@@ -103,6 +103,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(dayDecoration().color, AppTheme.light.colorScheme.primaryContainer);
+    expect(find.text('この日の試合はありません'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('calendar-day-2026-5-3')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
   });
 
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {

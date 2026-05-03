@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/entities/game.dart';
 import '../../domain/entities/my_team.dart';
+import 'game_record_card.dart';
 
 class GameCalendarView extends StatefulWidget {
   const GameCalendarView({
@@ -38,6 +40,7 @@ class _GameCalendarViewState extends State<GameCalendarView> {
     final month = DateTime(today.year, today.month);
     final calendarDays = _buildCalendarDays(month);
     final gameCountsByDate = _countGamesByDate(widget.games);
+    final selectedGames = _gamesOnDate(widget.games, _selectedDate);
     final weekdayLabels = _weekdayLabels(localeName);
 
     return SingleChildScrollView(
@@ -104,6 +107,12 @@ class _GameCalendarViewState extends State<GameCalendarView> {
               );
             },
           ),
+          const SizedBox(height: 18),
+          _SelectedDateGameList(
+            selectedDate: _selectedDate,
+            games: selectedGames,
+            myTeamById: widget.myTeamById,
+          ),
         ],
       ),
     );
@@ -138,12 +147,96 @@ class _GameCalendarViewState extends State<GameCalendarView> {
     return DateTime(date.year, date.month, date.day);
   }
 
+  List<Game> _gamesOnDate(List<Game> games, DateTime date) {
+    return games.where((game) => DateUtils.isSameDay(game.date, date)).toList();
+  }
+
   List<String> _weekdayLabels(String localeName) {
     final sunday = DateTime(2026, 1, 4);
     return [
       for (var i = 0; i < DateTime.daysPerWeek; i++)
         DateFormat.E(localeName).format(sunday.add(Duration(days: i))),
     ];
+  }
+}
+
+class _SelectedDateGameList extends StatelessWidget {
+  const _SelectedDateGameList({
+    required this.selectedDate,
+    required this.games,
+    required this.myTeamById,
+  });
+
+  final DateTime selectedDate;
+  final List<Game> games;
+  final Map<String, MyTeam> myTeamById;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final localeName = Localizations.localeOf(context).toLanguageTag();
+    final dateFormat = DateFormat('yyyy/MM/dd');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Text(
+              l10n.selectedDateGamesTitle,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              DateFormat.yMMMd(localeName).format(selectedDate),
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        if (games.isEmpty)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLowest,
+              border: Border.all(color: colorScheme.outlineVariant),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Text(
+                l10n.noGamesOnSelectedDate,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          )
+        else
+          ...games.map(
+            (game) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: GameRecordCard(
+                title:
+                    '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
+                date: dateFormat.format(game.date),
+                location: game.location,
+                homeScore: game.homeScore ?? 0,
+                awayScore: game.awayScore ?? 0,
+                onTap: () => context.go('/games/${game.id}'),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }
 
