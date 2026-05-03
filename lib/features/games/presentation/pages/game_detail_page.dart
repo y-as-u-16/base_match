@@ -40,7 +40,7 @@ class GameDetailPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${game.homeTeamName} vs ${game.awayTeamName}',
+                    '${game.myTeamId} vs ${game.awayTeamName}',
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -52,7 +52,7 @@ class GameDetailPage extends ConsumerWidget {
                   Row(
                     children: [
                       _ScoreBox(
-                        label: game.homeTeamName,
+                        label: game.myTeamId,
                         score: game.homeScore ?? 0,
                       ),
                       const SizedBox(width: 12),

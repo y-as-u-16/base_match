@@ -56,7 +56,7 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
         .read(localGameStoreProvider.notifier)
         .createGame(
           date: _selectedDate,
-          homeTeamName: _homeTeamController.text.trim(),
+          myTeamId: _homeTeamController.text.trim(),
           awayTeamName: _awayTeamController.text.trim(),
           location: _locationController.text.trim().isEmpty
               ? null

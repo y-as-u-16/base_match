@@ -21,6 +21,7 @@ void main() {
       overrides: [localDatabaseProvider.overrideWithValue(database)],
       child: MaterialApp(
         theme: AppTheme.light,
+        locale: const Locale('ja'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const HomePage(),

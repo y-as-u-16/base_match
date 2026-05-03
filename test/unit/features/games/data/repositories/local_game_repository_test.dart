@@ -7,6 +7,7 @@ import 'package:base_match/features/games/data/repositories/local_game_repositor
 
 void main() {
   group('LocalGameRepository', () {
+    const myTeamId = 'team-1';
     final uuidPattern = RegExp(
       r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
     );
@@ -14,9 +15,10 @@ void main() {
     late LocalDatabase database;
     late LocalGameRepository repository;
 
-    setUp(() {
+    setUp(() async {
       database = LocalDatabase.forTesting(NativeDatabase.memory());
       repository = LocalGameRepository(database);
+      await _insertMyTeam(database, id: myTeamId);
     });
 
     tearDown(() async {
@@ -32,7 +34,7 @@ void main() {
     test('createGame は UUID v4 の ID と入力したスコアを保存する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         innings: 7,
         homeScore: 5,
@@ -55,12 +57,12 @@ void main() {
     test('createGame は試合ごとに異なる UUID を保存する', () async {
       final first = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team A',
       );
       final second = await repository.createGame(
         date: DateTime.utc(2026, 5, 3),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team B',
       );
 
@@ -70,11 +72,11 @@ void main() {
       expect(await repository.getGames(), hasLength(2));
     });
 
-    test('createGame は空のチーム名を拒否する', () async {
+    test('createGame は空の自チーム ID を拒否する', () async {
       expect(
         () => repository.createGame(
           date: DateTime.utc(2026, 5, 2),
-          homeTeamName: ' ',
+          myTeamId: ' ',
           awayTeamName: 'Away Team',
         ),
         throwsArgumentError,
@@ -87,7 +89,7 @@ void main() {
       expect(
         () => repository.createGame(
           date: DateTime.utc(2026, 5, 2),
-          homeTeamName: 'Home Team',
+          myTeamId: myTeamId,
           awayTeamName: 'Away Team',
           innings: 0,
         ),
@@ -100,7 +102,7 @@ void main() {
     test('addPlateAppearance は UUID v4 の ID と打者名を保存しスコアを変更しない', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         homeScore: 5,
         awayScore: 3,
@@ -133,7 +135,7 @@ void main() {
     test('addPlateAppearance は打点が null の場合に得点を変更しない', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -152,7 +154,7 @@ void main() {
     test('addPlateAppearance は複数打席の打点を保存してもスコアを変更しない', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         homeScore: 6,
         awayScore: 2,
@@ -194,7 +196,7 @@ void main() {
     test('addPlateAppearance は負の打点を拒否する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -216,7 +218,7 @@ void main() {
     test('addPitchingAppearance は UUID v4 の ID で投球成績を保存する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -248,7 +250,7 @@ void main() {
     test('addPitchingAppearance は 0 の成績値を受け入れる', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -295,7 +297,7 @@ void main() {
     test('addPitchingAppearance は 0 以下の投球アウト数を拒否する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -320,7 +322,7 @@ void main() {
     test('addPitchingAppearance は負の成績値を拒否する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -345,7 +347,7 @@ void main() {
     test('finalizeGame は保存済み試合のステータスを final に更新する', () async {
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
       );
 
@@ -357,4 +359,20 @@ void main() {
       );
     });
   });
+}
+
+Future<void> _insertMyTeam(LocalDatabase database, {required String id}) async {
+  final now = DateTime.utc(2026, 5, 2);
+  await database
+      .into(database.localMyTeams)
+      .insert(
+        LocalMyTeamsCompanion.insert(
+          id: id,
+          name: 'Home Team',
+          isDefault: true,
+          displayOrder: 0,
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
 }

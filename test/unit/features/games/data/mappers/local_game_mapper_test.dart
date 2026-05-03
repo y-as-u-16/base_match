@@ -9,6 +9,7 @@ import 'package:base_match/features/games/domain/entities/plate_appearance.dart'
 
 void main() {
   group('LocalGameMapper', () {
+    const myTeamId = 'team-1';
     final date = DateTime.utc(2026, 5, 2);
     final createdAt = DateTime.utc(2026, 5, 2, 12);
 
@@ -17,7 +18,7 @@ void main() {
         id: '550e8400-e29b-41d4-a716-446655440000',
         date: date,
         location: 'Riverside Field',
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         homeScore: 5,
         awayScore: 3,
@@ -31,7 +32,7 @@ void main() {
       expect(entity.id, row.id);
       expect(entity.date, date);
       expect(entity.location, 'Riverside Field');
-      expect(entity.homeTeamName, 'Home Team');
+      expect(entity.myTeamId, myTeamId);
       expect(entity.awayTeamName, 'Away Team');
       expect(entity.homeScore, 5);
       expect(entity.awayScore, 3);
@@ -45,7 +46,7 @@ void main() {
         id: '550e8400-e29b-41d4-a716-446655440000',
         date: date,
         location: null,
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         homeScore: 0,
         awayScore: 0,
@@ -59,7 +60,7 @@ void main() {
       expect(companion.id.value, entity.id);
       expect(companion.date.value, date);
       expect(companion.location.value, isNull);
-      expect(companion.homeTeamName.value, 'Home Team');
+      expect(companion.myTeamId.value, myTeamId);
       expect(companion.awayTeamName.value, 'Away Team');
       expect(companion.homeScore.value, 0);
       expect(companion.awayScore.value, 0);

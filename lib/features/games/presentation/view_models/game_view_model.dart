@@ -90,7 +90,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
 
   Future<Game> createGame({
     required DateTime date,
-    required String homeTeamName,
+    required String myTeamId,
     required String awayTeamName,
     String? location,
     int? innings,
@@ -100,7 +100,7 @@ class LocalGameStore extends StateNotifier<LocalGameState> {
     final game = await _repository.createGame(
       date: date,
       location: location,
-      homeTeamName: homeTeamName,
+      myTeamId: myTeamId,
       awayTeamName: awayTeamName,
       innings: innings,
       homeScore: homeScore,

@@ -11,7 +11,7 @@ abstract class GameRepository {
 
   Future<Game> createGame({
     required DateTime date,
-    required String homeTeamName,
+    required String myTeamId,
     required String awayTeamName,
     String? location,
     int? innings,

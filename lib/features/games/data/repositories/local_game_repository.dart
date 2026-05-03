@@ -38,7 +38,7 @@ class LocalGameRepository implements GameRepository {
   @override
   Future<Game> createGame({
     required DateTime date,
-    required String homeTeamName,
+    required String myTeamId,
     required String awayTeamName,
     String? location,
     int? innings,
@@ -46,7 +46,7 @@ class LocalGameRepository implements GameRepository {
     int awayScore = 0,
   }) async {
     _validateGameInput(
-      homeTeamName: homeTeamName,
+      myTeamId: myTeamId,
       awayTeamName: awayTeamName,
       innings: innings,
       homeScore: homeScore,
@@ -58,7 +58,7 @@ class LocalGameRepository implements GameRepository {
       id: _id(),
       date: date,
       location: location,
-      homeTeamName: homeTeamName,
+      myTeamId: myTeamId,
       awayTeamName: awayTeamName,
       status: AppConstants.statusDraft,
       createdAt: now,
@@ -173,14 +173,14 @@ class LocalGameRepository implements GameRepository {
   String _id() => _uuid.v4();
 
   void _validateGameInput({
-    required String homeTeamName,
+    required String myTeamId,
     required String awayTeamName,
     required int? innings,
     required int homeScore,
     required int awayScore,
   }) {
-    if (homeTeamName.trim().isEmpty) {
-      throw ArgumentError.value(homeTeamName, 'homeTeamName', 'Required.');
+    if (myTeamId.trim().isEmpty) {
+      throw ArgumentError.value(myTeamId, 'myTeamId', 'Required.');
     }
     if (awayTeamName.trim().isEmpty) {
       throw ArgumentError.value(awayTeamName, 'awayTeamName', 'Required.');

@@ -16,6 +16,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
+            locale: const Locale('ja'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const PlateAppearanceInputPage(gameId: 'game-1'),
@@ -53,6 +54,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             theme: AppTheme.light,
+            locale: const Locale('ja'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const PitchingInputPage(gameId: 'game-1'),

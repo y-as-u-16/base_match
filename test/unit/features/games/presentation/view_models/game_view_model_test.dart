@@ -9,10 +9,12 @@ import 'package:base_match/features/games/presentation/view_models/game_view_mod
 
 void main() {
   group('LocalGameStore', () {
+    const myTeamId = 'team-1';
     late LocalDatabase database;
 
-    setUp(() {
+    setUp(() async {
       database = LocalDatabase.forTesting(NativeDatabase.memory());
+      await _insertMyTeam(database, id: myTeamId);
     });
 
     tearDown(() async {
@@ -27,7 +29,7 @@ void main() {
       final store = LocalGameStore(repository);
       final game = await store.createGame(
         date: DateTime.utc(2026, 5, 2),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team',
         location: 'Riverside Field',
         innings: 7,
@@ -63,7 +65,7 @@ void main() {
       await reloadedStore.load();
 
       expect(reloadedStore.state.games, hasLength(1));
-      expect(reloadedStore.state.games.single.homeTeamName, 'Home Team');
+      expect(reloadedStore.state.games.single.myTeamId, myTeamId);
       expect(reloadedStore.state.games.single.homeScore, 4);
       expect(reloadedStore.state.games.single.awayScore, 2);
       expect(reloadedStore.state.plateAppearances, hasLength(1));
@@ -96,12 +98,12 @@ void main() {
       final store = LocalGameStore(repository);
       await store.createGame(
         date: DateTime.utc(2026, 5, 1),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team A',
       );
       await store.createGame(
         date: DateTime.utc(2026, 5, 3),
-        homeTeamName: 'Home Team',
+        myTeamId: myTeamId,
         awayTeamName: 'Away Team B',
       );
 
@@ -118,4 +120,20 @@ void main() {
       ]);
     });
   });
+}
+
+Future<void> _insertMyTeam(LocalDatabase database, {required String id}) async {
+  final now = DateTime.utc(2026, 5, 2);
+  await database
+      .into(database.localMyTeams)
+      .insert(
+        LocalMyTeamsCompanion.insert(
+          id: id,
+          name: 'Home Team',
+          isDefault: true,
+          displayOrder: 0,
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
 }

@@ -31,7 +31,7 @@ class GamesPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final game = games[index];
                 return _GameRecordCard(
-                  title: '${game.homeTeamName} vs ${game.awayTeamName}',
+                  title: '${game.myTeamId} vs ${game.awayTeamName}',
                   date: dateFormat.format(game.date),
                   location: game.location,
                   homeScore: game.homeScore ?? 0,

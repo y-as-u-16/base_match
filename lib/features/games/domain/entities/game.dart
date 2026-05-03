@@ -3,7 +3,7 @@ class Game {
     required this.id,
     required this.date,
     this.location,
-    required this.homeTeamName,
+    required this.myTeamId,
     required this.awayTeamName,
     this.homeScore,
     this.awayScore,
@@ -15,7 +15,7 @@ class Game {
   final String id;
   final DateTime date;
   final String? location;
-  final String homeTeamName;
+  final String myTeamId;
   final String awayTeamName;
   final int? homeScore;
   final int? awayScore;
@@ -28,7 +28,7 @@ class Game {
       id: json['id'] as String,
       date: DateTime.parse(json['date'] as String),
       location: json['location'] as String?,
-      homeTeamName: json['home_team_name'] as String,
+      myTeamId: json['my_team_id'] as String,
       awayTeamName: json['away_team_name'] as String,
       homeScore: json['home_score'] as int?,
       awayScore: json['away_score'] as int?,
@@ -43,7 +43,7 @@ class Game {
       'id': id,
       'date': date.toIso8601String(),
       'location': location,
-      'home_team_name': homeTeamName,
+      'my_team_id': myTeamId,
       'away_team_name': awayTeamName,
       'home_score': homeScore,
       'away_score': awayScore,
@@ -57,7 +57,7 @@ class Game {
     String? id,
     DateTime? date,
     String? location,
-    String? homeTeamName,
+    String? myTeamId,
     String? awayTeamName,
     int? homeScore,
     int? awayScore,
@@ -69,7 +69,7 @@ class Game {
       id: id ?? this.id,
       date: date ?? this.date,
       location: location ?? this.location,
-      homeTeamName: homeTeamName ?? this.homeTeamName,
+      myTeamId: myTeamId ?? this.myTeamId,
       awayTeamName: awayTeamName ?? this.awayTeamName,
       homeScore: homeScore ?? this.homeScore,
       awayScore: awayScore ?? this.awayScore,

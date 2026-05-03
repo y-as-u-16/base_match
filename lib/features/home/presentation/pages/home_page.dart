@@ -51,8 +51,7 @@ class HomePage extends ConsumerWidget {
                         (game) => Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: _RecentGameCard(
-                            title:
-                                '${game.homeTeamName} vs ${game.awayTeamName}',
+                            title: '${game.myTeamId} vs ${game.awayTeamName}',
                             date: game.date,
                             location: game.location,
                             homeScore: game.homeScore ?? 0,

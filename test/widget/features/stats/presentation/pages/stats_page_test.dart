@@ -13,6 +13,7 @@ import 'package:base_match/l10n/generated/app_localizations.dart';
 import 'package:base_match/l10n/generated/app_localizations_ja.dart';
 
 void main() {
+  const myTeamId = 'team-1';
   final l10n = AppLocalizationsJa();
 
   Widget buildSubjectWithDatabase(LocalDatabase database) {
@@ -20,6 +21,7 @@ void main() {
       overrides: [localDatabaseProvider.overrideWithValue(database)],
       child: MaterialApp(
         theme: AppTheme.light,
+        locale: const Locale('ja'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const StatsPage(),
@@ -50,10 +52,11 @@ void main() {
     testWidgets('打撃グラフの棒が伸びても overflow しない', (tester) async {
       final database = LocalDatabase.forTesting(NativeDatabase.memory());
       addTearDown(database.close);
+      await _insertMyTeam(database, id: myTeamId);
       final repository = LocalGameRepository(database);
       final game = await repository.createGame(
         date: DateTime.utc(2026, 5, 3),
-        homeTeamName: 'Home',
+        myTeamId: myTeamId,
         awayTeamName: 'Away',
       );
       await repository.addPlateAppearance(
@@ -83,4 +86,20 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+}
+
+Future<void> _insertMyTeam(LocalDatabase database, {required String id}) async {
+  final now = DateTime.utc(2026, 5, 2);
+  await database
+      .into(database.localMyTeams)
+      .insert(
+        LocalMyTeamsCompanion.insert(
+          id: id,
+          name: 'Home',
+          isDefault: true,
+          displayOrder: 0,
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
 }

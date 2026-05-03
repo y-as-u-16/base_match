@@ -8,7 +8,7 @@ void main() {
       'id': 'game-1',
       'date': now.toIso8601String(),
       'location': 'Riverside Field',
-      'home_team_name': 'Home Team',
+      'my_team_id': 'team-1',
       'away_team_name': 'Away Team',
       'home_score': 5,
       'away_score': 3,
@@ -22,7 +22,7 @@ void main() {
       expect(game.id, 'game-1');
       expect(game.date, now);
       expect(game.location, 'Riverside Field');
-      expect(game.homeTeamName, 'Home Team');
+      expect(game.myTeamId, 'team-1');
       expect(game.awayTeamName, 'Away Team');
       expect(game.homeScore, 5);
       expect(game.awayScore, 3);
@@ -35,7 +35,7 @@ void main() {
       final result = game.toJson();
 
       expect(result['id'], 'game-1');
-      expect(result['home_team_name'], 'Home Team');
+      expect(result['my_team_id'], 'team-1');
       expect(result['away_team_name'], 'Away Team');
       expect(result['home_score'], 5);
       expect(result['away_score'], 3);
@@ -50,7 +50,7 @@ void main() {
       expect(roundTripped['id'], json['id']);
       expect(roundTripped['date'], json['date']);
       expect(roundTripped['location'], json['location']);
-      expect(roundTripped['home_team_name'], json['home_team_name']);
+      expect(roundTripped['my_team_id'], json['my_team_id']);
       expect(roundTripped['away_team_name'], json['away_team_name']);
       expect(roundTripped['home_score'], json['home_score']);
       expect(roundTripped['away_score'], json['away_score']);
@@ -63,7 +63,7 @@ void main() {
         'id': 'game-2',
         'date': now.toIso8601String(),
         'location': null,
-        'home_team_name': 'Home Team',
+        'my_team_id': 'team-1',
         'away_team_name': 'Away Team',
         'home_score': null,
         'away_score': null,
