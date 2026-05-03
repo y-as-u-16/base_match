@@ -7,71 +7,67 @@ void main() {
     final json = {
       'id': 'game-1',
       'date': now.toIso8601String(),
-      'location': '河川敷グラウンド',
-      'home_team_id': 'team-a',
-      'away_team_id': 'team-b',
+      'location': 'Riverside Field',
+      'my_team_id': 'team-1',
+      'away_team_name': 'Away Team',
       'home_score': 5,
       'away_score': 3,
       'status': 'final',
-      'created_by': 'user-1',
       'created_at': now.toIso8601String(),
     };
 
-    test('fromJson で正しくパースされる', () {
+    test('JSON から変換できる', () {
       final game = Game.fromJson(json);
 
       expect(game.id, 'game-1');
       expect(game.date, now);
-      expect(game.location, '河川敷グラウンド');
-      expect(game.homeTeamId, 'team-a');
-      expect(game.awayTeamId, 'team-b');
+      expect(game.location, 'Riverside Field');
+      expect(game.myTeamId, 'team-1');
+      expect(game.awayTeamName, 'Away Team');
       expect(game.homeScore, 5);
       expect(game.awayScore, 3);
       expect(game.status, 'final');
-      expect(game.createdBy, 'user-1');
       expect(game.createdAt, now);
     });
 
-    test('toJson で正しくシリアライズされる', () {
+    test('JSON に変換できる', () {
       final game = Game.fromJson(json);
       final result = game.toJson();
 
       expect(result['id'], 'game-1');
-      expect(result['home_team_id'], 'team-a');
-      expect(result['away_team_id'], 'team-b');
+      expect(result['my_team_id'], 'team-1');
+      expect(result['away_team_name'], 'Away Team');
       expect(result['home_score'], 5);
       expect(result['away_score'], 3);
       expect(result['status'], 'final');
     });
 
-    test('fromJson -> toJson の往復で値が保持される', () {
+    test('fromJson から toJson の往復変換後も値を維持する', () {
       final game = Game.fromJson(json);
       final roundTripped = game.toJson();
 
-      // innings, gameNumber は元のJSONに含まれないがtoJsonでは出力される
+      // innings is absent in the source JSON but emitted by toJson.
       expect(roundTripped['id'], json['id']);
       expect(roundTripped['date'], json['date']);
       expect(roundTripped['location'], json['location']);
-      expect(roundTripped['home_team_id'], json['home_team_id']);
-      expect(roundTripped['away_team_id'], json['away_team_id']);
+      expect(roundTripped['my_team_id'], json['my_team_id']);
+      expect(roundTripped['away_team_name'], json['away_team_name']);
       expect(roundTripped['home_score'], json['home_score']);
       expect(roundTripped['away_score'], json['away_score']);
       expect(roundTripped['status'], json['status']);
-      expect(roundTripped['created_by'], json['created_by']);
       expect(roundTripped['created_at'], json['created_at']);
     });
 
-    test('null許容フィールド (location, scores) が null の場合', () {
+    test('任意項目の null を受け入れる', () {
       final jsonDraft = {
         'id': 'game-2',
         'date': now.toIso8601String(),
         'location': null,
-        'home_team_id': 'team-a',
-        'away_team_id': 'team-b',
+        'my_team_id': 'team-1',
+        'away_team_name': 'Away Team',
         'home_score': null,
         'away_score': null,
         'status': 'draft',
-        'created_by': 'user-1',
         'created_at': now.toIso8601String(),
       };
       final game = Game.fromJson(jsonDraft);
@@ -82,7 +78,7 @@ void main() {
       expect(game.status, 'draft');
     });
 
-    test('copyWith で特定フィールドのみ更新される', () {
+    test('copyWith は指定した項目だけを更新する', () {
       final game = Game.fromJson(json);
       final updated = game.copyWith(homeScore: 10, awayScore: 2);
 

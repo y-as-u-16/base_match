@@ -2,105 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/auth/presentation/pages/sign_up_page.dart';
-import '../../features/auth/presentation/view_models/auth_view_model.dart';
 import '../../features/games/presentation/pages/create_game_page.dart';
 import '../../features/games/presentation/pages/game_detail_page.dart';
+import '../../features/games/presentation/pages/games_page.dart';
+import '../../features/games/presentation/pages/pitching_input_page.dart';
 import '../../features/games/presentation/pages/plate_appearance_input_page.dart';
+import '../../features/games/presentation/pages/teams_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/matchups/presentation/pages/matchup_detail_page.dart';
-import '../../features/matchups/presentation/pages/matchup_list_page.dart';
-import '../../features/profile/presentation/pages/edit_profile_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/share/presentation/pages/card_preview_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
-import '../../features/teams/presentation/pages/create_team_page.dart';
-import '../../features/teams/presentation/pages/join_team_page.dart';
-import '../../features/teams/presentation/pages/team_detail_page.dart';
+import '../../features/stats/presentation/pages/stats_page.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-/// Supabase初期化完了フラグ。SplashPageの初期化完了後にtrueにする。
 final isInitializedProvider = StateProvider<bool>((ref) => false);
 
-/// フェード遷移を生成するヘルパー
 CustomTransitionPage<void> _fadeTransitionPage({
   required LocalKey key,
   required Widget child,
-  Duration duration = const Duration(milliseconds: 250),
 }) {
   return CustomTransitionPage<void>(
     key: key,
     child: child,
-    transitionDuration: duration,
-    reverseTransitionDuration: duration,
+    transitionDuration: const Duration(milliseconds: 220),
+    reverseTransitionDuration: const Duration(milliseconds: 220),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(opacity: animation, child: child);
     },
   );
 }
 
-/// ボトムアップスライド+フェード遷移を生成するヘルパー
-CustomTransitionPage<void> _slideUpFadeTransitionPage({
-  required LocalKey key,
-  required Widget child,
-  Duration duration = const Duration(milliseconds: 280),
-}) {
-  return CustomTransitionPage<void>(
-    key: key,
-    child: child,
-    transitionDuration: duration,
-    reverseTransitionDuration: duration,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final tween = Tween(begin: const Offset(0, 0.15), end: Offset.zero)
-          .chain(CurveTween(curve: Curves.easeOutCubic));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: FadeTransition(opacity: animation, child: child),
-      );
-    },
-  );
-}
-
-/// スケール+フェード遷移を生成するヘルパー
-CustomTransitionPage<void> _scaleFadeTransitionPage({
-  required LocalKey key,
-  required Widget child,
-  Duration duration = const Duration(milliseconds: 280),
-}) {
-  return CustomTransitionPage<void>(
-    key: key,
-    child: child,
-    transitionDuration: duration,
-    reverseTransitionDuration: duration,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final scaleTween = Tween(begin: 0.92, end: 1.0)
-          .chain(CurveTween(curve: Curves.easeOutCubic));
-      return ScaleTransition(
-        scale: animation.drive(scaleTween),
-        child: FadeTransition(opacity: animation, child: child),
-      );
-    },
-  );
-}
-
-/// 右からスライド遷移を生成するヘルパー（作成系画面用、やや高速）
 CustomTransitionPage<void> _slideRightTransitionPage({
   required LocalKey key,
   required Widget child,
-  Duration duration = const Duration(milliseconds: 250),
 }) {
   return CustomTransitionPage<void>(
     key: key,
     child: child,
-    transitionDuration: duration,
-    reverseTransitionDuration: duration,
+    transitionDuration: const Duration(milliseconds: 240),
+    reverseTransitionDuration: const Duration(milliseconds: 240),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final tween = Tween(begin: const Offset(1, 0), end: Offset.zero)
-          .chain(CurveTween(curve: Curves.easeOutCubic));
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
+      final tween = Tween(
+        begin: const Offset(1, 0),
+        end: Offset.zero,
+      ).chain(CurveTween(curve: Curves.easeOutCubic));
+      return SlideTransition(position: animation.drive(tween), child: child);
     },
   );
 }
@@ -108,66 +52,25 @@ CustomTransitionPage<void> _slideRightTransitionPage({
 final routerProvider = Provider<GoRouter>((ref) {
   final isInitialized = ref.watch(isInitializedProvider);
 
-  // Supabase初期化完了後のみauthStateを参照する
-  final authState = isInitialized ? ref.watch(authStateProvider) : null;
-
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
-      // 初期化完了前はスプラッシュに留まる
       if (!isInitialized) {
         if (state.matchedLocation != '/splash') return '/splash';
         return null;
       }
-
-      // 認証状態がまだ確定していない間はスプラッシュに留まる
-      // （StreamProviderの初回ロード中に/loginへ飛ばすとちらつきが発生するため）
-      if (authState != null && authState.isLoading) {
-        if (state.matchedLocation != '/splash') return '/splash';
-        return null;
-      }
-
-      // スプラッシュから離れた後の認証リダイレクト
-      final isLoggedIn = authState?.valueOrNull != null;
-      final isAuthRoute =
-          state.matchedLocation == '/login' ||
-          state.matchedLocation == '/sign-up';
-
-      if (state.matchedLocation == '/splash') {
-        return isLoggedIn ? '/' : '/login';
-      }
-      if (!isLoggedIn && !isAuthRoute) return '/login';
-      if (isLoggedIn && isAuthRoute) return '/';
+      if (state.matchedLocation == '/splash') return '/';
       return null;
     },
     routes: [
-      // スプラッシュ画面
       GoRoute(
         path: '/splash',
-        pageBuilder: (context, state) => _fadeTransitionPage(
-          key: state.pageKey,
-          child: const SplashPage(),
-        ),
-      ),
-      // 認証画面: フェード
-      GoRoute(
-        path: '/login',
-        pageBuilder: (context, state) => _fadeTransitionPage(
-          key: state.pageKey,
-          child: const LoginPage(),
-        ),
-      ),
-      GoRoute(
-        path: '/sign-up',
-        pageBuilder: (context, state) => _fadeTransitionPage(
-          key: state.pageKey,
-          child: const SignUpPage(),
-        ),
+        pageBuilder: (context, state) =>
+            _fadeTransitionPage(key: state.pageKey, child: const SplashPage()),
       ),
       ShellRoute(
         builder: (context, state, child) => _ScaffoldWithNavBar(child: child),
         routes: [
-          // タブ画面: フェード
           GoRoute(
             path: '/',
             pageBuilder: (context, state) => _fadeTransitionPage(
@@ -175,120 +78,64 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: const HomePage(),
             ),
           ),
-          // タブ画面: フェード
           GoRoute(
-            path: '/teams',
+            path: '/games',
             pageBuilder: (context, state) => _fadeTransitionPage(
               key: state.pageKey,
-              child: const CreateTeamPage(),
-            ),
-          ),
-          // 作成系画面: 右からスライド
-          GoRoute(
-            path: '/teams/create',
-            pageBuilder: (context, state) => _slideRightTransitionPage(
-              key: state.pageKey,
-              child: const CreateTeamPage(),
-            ),
-          ),
-          GoRoute(
-            path: '/teams/join',
-            pageBuilder: (context, state) => _slideRightTransitionPage(
-              key: state.pageKey,
-              child: const JoinTeamPage(),
-            ),
-          ),
-          // 詳細画面: ボトムアップ+フェード
-          GoRoute(
-            path: '/teams/:teamId',
-            pageBuilder: (context, state) => _slideUpFadeTransitionPage(
-              key: state.pageKey,
-              child: TeamDetailPage(
-                teamId: state.pathParameters['teamId']!,
-              ),
-            ),
-          ),
-          // 作成系画面: 右からスライド
-          GoRoute(
-            path: '/games/create',
-            pageBuilder: (context, state) => _slideRightTransitionPage(
-              key: state.pageKey,
-              child: CreateGamePage(
-                teamId: state.uri.queryParameters['teamId']!,
-              ),
-            ),
-          ),
-          // 詳細画面: ボトムアップ+フェード
-          GoRoute(
-            path: '/games/:gameId',
-            pageBuilder: (context, state) => _slideUpFadeTransitionPage(
-              key: state.pageKey,
-              child: GameDetailPage(
-                gameId: state.pathParameters['gameId']!,
-              ),
+              child: const GamesPage(),
             ),
             routes: [
-              // 打席入力: 右からスライド
               GoRoute(
-                path: 'plate-appearance',
+                path: 'create',
                 pageBuilder: (context, state) => _slideRightTransitionPage(
                   key: state.pageKey,
-                  child: PlateAppearanceInputPage(
+                  child: const CreateGamePage(),
+                ),
+              ),
+              GoRoute(
+                path: ':gameId',
+                pageBuilder: (context, state) => _fadeTransitionPage(
+                  key: state.pageKey,
+                  child: GameDetailPage(
                     gameId: state.pathParameters['gameId']!,
                   ),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'plate-appearances/new',
+                    pageBuilder: (context, state) => _slideRightTransitionPage(
+                      key: state.pageKey,
+                      child: PlateAppearanceInputPage(
+                        gameId: state.pathParameters['gameId']!,
+                      ),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'pitching/new',
+                    pageBuilder: (context, state) => _slideRightTransitionPage(
+                      key: state.pageKey,
+                      child: PitchingInputPage(
+                        gameId: state.pathParameters['gameId']!,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          // タブ画面: フェード
           GoRoute(
-            path: '/matchups',
+            path: '/stats',
             pageBuilder: (context, state) => _fadeTransitionPage(
               key: state.pageKey,
-              child: const MatchupListPage(),
+              child: const StatsPage(),
             ),
           ),
-          // 詳細画面: ボトムアップ+フェード
           GoRoute(
-            path: '/matchups/:matchupType/:id1/:id2',
-            pageBuilder: (context, state) => _slideUpFadeTransitionPage(
+            path: '/teams',
+            pageBuilder: (context, state) => _slideRightTransitionPage(
               key: state.pageKey,
-              child: MatchupDetailPage(
-                matchupType: state.pathParameters['matchupType']!,
-                id1: state.pathParameters['id1']!,
-                id2: state.pathParameters['id2']!,
-              ),
+              child: const TeamsPage(),
             ),
-          ),
-          // カードプレビュー: スケール+フェード
-          GoRoute(
-            path: '/matchups/:matchupType/:id1/:id2/card',
-            pageBuilder: (context, state) => _scaleFadeTransitionPage(
-              key: state.pageKey,
-              child: CardPreviewPage(
-                matchupType: state.pathParameters['matchupType']!,
-                id1: state.pathParameters['id1']!,
-                id2: state.pathParameters['id2']!,
-              ),
-            ),
-          ),
-          // タブ画面: フェード
-          GoRoute(
-            path: '/profile',
-            pageBuilder: (context, state) => _fadeTransitionPage(
-              key: state.pageKey,
-              child: const ProfilePage(),
-            ),
-            routes: [
-              // プロフィール編集: ボトムアップ+フェード
-              GoRoute(
-                path: 'edit',
-                pageBuilder: (context, state) => _slideUpFadeTransitionPage(
-                  key: state.pageKey,
-                  child: const EditProfilePage(),
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -302,17 +149,25 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _calculateSelectedIndex(context),
         onDestinationSelected: (index) => _onItemTapped(index, context),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.sports_baseball), label: 'ホーム'),
-          NavigationDestination(icon: Icon(Icons.groups), label: 'チーム'),
+        destinations: [
           NavigationDestination(
-              icon: Icon(Icons.local_fire_department), label: '因縁'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'プロフィール'),
+            icon: const Icon(Icons.home_outlined),
+            label: l10n.navHome,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.sports_baseball_outlined),
+            label: l10n.navRecord,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.bar_chart),
+            label: l10n.navStats,
+          ),
         ],
       ),
     );
@@ -320,9 +175,9 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
-    if (location.startsWith('/matchups')) return 2;
-    if (location.startsWith('/profile')) return 3;
+    if (location.startsWith('/games')) return 1;
     if (location.startsWith('/teams')) return 1;
+    if (location.startsWith('/stats')) return 2;
     return 0;
   }
 
@@ -331,11 +186,9 @@ class _ScaffoldWithNavBar extends StatelessWidget {
       case 0:
         context.go('/');
       case 1:
-        context.go('/teams');
+        context.go('/games');
       case 2:
-        context.go('/matchups');
-      case 3:
-        context.go('/profile');
+        context.go('/stats');
     }
   }
 }

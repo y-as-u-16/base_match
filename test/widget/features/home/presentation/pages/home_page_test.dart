@@ -1,84 +1,52 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:base_match/core/local_db/local_database.dart';
+import 'package:base_match/core/local_db/local_database_provider.dart';
 import 'package:base_match/core/theme/app_theme.dart';
-import 'package:base_match/features/auth/presentation/view_models/auth_view_model.dart';
 import 'package:base_match/features/home/presentation/pages/home_page.dart';
-import 'package:base_match/features/home/presentation/view_models/home_view_model.dart';
+import 'package:base_match/l10n/generated/app_localizations.dart';
+import 'package:base_match/l10n/generated/app_localizations_ja.dart';
 
 void main() {
+  final l10n = AppLocalizationsJa();
+
   Widget buildSubject() {
+    final database = LocalDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(database.close);
+
     return ProviderScope(
-      overrides: [
-        currentUserProvider.overrideWithValue(null),
-        myTeamsForHomeProvider.overrideWith((ref) async => []),
-        recentGamesProvider.overrideWith((ref) async => []),
-        matchupHighlightsProvider.overrideWith((ref) async => []),
-      ],
+      overrides: [localDatabaseProvider.overrideWithValue(database)],
       child: MaterialApp(
         theme: AppTheme.light,
+        locale: const Locale('ja'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: const HomePage(),
       ),
     );
   }
 
   group('HomePage', () {
-    testWidgets('AppBarに「base_match」が表示される', (tester) async {
+    testWidgets('ホームの主要アクションを表示する', (tester) async {
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text('base_match'), findsOneWidget);
+      expect(find.text(l10n.navHome), findsOneWidget);
+      expect(find.text(l10n.homeHeadline), findsOneWidget);
+      expect(find.text(l10n.seasonSummaryTitle), findsOneWidget);
+      expect(find.text(l10n.seasonGamesCount(0)), findsOneWidget);
+      expect(find.text(l10n.seasonRecordLabel(0, 0, 0)), findsOneWidget);
+      expect(find.text(l10n.recordGameButton), findsOneWidget);
+      expect(find.text(l10n.viewStatsButton), findsOneWidget);
     });
 
-    testWidgets('「試合を記録」FABが表示される', (tester) async {
+    testWidgets('試合がない場合は空状態を表示する', (tester) async {
       await tester.pumpWidget(buildSubject());
 
-      expect(find.text('試合を記録'), findsOneWidget);
-    });
-
-    testWidgets('ウェルカムメッセージが表示される', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      expect(find.textContaining('ようこそ'), findsOneWidget);
-    });
-
-    testWidgets('セクションヘッダーが表示される（注目の因縁・自分のチーム）', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      // 上部に表示されるセクションヘッダーのみ確認
-      expect(find.text('注目の因縁'), findsOneWidget);
-      expect(find.text('自分のチーム'), findsOneWidget);
-    });
-
-    testWidgets('クイックアクションカードが表示される', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      expect(find.text('因縁を見る'), findsOneWidget);
-      expect(find.text('チーム作成'), findsOneWidget);
-    });
-
-    testWidgets('チームが空の場合にEmptyStateが表示される', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      expect(
-        find.text('まずはチームを作ろう。因縁はそこから始まる。'),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('スクロールすると「直近の試合」セクションが表示される', (tester) async {
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
-
-      // ListViewをスクロールして下部の要素を表示
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
-      await tester.pumpAndSettle();
-
-      expect(find.text('直近の試合'), findsOneWidget);
+      expect(find.text(l10n.recentGamesTitle), findsOneWidget);
+      expect(find.text(l10n.homeEmptyGames), findsOneWidget);
     });
   });
 }

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  // -- 野球テーマ カラーパレット --
-  // 球場の芝（深い緑）
+  // -- Baseball color palette --
+  // Field grass.
   static const _fieldGreen = Color(0xFF1B4332);
-  // グローブ・バットの革（ディープブラウン）
+  // Glove and bat leather.
   static const _leatherBrown = Color(0xFF5C4033);
-  // 野球ボールの縫い目（レッド）
+  // Ball stitching.
   static const _stitchRed = Color(0xFFC62828);
-  // ベースの白（オフホワイト）
+  // Base bag white.
   static const _baseWhite = Color(0xFFFFF8F0);
-  // トロフィー・ゴールド
+  // Trophy gold.
   static const _trophyGold = Color(0xFFD4A017);
 
   // -- Light Theme --
@@ -47,7 +47,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
 
-      // -- AppBar（球場の電光掲示板風） --
+      // -- AppBar --
       appBarTheme: AppBarTheme(
         centerTitle: true,
         backgroundColor: isLight ? _fieldGreen : colorScheme.surface,
@@ -63,7 +63,7 @@ class AppTheme {
         ),
       ),
 
-      // -- Card（野球カード風） --
+      // -- Card --
       cardTheme: CardThemeData(
         elevation: 1,
         shadowColor: colorScheme.shadow.withValues(alpha: 0.15),
@@ -87,22 +87,19 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: colorScheme.outlineVariant,
-          ),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: colorScheme.primary,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: colorScheme.primary, width: 2),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
 
-      // -- FilledButton（太めフォント、やや丸み） --
+      // -- FilledButton --
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
@@ -124,10 +121,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
         ),
       ),
 
@@ -139,10 +133,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(14),
           ),
           side: BorderSide(color: colorScheme.outline),
-          textStyle: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
         ),
       ),
 
@@ -150,25 +141,18 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          textStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
 
       // -- Chip --
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
 
       // -- ListTile --
       listTileTheme: ListTileThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
 
@@ -182,25 +166,18 @@ class AppTheme {
       // -- SnackBar --
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
 
       // -- Dialog --
       dialogTheme: DialogThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
 
       // -- TabBar --
       tabBarTheme: TabBarThemeData(
         indicatorSize: TabBarIndicatorSize.label,
-        labelStyle: const TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 14,
-        ),
+        labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         unselectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 14,
@@ -247,7 +224,7 @@ class AppTheme {
     );
   }
 
-  // テーマカラーをアプリ全体で参照するための定数
+  // Shared theme colors.
   static const Color fieldGreen = _fieldGreen;
   static const Color leatherBrown = _leatherBrown;
   static const Color stitchRed = _stitchRed;

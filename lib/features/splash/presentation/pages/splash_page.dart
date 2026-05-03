@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/routing/app_router.dart';
 
@@ -32,29 +28,12 @@ class _SplashPageState extends ConsumerState<SplashPage>
   }
 
   Future<void> _initialize() async {
-    const env = String.fromEnvironment('ENV', defaultValue: 'local');
-    final envFile = env == 'release' ? '.env' : '.env.local';
-    await dotenv.load(fileName: envFile);
-
-    var supabaseUrl = dotenv.env['SUPABASE_URL']!;
-
-    // ローカル開発時、Androidエミュレータでは 127.0.0.1 でホストPCに
-    // アクセスできないため、10.0.2.2 に自動変換する
-    if (env == 'local' && Platform.isAndroid) {
-      supabaseUrl = supabaseUrl.replaceAll('127.0.0.1', '10.0.2.2');
-    }
-
-    await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-    );
-
-    // 最低1.5秒はスプラッシュを表示
+    // MVP1 is local-only, so there is no external service bootstrap here.
     await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
-    // 初期化完了フラグをONにする → ルーターのredirectが認証状態に応じて遷移させる
+    // Mark initialization as complete so the router can leave splash.
     ref.read(isInitializedProvider.notifier).state = true;
   }
 
@@ -71,11 +50,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
       body: Center(
         child: FadeTransition(
           opacity: _fadeIn,
-          child: Image.asset(
-            'assets/splash.png',
-            width: 200,
-            height: 200,
-          ),
+          child: Image.asset('assets/splash.png', width: 200, height: 200),
         ),
       ),
     );

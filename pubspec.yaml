@@ -1,5 +1,5 @@
 name: base_match
-description: "草野球対戦履歴アプリ - バッターxピッチャー、チームxチームの因縁を記録・共有"
+description: "Local baseball game and stats tracking app"
 
 publish_to: 'none'
 version: 1.0.0+1
@@ -10,9 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # Supabase
-  supabase_flutter: ^2.8.0
+  flutter_localizations:
+    sdk: flutter
 
   # State Management
   flutter_riverpod: ^2.6.1
@@ -20,11 +19,12 @@ dependencies:
   # Routing
   go_router: ^14.8.1
 
-  # Environment Variables
-  flutter_dotenv: ^5.2.1
-
-  # Sharing
-  share_plus: ^10.1.4
+  # Local database
+  drift: ^2.22.1
+  sqlite3_flutter_libs: ^0.5.28
+  path_provider: ^2.1.5
+  path: ^1.9.0
+  uuid: ^4.5.1
 
   # Serialization
   freezed_annotation: ^2.4.4
@@ -32,7 +32,7 @@ dependencies:
 
   # UI
   cupertino_icons: ^1.0.8
-  intl: ^0.19.0
+  intl: ^0.20.2
   gap: ^3.0.1
 
 dev_dependencies:
@@ -45,6 +45,7 @@ dev_dependencies:
   mocktail: ^1.0.4
 
   # Code Generation
+  drift_dev: ^2.22.1
   freezed: ^2.5.8
   json_serializable: ^6.9.4
   build_runner: ^2.4.14
@@ -57,9 +58,8 @@ flutter_launcher_icons:
   min_sdk_android: 21
 
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:
-    - .env
-    - .env.local
     - assets/splash.png

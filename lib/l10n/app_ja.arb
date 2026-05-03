@@ -1,0 +1,302 @@
+{
+  "@@locale": "ja",
+  "appTitle": "草野球マッチ",
+  "brandName": "base_match",
+  "navHome": "ホーム",
+  "navRecord": "記録",
+  "navStats": "成績",
+  "homeHeadline": "試合を記録しよう",
+  "homeDescription": "対戦カード、打席、ピッチング成績をまとめて残せます。",
+  "seasonSummaryTitle": "今季サマリー",
+  "seasonSummarySubtitle": "{year}年の記録",
+  "@seasonSummarySubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonGamesMetricLabel": "試合",
+  "seasonRecordMetricLabel": "勝敗",
+  "seasonRunsMetricLabel": "得点",
+  "seasonAverageMetricLabel": "打率",
+  "seasonEraMetricLabel": "防御率",
+  "seasonGamesCount": "{count}試合",
+  "@seasonGamesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRecordLabel": "{wins}勝 {losses}敗 {draws}分",
+  "@seasonRecordLabel": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRunsLabel": "{runs}点",
+  "@seasonRunsLabel": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
+  "recordGameButton": "試合を記録する",
+  "viewStatsButton": "成績を見る",
+  "recentGamesTitle": "直近の試合",
+  "homeEmptyGames": "まだ試合がありません。最初の試合を記録してください。",
+  "recordTitle": "記録",
+  "addGameButton": "試合を追加",
+  "emptyGamesTitle": "まだ試合がありません",
+  "emptyGamesSubtitle": "試合を作成して、打席やピッチング成績を記録します。",
+  "createGameButton": "試合を作成する",
+  "createGameTitle": "試合を作成",
+  "gameDateLabel": "試合日",
+  "homeTeamNameLabel": "自チーム名",
+  "homeTeamNameRequired": "チーム名を入力してください",
+  "awayTeamNameLabel": "相手チーム名",
+  "awayTeamNameRequired": "相手チーム名を入力してください",
+  "homeScoreLabel": "自チーム得点",
+  "awayScoreLabel": "相手チーム得点",
+  "scoreRequired": "点数を入力してください",
+  "scoreMustBeNonNegative": "0以上の点数を入力してください",
+  "locationOptionalLabel": "球場（任意）",
+  "inningsCountLabel": "イニング数",
+  "inningsShort": "{innings}回",
+  "@inningsShort": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      }
+    }
+  },
+  "createButton": "作成する",
+  "gameDetailTitle": "試合詳細",
+  "gameNotFound": "試合が見つかりません",
+  "addPlateAppearanceButton": "打席",
+  "addPitchingButton": "投手",
+  "plateAppearanceRecordsTitle": "打席記録",
+  "emptyPlateAppearances": "まだ打席記録がありません",
+  "plateAppearanceListSubtitle": "{inning}回 / 打点 {rbi}",
+  "@plateAppearanceListSubtitle": {
+    "placeholders": {
+      "inning": {
+        "type": "String"
+      },
+      "rbi": {
+        "type": "int"
+      }
+    }
+  },
+  "pitchingRecordsTitle": "ピッチング記録",
+  "emptyPitchingAppearances": "まだピッチング記録がありません",
+  "pitchingOutsTitle": "投球回 {innings}",
+  "@pitchingOutsTitle": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchingListSubtitle": "失点 {runs} / 自責 {earnedRuns} / 奪三振 {strikeouts}",
+  "@pitchingListSubtitle": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      },
+      "earnedRuns": {
+        "type": "int"
+      },
+      "strikeouts": {
+        "type": "int"
+      }
+    }
+  },
+  "inningsOnlyLabel": "{innings}回",
+  "@inningsOnlyLabel": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      }
+    }
+  },
+  "inningsWithRestLabel": "{innings}回{rest}/3",
+  "@inningsWithRestLabel": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      },
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "resultHit": "ヒット",
+  "resultOut": "アウト",
+  "resultWalk": "四死球",
+  "resultError": "エラー",
+  "detailSingle": "単打",
+  "detailDouble": "二塁打",
+  "detailTriple": "三塁打",
+  "detailHomeRun": "本塁打",
+  "detailStrikeout": "三振",
+  "detailGround": "ゴロ",
+  "detailFly": "フライ",
+  "detailLine": "ライナー",
+  "detailDoublePlay": "併殺",
+  "detailSacBunt": "犠打",
+  "detailSacFly": "犠飛",
+  "detailOther": "その他",
+  "detailWalk": "四球",
+  "detailHitByPitch": "死球",
+  "detailError": "エラー",
+  "plateAppearanceInputTitle": "打席入力",
+  "selectPlateAppearanceResultMessage": "打席結果を選択してください",
+  "notSelectedLabel": "未選択",
+  "playerNameRequired": "選手名を入力してください",
+  "batterNameLabel": "打者名",
+  "plateAppearanceSummary": "{inning}回 / {result} / 打点 {rbi}",
+  "@plateAppearanceSummary": {
+    "placeholders": {
+      "inning": {
+        "type": "int"
+      },
+      "result": {
+        "type": "String"
+      },
+      "rbi": {
+        "type": "int"
+      }
+    }
+  },
+  "inningLabel": "イニング",
+  "rbiLabel": "打点",
+  "hitSectionTitle": "ヒット",
+  "outSectionTitle": "アウト",
+  "onBaseSectionTitle": "出塁・その他",
+  "saveButton": "登録する",
+  "decreaseLabelTooltip": "{label}を減らす",
+  "@decreaseLabelTooltip": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "increaseLabelTooltip": "{label}を増やす",
+  "@increaseLabelTooltip": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchingInputTitle": "ピッチング入力",
+  "pitcherNameLabel": "投手名",
+  "pitchingInputSummary": "投球回 {innings} / 失点 {runs} / 自責 {earnedRuns}",
+  "@pitchingInputSummary": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      },
+      "runs": {
+        "type": "int"
+      },
+      "earnedRuns": {
+        "type": "int"
+      }
+    }
+  },
+  "runsLabel": "失点",
+  "earnedRunsLabel": "自責点",
+  "hitsAllowedLabel": "被安打",
+  "walksAllowedLabel": "与四死球",
+  "strikeoutsLabel": "奪三振",
+  "homeRunsAllowedLabel": "被本塁打",
+  "pitchingInningsLabel": "投球回",
+  "decreaseOneOutTooltip": "1アウト減らす",
+  "increaseOneOutTooltip": "1アウト増やす",
+  "outsLabel": "{outs} アウト",
+  "@outsLabel": {
+    "placeholders": {
+      "outs": {
+        "type": "int"
+      }
+    }
+  },
+  "addOneThirdInningButton": "+1/3回",
+  "addOneInningButton": "+1回",
+  "resetOneInningButton": "1回に戻す",
+  "statsTitle": "成績",
+  "battingStatsTitle": "打撃成績",
+  "pitchingStatsTitle": "ピッチング成績",
+  "personalBattingTitle": "自分の打撃",
+  "noBattingStatsLabel": "打撃記録なし",
+  "battingStatsSummary": "打席 {pa} / 打数 {ab} / 安打 {hits} / 本塁打 {hr} / 三振 {so}",
+  "@battingStatsSummary": {
+    "placeholders": {
+      "pa": {
+        "type": "int"
+      },
+      "ab": {
+        "type": "int"
+      },
+      "hits": {
+        "type": "int"
+      },
+      "hr": {
+        "type": "int"
+      },
+      "so": {
+        "type": "int"
+      }
+    }
+  },
+  "personalPitchingTitle": "自分の投球",
+  "noPitchingStatsLabel": "投球記録なし",
+  "pitchingStatsSummary": "登板 {games} / 投球回 {innings} / 自責 {earnedRuns} / 奪三振 {strikeouts}",
+  "@pitchingStatsSummary": {
+    "placeholders": {
+      "games": {
+        "type": "int"
+      },
+      "innings": {
+        "type": "String"
+      },
+      "earnedRuns": {
+        "type": "int"
+      },
+      "strikeouts": {
+        "type": "int"
+      }
+    }
+  },
+  "reloadButton": "再読み込み",
+  "myTeamsTitle": "自分のチーム",
+  "manageMyTeamsTooltip": "自チームを管理",
+  "addMyTeamButton": "チームを追加",
+  "emptyMyTeamsTitle": "自分のチームがありません",
+  "emptyMyTeamsSubtitle": "最初のチームを追加すると、試合記録で使えるようになります。",
+  "addMyTeamTitle": "自チームを追加",
+  "myTeamNameLabel": "チーム名",
+  "myTeamNameRequired": "チーム名を入力してください",
+  "myTeamSelectLabel": "自チーム",
+  "selectMyTeamRequired": "自チームを選択してください",
+  "noMyTeamsForGameTitle": "自チームを追加してください",
+  "noMyTeamsForGameSubtitle": "試合を作成するには、先に自分のチームが必要です。",
+  "defaultMyTeamBadge": "デフォルト",
+  "myTeamCreatedMessage": "チームを追加しました",
+  "unknownMyTeamLabel": "不明なチーム",
+  "cancelButton": "キャンセル",
+  "addButton": "追加"
+}

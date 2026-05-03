@@ -5,75 +5,75 @@ import 'package:base_match/core/theme/app_theme.dart';
 
 void main() {
   group('AppTheme', () {
-    group('カラー定数', () {
-      test('fieldGreen の値が正しい', () {
+    group('color constants', () {
+      test('fieldGreen が期待した値である', () {
         expect(AppTheme.fieldGreen, const Color(0xFF1B4332));
       });
 
-      test('leatherBrown の値が正しい', () {
+      test('leatherBrown が期待した値である', () {
         expect(AppTheme.leatherBrown, const Color(0xFF5C4033));
       });
 
-      test('stitchRed の値が正しい', () {
+      test('stitchRed が期待した値である', () {
         expect(AppTheme.stitchRed, const Color(0xFFC62828));
       });
 
-      test('baseWhite の値が正しい', () {
+      test('baseWhite が期待した値である', () {
         expect(AppTheme.baseWhite, const Color(0xFFFFF8F0));
       });
 
-      test('trophyGold の値が正しい', () {
+      test('trophyGold が期待した値である', () {
         expect(AppTheme.trophyGold, const Color(0xFFD4A017));
       });
     });
 
-    group('ライトテーマ', () {
+    group('light theme', () {
       late ThemeData theme;
 
       setUp(() {
         theme = AppTheme.light;
       });
 
-      test('正常に生成される', () {
+      test('ライトテーマとして生成される', () {
         expect(theme, isNotNull);
         expect(theme.brightness, Brightness.light);
       });
 
-      test('Material 3 が有効である', () {
+      test('Material 3 を使用する', () {
         expect(theme.useMaterial3, isTrue);
       });
 
-      test('AppBar が緑背景・白文字である', () {
+      test('AppBar は緑の背景と白い前景色を使用する', () {
         expect(theme.appBarTheme.backgroundColor, AppTheme.fieldGreen);
         expect(theme.appBarTheme.foregroundColor, Colors.white);
       });
 
-      test('AppBar のタイトルが中央寄せである', () {
+      test('AppBar のタイトルを中央寄せにする', () {
         expect(theme.appBarTheme.centerTitle, isTrue);
       });
 
-      test('AppBar のタイトルテキストスタイルが白色である', () {
+      test('AppBar のタイトル文字色に白を使用する', () {
         expect(theme.appBarTheme.titleTextStyle?.color, Colors.white);
       });
     });
 
-    group('ダークテーマ', () {
+    group('dark theme', () {
       late ThemeData theme;
 
       setUp(() {
         theme = AppTheme.dark;
       });
 
-      test('正常に生成される', () {
+      test('ダークテーマとして生成される', () {
         expect(theme, isNotNull);
         expect(theme.brightness, Brightness.dark);
       });
 
-      test('Material 3 が有効である', () {
+      test('Material 3 を使用する', () {
         expect(theme.useMaterial3, isTrue);
       });
 
-      test('AppBar のタイトルが中央寄せである', () {
+      test('AppBar のタイトルを中央寄せにする', () {
         expect(theme.appBarTheme.centerTitle, isTrue);
       });
     });

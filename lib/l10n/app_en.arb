@@ -1,0 +1,302 @@
+{
+  "@@locale": "en",
+  "appTitle": "Base Match",
+  "brandName": "base_match",
+  "navHome": "Home",
+  "navRecord": "Record",
+  "navStats": "Stats",
+  "homeHeadline": "Record your games",
+  "homeDescription": "Keep matchups, plate appearances, and pitching stats in one place.",
+  "seasonSummaryTitle": "Season Summary",
+  "seasonSummarySubtitle": "{year} records",
+  "@seasonSummarySubtitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonGamesMetricLabel": "Games",
+  "seasonRecordMetricLabel": "Record",
+  "seasonRunsMetricLabel": "Runs",
+  "seasonAverageMetricLabel": "AVG",
+  "seasonEraMetricLabel": "ERA",
+  "seasonGamesCount": "{count} games",
+  "@seasonGamesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRecordLabel": "{wins}W {losses}L {draws}D",
+  "@seasonRecordLabel": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      }
+    }
+  },
+  "seasonRunsLabel": "{runs} runs",
+  "@seasonRunsLabel": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
+  "recordGameButton": "Record a game",
+  "viewStatsButton": "View stats",
+  "recentGamesTitle": "Recent Games",
+  "homeEmptyGames": "No games yet. Record your first game.",
+  "recordTitle": "Record",
+  "addGameButton": "Add game",
+  "emptyGamesTitle": "No games yet",
+  "emptyGamesSubtitle": "Create a game to record plate appearances and pitching stats.",
+  "createGameButton": "Create game",
+  "createGameTitle": "Create Game",
+  "gameDateLabel": "Game date",
+  "homeTeamNameLabel": "My team name",
+  "homeTeamNameRequired": "Enter a team name",
+  "awayTeamNameLabel": "Opponent team name",
+  "awayTeamNameRequired": "Enter an opponent team name",
+  "homeScoreLabel": "My team score",
+  "awayScoreLabel": "Opponent score",
+  "scoreRequired": "Enter a score",
+  "scoreMustBeNonNegative": "Enter a score of 0 or higher",
+  "locationOptionalLabel": "Ballpark (optional)",
+  "inningsCountLabel": "Innings",
+  "inningsShort": "{innings} inn.",
+  "@inningsShort": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      }
+    }
+  },
+  "createButton": "Create",
+  "gameDetailTitle": "Game Details",
+  "gameNotFound": "Game not found",
+  "addPlateAppearanceButton": "Plate appearance",
+  "addPitchingButton": "Pitching",
+  "plateAppearanceRecordsTitle": "Plate Appearance Records",
+  "emptyPlateAppearances": "No plate appearances yet",
+  "plateAppearanceListSubtitle": "{inning} inn. / RBI {rbi}",
+  "@plateAppearanceListSubtitle": {
+    "placeholders": {
+      "inning": {
+        "type": "String"
+      },
+      "rbi": {
+        "type": "int"
+      }
+    }
+  },
+  "pitchingRecordsTitle": "Pitching Records",
+  "emptyPitchingAppearances": "No pitching records yet",
+  "pitchingOutsTitle": "Innings pitched {innings}",
+  "@pitchingOutsTitle": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchingListSubtitle": "Runs {runs} / ER {earnedRuns} / SO {strikeouts}",
+  "@pitchingListSubtitle": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      },
+      "earnedRuns": {
+        "type": "int"
+      },
+      "strikeouts": {
+        "type": "int"
+      }
+    }
+  },
+  "inningsOnlyLabel": "{innings} inn.",
+  "@inningsOnlyLabel": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      }
+    }
+  },
+  "inningsWithRestLabel": "{innings}.{rest} inn.",
+  "@inningsWithRestLabel": {
+    "placeholders": {
+      "innings": {
+        "type": "int"
+      },
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "resultHit": "Hit",
+  "resultOut": "Out",
+  "resultWalk": "Walk/HBP",
+  "resultError": "Error",
+  "detailSingle": "Single",
+  "detailDouble": "Double",
+  "detailTriple": "Triple",
+  "detailHomeRun": "Home run",
+  "detailStrikeout": "Strikeout",
+  "detailGround": "Grounder",
+  "detailFly": "Fly ball",
+  "detailLine": "Line drive",
+  "detailDoublePlay": "Double play",
+  "detailSacBunt": "Sac bunt",
+  "detailSacFly": "Sac fly",
+  "detailOther": "Other",
+  "detailWalk": "Walk",
+  "detailHitByPitch": "Hit by pitch",
+  "detailError": "Error",
+  "plateAppearanceInputTitle": "Plate Appearance",
+  "selectPlateAppearanceResultMessage": "Select a plate appearance result",
+  "notSelectedLabel": "Not selected",
+  "playerNameRequired": "Enter a player name",
+  "batterNameLabel": "Batter name",
+  "plateAppearanceSummary": "{inning} inn. / {result} / RBI {rbi}",
+  "@plateAppearanceSummary": {
+    "placeholders": {
+      "inning": {
+        "type": "int"
+      },
+      "result": {
+        "type": "String"
+      },
+      "rbi": {
+        "type": "int"
+      }
+    }
+  },
+  "inningLabel": "Inning",
+  "rbiLabel": "RBI",
+  "hitSectionTitle": "Hits",
+  "outSectionTitle": "Outs",
+  "onBaseSectionTitle": "On base / other",
+  "saveButton": "Save",
+  "decreaseLabelTooltip": "Decrease {label}",
+  "@decreaseLabelTooltip": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "increaseLabelTooltip": "Increase {label}",
+  "@increaseLabelTooltip": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "pitchingInputTitle": "Pitching",
+  "pitcherNameLabel": "Pitcher name",
+  "pitchingInputSummary": "IP {innings} / Runs {runs} / ER {earnedRuns}",
+  "@pitchingInputSummary": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      },
+      "runs": {
+        "type": "int"
+      },
+      "earnedRuns": {
+        "type": "int"
+      }
+    }
+  },
+  "runsLabel": "Runs",
+  "earnedRunsLabel": "Earned runs",
+  "hitsAllowedLabel": "Hits allowed",
+  "walksAllowedLabel": "Walks/HBP",
+  "strikeoutsLabel": "Strikeouts",
+  "homeRunsAllowedLabel": "Home runs allowed",
+  "pitchingInningsLabel": "Innings pitched",
+  "decreaseOneOutTooltip": "Decrease by 1 out",
+  "increaseOneOutTooltip": "Increase by 1 out",
+  "outsLabel": "{outs} outs",
+  "@outsLabel": {
+    "placeholders": {
+      "outs": {
+        "type": "int"
+      }
+    }
+  },
+  "addOneThirdInningButton": "+1/3 inn.",
+  "addOneInningButton": "+1 inn.",
+  "resetOneInningButton": "Reset to 1 inn.",
+  "statsTitle": "Stats",
+  "battingStatsTitle": "Batting Stats",
+  "pitchingStatsTitle": "Pitching Stats",
+  "personalBattingTitle": "My Batting",
+  "noBattingStatsLabel": "No batting records",
+  "battingStatsSummary": "PA {pa} / AB {ab} / H {hits} / HR {hr} / SO {so}",
+  "@battingStatsSummary": {
+    "placeholders": {
+      "pa": {
+        "type": "int"
+      },
+      "ab": {
+        "type": "int"
+      },
+      "hits": {
+        "type": "int"
+      },
+      "hr": {
+        "type": "int"
+      },
+      "so": {
+        "type": "int"
+      }
+    }
+  },
+  "personalPitchingTitle": "My Pitching",
+  "noPitchingStatsLabel": "No pitching records",
+  "pitchingStatsSummary": "G {games} / IP {innings} / ER {earnedRuns} / SO {strikeouts}",
+  "@pitchingStatsSummary": {
+    "placeholders": {
+      "games": {
+        "type": "int"
+      },
+      "innings": {
+        "type": "String"
+      },
+      "earnedRuns": {
+        "type": "int"
+      },
+      "strikeouts": {
+        "type": "int"
+      }
+    }
+  },
+  "reloadButton": "Reload",
+  "myTeamsTitle": "My Teams",
+  "manageMyTeamsTooltip": "Manage my teams",
+  "addMyTeamButton": "Add team",
+  "emptyMyTeamsTitle": "No teams yet",
+  "emptyMyTeamsSubtitle": "Add your first team to use it when recording games.",
+  "addMyTeamTitle": "Add My Team",
+  "myTeamNameLabel": "Team name",
+  "myTeamNameRequired": "Enter a team name",
+  "myTeamSelectLabel": "My team",
+  "selectMyTeamRequired": "Select your team",
+  "noMyTeamsForGameTitle": "Add your team",
+  "noMyTeamsForGameSubtitle": "You need to add your team before creating a game.",
+  "defaultMyTeamBadge": "Default",
+  "myTeamCreatedMessage": "Team added",
+  "unknownMyTeamLabel": "Unknown team",
+  "cancelButton": "Cancel",
+  "addButton": "Add"
+}

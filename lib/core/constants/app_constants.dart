@@ -3,11 +3,6 @@ class AppConstants {
 
   static const String appName = 'base_match';
 
-  // Team roles
-  static const String roleOwner = 'owner';
-  static const String roleAdmin = 'admin';
-  static const String roleMember = 'member';
-
   // Game status
   static const String statusDraft = 'draft';
   static const String statusFinal = 'final';
@@ -34,10 +29,4 @@ class AppConstants {
   static const String detailBb = 'bb';
   static const String detailHbp = 'hbp';
   static const String detailE = 'e';
-
-  // Invite code length
-  static const int inviteCodeLength = 8;
-
-  // Recent matchup count
-  static const int recentMatchupCount = 5;
 }

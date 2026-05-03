@@ -1,199 +1,182 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/supabase_client_provider.dart';
-import '../../data/repositories/game_repository_impl.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/local_db/local_database_provider.dart';
+import '../../data/repositories/local_game_repository.dart';
 import '../../domain/entities/game.dart';
+import '../../domain/entities/pitching_appearance.dart';
 import '../../domain/entities/plate_appearance.dart';
-import '../../domain/entities/player.dart';
 import '../../domain/repositories/game_repository.dart';
 
-/// 試合内の注目の因縁（最も打数が多いバッターxピッチャー）
-class GameTopMatchup {
-  const GameTopMatchup({
-    required this.batterId,
-    required this.pitcherId,
-    required this.batterName,
-    required this.pitcherName,
-    required this.ab,
-    required this.hits,
-    this.avg,
+class LocalGameState {
+  const LocalGameState({
+    this.games = const [],
+    this.plateAppearances = const [],
+    this.pitchingAppearances = const [],
   });
 
-  final String batterId;
-  final String pitcherId;
-  final String batterName;
-  final String pitcherName;
-  final int ab;
-  final int hits;
-  final double? avg;
+  final List<Game> games;
+  final List<PlateAppearance> plateAppearances;
+  final List<PitchingAppearance> pitchingAppearances;
+
+  LocalGameState copyWith({
+    List<Game>? games,
+    List<PlateAppearance>? plateAppearances,
+    List<PitchingAppearance>? pitchingAppearances,
+  }) {
+    return LocalGameState(
+      games: games ?? this.games,
+      plateAppearances: plateAppearances ?? this.plateAppearances,
+      pitchingAppearances: pitchingAppearances ?? this.pitchingAppearances,
+    );
+  }
 }
 
-/// 試合の打席データから、最も打数が多いバッターxピッチャーの因縁を取得
-final gameTopMatchupProvider =
-    FutureProvider.family<GameTopMatchup?, String>((ref, gameId) async {
-  final client = ref.watch(supabaseClientProvider);
+final localGameStoreProvider =
+    StateNotifierProvider<LocalGameStore, LocalGameState>((ref) {
+      final database = ref.watch(localDatabaseProvider);
+      final repository = LocalGameRepository(database);
+      return LocalGameStore(repository)..load();
+    });
 
-  // その試合の打席に含まれるバッター/ピッチャーペアを取得
-  final pas = await client
-      .from('plate_appearances')
-      .select('batter_player_id, pitcher_player_id')
-      .eq('game_id', gameId);
-
-  if (pas.isEmpty) return null;
-
-  // ユニークなペアを集計
-  final pairCounts = <String, Map<String, dynamic>>{};
-  for (final pa in pas) {
-    final key =
-        '${pa['batter_player_id']}|${pa['pitcher_player_id']}';
-    pairCounts[key] = pa;
-  }
-
-  if (pairCounts.isEmpty) return null;
-
-  // 各ペアについてビューから通算成績を取得し、最もabが多いものを返す
-  GameTopMatchup? best;
-  for (final entry in pairCounts.entries) {
-    final parts = entry.key.split('|');
-    final batterId = parts[0];
-    final pitcherId = parts[1];
-
-    final rows = await client
-        .from('v_matchup_batter_pitcher')
-        .select()
-        .eq('batter_player_id', batterId)
-        .eq('pitcher_player_id', pitcherId)
-        .limit(1);
-
-    if (rows.isNotEmpty) {
-      final row = rows.first;
-      final ab = (row['ab'] as num?)?.toInt() ?? 0;
-      if (best == null || ab > best.ab) {
-        best = GameTopMatchup(
-          batterId: batterId,
-          pitcherId: pitcherId,
-          batterName: row['batter_name'] as String? ?? '',
-          pitcherName: row['pitcher_name'] as String? ?? '',
-          ab: ab,
-          hits: (row['hits'] as num?)?.toInt() ?? 0,
-          avg: (row['avg'] as num?)?.toDouble(),
-        );
-      }
-    }
-  }
-
-  return best;
+final gamesProvider = Provider<List<Game>>((ref) {
+  final games = ref.watch(localGameStoreProvider).games.toList()
+    ..sort((a, b) => b.date.compareTo(a.date));
+  return games;
 });
 
-final gameRepositoryProvider = Provider<GameRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
-  return GameRepositoryImpl(client);
+final gameDetailProvider = Provider.family<Game?, String>((ref, gameId) {
+  return ref
+      .watch(localGameStoreProvider)
+      .games
+      .where((game) => game.id == gameId)
+      .firstOrNull;
 });
 
-final gamesByTeamProvider =
-    FutureProvider.family<List<Game>, String>((ref, teamId) async {
-  final repo = ref.watch(gameRepositoryProvider);
-  return repo.getGamesByTeam(teamId);
-});
+final plateAppearancesProvider = Provider.family<List<PlateAppearance>, String>(
+  (ref, gameId) {
+    return ref
+        .watch(localGameStoreProvider)
+        .plateAppearances
+        .where((appearance) => appearance.gameId == gameId)
+        .toList();
+  },
+);
 
-final gameDetailProvider =
-    FutureProvider.family<Game, String>((ref, gameId) async {
-  final repo = ref.watch(gameRepositoryProvider);
-  return repo.getGameDetail(gameId);
-});
+final pitchingAppearancesProvider =
+    Provider.family<List<PitchingAppearance>, String>((ref, gameId) {
+      return ref
+          .watch(localGameStoreProvider)
+          .pitchingAppearances
+          .where((appearance) => appearance.gameId == gameId)
+          .toList();
+    });
 
-final plateAppearancesProvider =
-    FutureProvider.family<List<PlateAppearance>, String>((ref, gameId) async {
-  final repo = ref.watch(gameRepositoryProvider);
-  return repo.getPlateAppearances(gameId);
-});
-
-final playersForTeamProvider =
-    FutureProvider.family<List<Player>, String>((ref, teamId) async {
-  final repo = ref.watch(gameRepositoryProvider);
-  return repo.getPlayersForTeam(teamId);
-});
-
-class GameViewModel extends StateNotifier<AsyncValue<void>> {
-  GameViewModel(this._repository) : super(const AsyncValue.data(null));
+class LocalGameStore extends StateNotifier<LocalGameState> {
+  LocalGameStore(this._repository) : super(const LocalGameState());
 
   final GameRepository _repository;
 
-  Future<Game?> createGame({
-    required DateTime date,
-    String? location,
-    required String homeTeamId,
-    required String awayTeamId,
-    int? innings,
-    int? gameNumber,
-  }) async {
-    state = const AsyncValue.loading();
-    Game? result;
-    state = await AsyncValue.guard(() async {
-      result = await _repository.createGame(
-        date: date,
-        location: location,
-        homeTeamId: homeTeamId,
-        awayTeamId: awayTeamId,
-        innings: innings,
-        gameNumber: gameNumber,
-      );
-    });
-    return result;
+  Future<void> load() async {
+    final games = await _repository.getGames();
+    final plateAppearances = await _repository.getPlateAppearances();
+    final pitchingAppearances = await _repository.getPitchingAppearances();
+    state = LocalGameState(
+      games: games,
+      plateAppearances: plateAppearances,
+      pitchingAppearances: pitchingAppearances,
+    );
   }
 
-  Future<PlateAppearance?> addPlateAppearance({
+  Future<Game> createGame({
+    required DateTime date,
+    required String myTeamId,
+    required String awayTeamName,
+    String? location,
+    int? innings,
+    int homeScore = 0,
+    int awayScore = 0,
+  }) async {
+    final game = await _repository.createGame(
+      date: date,
+      location: location,
+      myTeamId: myTeamId,
+      awayTeamName: awayTeamName,
+      innings: innings,
+      homeScore: homeScore,
+      awayScore: awayScore,
+    );
+    state = state.copyWith(games: [...state.games, game]);
+    return game;
+  }
+
+  Future<PlateAppearance> addPlateAppearance({
     required String gameId,
-    int? inning,
-    required String batterPlayerId,
-    required String pitcherPlayerId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
+    int? inning,
     int? rbi,
   }) async {
-    state = const AsyncValue.loading();
-    PlateAppearance? result;
-    state = await AsyncValue.guard(() async {
-      result = await _repository.addPlateAppearance(
-        gameId: gameId,
-        inning: inning,
-        batterPlayerId: batterPlayerId,
-        pitcherPlayerId: pitcherPlayerId,
-        resultType: resultType,
-        resultDetail: resultDetail,
-        rbi: rbi,
-      );
-    });
-    return result;
+    final updatedGame = await _repository.addPlateAppearance(
+      gameId: gameId,
+      batterName: batterName,
+      inning: inning,
+      resultType: resultType,
+      resultDetail: resultDetail,
+      rbi: rbi,
+    );
+    if (updatedGame == null) {
+      throw ArgumentError.value(gameId, 'gameId', 'Game does not exist.');
+    }
+    final plateAppearances = await _repository.getPlateAppearances();
+    final games = state.games
+        .map((game) => game.id == gameId ? updatedGame : game)
+        .toList();
+    final appearance = plateAppearances.last;
+
+    state = state.copyWith(games: games, plateAppearances: plateAppearances);
+    return appearance;
   }
 
-  Future<Game?> finalizeGame(String gameId) async {
-    state = const AsyncValue.loading();
-    Game? result;
-    state = await AsyncValue.guard(() async {
-      result = await _repository.finalizeGame(gameId);
-    });
-    return result;
-  }
-
-  Future<Player?> createTempPlayer({
-    required String teamId,
-    required String displayName,
+  Future<PitchingAppearance> addPitchingAppearance({
+    required String gameId,
+    required String pitcherName,
+    required int outsPitched,
+    required int runs,
+    required int earnedRuns,
+    required int hitsAllowed,
+    required int walks,
+    required int strikeouts,
+    required int homeRunsAllowed,
   }) async {
-    state = const AsyncValue.loading();
-    Player? result;
-    state = await AsyncValue.guard(() async {
-      result = await _repository.createTempPlayer(
-        teamId: teamId,
-        displayName: displayName,
-      );
-    });
-    return result;
+    final appearance = await _repository.addPitchingAppearance(
+      gameId: gameId,
+      pitcherName: pitcherName,
+      outsPitched: outsPitched,
+      runs: runs,
+      earnedRuns: earnedRuns,
+      hitsAllowed: hitsAllowed,
+      walks: walks,
+      strikeouts: strikeouts,
+      homeRunsAllowed: homeRunsAllowed,
+    );
+    state = state.copyWith(
+      pitchingAppearances: [...state.pitchingAppearances, appearance],
+    );
+    return appearance;
+  }
+
+  Future<void> finalizeGame(String gameId) async {
+    await _repository.finalizeGame(gameId);
+    state = state.copyWith(
+      games: state.games
+          .map(
+            (game) => game.id == gameId
+                ? game.copyWith(status: AppConstants.statusFinal)
+                : game,
+          )
+          .toList(),
+    );
   }
 }
-
-final gameViewModelProvider =
-    StateNotifierProvider<GameViewModel, AsyncValue<void>>((ref) {
-  final repository = ref.watch(gameRepositoryProvider);
-  return GameViewModel(repository);
-});

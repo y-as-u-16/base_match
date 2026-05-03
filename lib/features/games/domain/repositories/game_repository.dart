@@ -1,39 +1,44 @@
 import '../entities/game.dart';
+import '../entities/pitching_appearance.dart';
 import '../entities/plate_appearance.dart';
-import '../entities/player.dart';
 
 abstract class GameRepository {
+  Future<List<Game>> getGames();
+
+  Future<List<PlateAppearance>> getPlateAppearances();
+
+  Future<List<PitchingAppearance>> getPitchingAppearances();
+
   Future<Game> createGame({
     required DateTime date,
+    required String myTeamId,
+    required String awayTeamName,
     String? location,
-    required String homeTeamId,
-    required String awayTeamId,
     int? innings,
-    int? gameNumber,
+    int homeScore = 0,
+    int awayScore = 0,
   });
 
-  Future<List<Game>> getGamesByTeam(String teamId);
-
-  Future<Game> getGameDetail(String gameId);
-
-  Future<List<PlateAppearance>> getPlateAppearances(String gameId);
-
-  Future<PlateAppearance> addPlateAppearance({
+  Future<Game?> addPlateAppearance({
     required String gameId,
-    int? inning,
-    required String batterPlayerId,
-    required String pitcherPlayerId,
+    required String batterName,
     required String resultType,
     required String resultDetail,
+    int? inning,
     int? rbi,
   });
 
-  Future<Game> finalizeGame(String gameId);
-
-  Future<List<Player>> getPlayersForTeam(String teamId);
-
-  Future<Player> createTempPlayer({
-    required String teamId,
-    required String displayName,
+  Future<PitchingAppearance> addPitchingAppearance({
+    required String gameId,
+    required String pitcherName,
+    required int outsPitched,
+    required int runs,
+    required int earnedRuns,
+    required int hitsAllowed,
+    required int walks,
+    required int strikeouts,
+    required int homeRunsAllowed,
   });
+
+  Future<void> finalizeGame(String gameId);
 }
