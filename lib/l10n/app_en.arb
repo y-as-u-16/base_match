@@ -282,11 +282,7 @@
     }
   },
   "reloadButton": "Reload",
-  "myTeamsTitle": "My Teams",
-  "manageMyTeamsTooltip": "Manage my teams",
   "addMyTeamButton": "Add team",
-  "emptyMyTeamsTitle": "No teams yet",
-  "emptyMyTeamsSubtitle": "Add your first team to use it when recording games.",
   "addMyTeamTitle": "Add My Team",
   "myTeamNameLabel": "Team name",
   "myTeamNameRequired": "Enter a team name",

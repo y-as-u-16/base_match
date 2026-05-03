@@ -282,11 +282,7 @@
     }
   },
   "reloadButton": "再読み込み",
-  "myTeamsTitle": "自分のチーム",
-  "manageMyTeamsTooltip": "自チームを管理",
   "addMyTeamButton": "チームを追加",
-  "emptyMyTeamsTitle": "自分のチームがありません",
-  "emptyMyTeamsSubtitle": "最初のチームを追加すると、試合記録で使えるようになります。",
   "addMyTeamTitle": "自チームを追加",
   "myTeamNameLabel": "チーム名",
   "myTeamNameRequired": "チーム名を入力してください",
