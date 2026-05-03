@@ -82,6 +82,7 @@ void main() {
     expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
     expect(find.text('日'), findsOneWidget);
     expect(find.text('1'), findsWidgets);
+    expect(find.text('1試合'), findsOneWidget);
   });
 
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {
