@@ -64,6 +64,23 @@ void main() {
     expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
   });
 
+  testWidgets('記録一覧はリストとカレンダーを切り替えられる', (tester) async {
+    final seed = await createDatabaseWithGame();
+    addTearDown(seed.database.close);
+
+    await tester.pumpWidget(buildSubject(seed.database, const GamesPage()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('リスト'), findsOneWidget);
+    expect(find.text('カレンダー'), findsOneWidget);
+    expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
+
+    await tester.tap(find.text('カレンダー'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('カレンダー表示は次の手順で追加します'), findsOneWidget);
+  });
+
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {
     final seed = await createDatabaseWithGame();
     addTearDown(seed.database.close);

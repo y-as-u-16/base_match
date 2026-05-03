@@ -4,17 +4,27 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../domain/entities/game.dart';
+import '../../domain/entities/my_team.dart';
 import '../view_models/game_view_model.dart';
 import '../view_models/my_team_view_model.dart';
 
-class GamesPage extends ConsumerWidget {
+enum _GamesViewMode { list, calendar }
+
+class GamesPage extends ConsumerStatefulWidget {
   const GamesPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GamesPage> createState() => _GamesPageState();
+}
+
+class _GamesPageState extends ConsumerState<GamesPage> {
+  _GamesViewMode _viewMode = _GamesViewMode.list;
+
+  @override
+  Widget build(BuildContext context) {
     final games = ref.watch(gamesProvider);
     final myTeamById = ref.watch(myTeamByIdProvider);
-    final dateFormat = DateFormat('yyyy/MM/dd');
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
@@ -26,23 +36,121 @@ class GamesPage extends ConsumerWidget {
       ),
       body: games.isEmpty
           ? _RecordEmptyState(onCreate: () => context.go('/games/create'))
-          : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-              itemCount: games.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final game = games[index];
-                return _GameRecordCard(
-                  title:
-                      '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
-                  date: dateFormat.format(game.date),
-                  location: game.location,
-                  homeScore: game.homeScore ?? 0,
-                  awayScore: game.awayScore ?? 0,
-                  onTap: () => context.go('/games/${game.id}'),
-                );
-              },
+          : Column(
+              children: [
+                _GamesViewModeSelector(
+                  viewMode: _viewMode,
+                  onChanged: (viewMode) {
+                    setState(() {
+                      _viewMode = viewMode;
+                    });
+                  },
+                ),
+                Expanded(
+                  child: switch (_viewMode) {
+                    _GamesViewMode.list => _GameListView(
+                      games: games,
+                      myTeamById: myTeamById,
+                    ),
+                    _GamesViewMode.calendar => const _GameCalendarPlaceholder(),
+                  },
+                ),
+              ],
             ),
+    );
+  }
+}
+
+class _GamesViewModeSelector extends StatelessWidget {
+  const _GamesViewModeSelector({
+    required this.viewMode,
+    required this.onChanged,
+  });
+
+  final _GamesViewMode viewMode;
+  final ValueChanged<_GamesViewMode> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: SizedBox(
+        width: double.infinity,
+        child: SegmentedButton<_GamesViewMode>(
+          segments: [
+            ButtonSegment(
+              value: _GamesViewMode.list,
+              icon: Icon(Icons.view_list_outlined),
+              label: Text(l10n.gamesListViewLabel),
+            ),
+            ButtonSegment(
+              value: _GamesViewMode.calendar,
+              icon: Icon(Icons.calendar_month_outlined),
+              label: Text(l10n.gamesCalendarViewLabel),
+            ),
+          ],
+          selected: {viewMode},
+          onSelectionChanged: (selected) => onChanged(selected.single),
+        ),
+      ),
+    );
+  }
+}
+
+class _GameListView extends StatelessWidget {
+  const _GameListView({required this.games, required this.myTeamById});
+
+  final List<Game> games;
+  final Map<String, MyTeam> myTeamById;
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat('yyyy/MM/dd');
+    final l10n = AppLocalizations.of(context);
+
+    return ListView.separated(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+      itemCount: games.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final game = games[index];
+        return _GameRecordCard(
+          title:
+              '${myTeamById[game.myTeamId]?.name ?? l10n.unknownMyTeamLabel} vs ${game.awayTeamName}',
+          date: dateFormat.format(game.date),
+          location: game.location,
+          homeScore: game.homeScore ?? 0,
+          awayScore: game.awayScore ?? 0,
+          onTap: () => context.go('/games/${game.id}'),
+        );
+      },
+    );
+  }
+}
+
+class _GameCalendarPlaceholder extends StatelessWidget {
+  const _GameCalendarPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Text(
+          l10n.gamesCalendarPlaceholder,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
     );
   }
 }

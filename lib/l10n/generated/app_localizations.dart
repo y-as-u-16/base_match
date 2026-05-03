@@ -236,6 +236,24 @@ abstract class AppLocalizations {
   /// **'試合を追加'**
   String get addGameButton;
 
+  /// No description provided for @gamesListViewLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'リスト'**
+  String get gamesListViewLabel;
+
+  /// No description provided for @gamesCalendarViewLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'カレンダー'**
+  String get gamesCalendarViewLabel;
+
+  /// No description provided for @gamesCalendarPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'カレンダー表示は次の手順で追加します'**
+  String get gamesCalendarPlaceholder;
+
   /// No description provided for @emptyGamesTitle.
   ///
   /// In ja, this message translates to:

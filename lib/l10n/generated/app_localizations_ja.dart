@@ -86,6 +86,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get addGameButton => '試合を追加';
 
   @override
+  String get gamesListViewLabel => 'リスト';
+
+  @override
+  String get gamesCalendarViewLabel => 'カレンダー';
+
+  @override
+  String get gamesCalendarPlaceholder => 'カレンダー表示は次の手順で追加します';
+
+  @override
   String get emptyGamesTitle => 'まだ試合がありません';
 
   @override
