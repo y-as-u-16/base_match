@@ -16,12 +16,12 @@ class TeamsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.myTeamsTitle)),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showCreateTeamDialog(context),
+        onPressed: () => _showCreateTeamSheet(context),
         icon: const Icon(Icons.add),
         label: Text(l10n.addMyTeamButton),
       ),
       body: teams.isEmpty
-          ? _EmptyMyTeams(onCreate: () => _showCreateTeamDialog(context))
+          ? _EmptyMyTeams(onCreate: () => _showCreateTeamSheet(context))
           : ListView.separated(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               itemCount: teams.length,
@@ -34,10 +34,12 @@ class TeamsPage extends ConsumerWidget {
     );
   }
 
-  Future<void> _showCreateTeamDialog(BuildContext context) async {
-    final created = await showDialog<bool>(
+  Future<void> _showCreateTeamSheet(BuildContext context) async {
+    final created = await showModalBottomSheet<bool>(
       context: context,
-      builder: (context) => const _CreateMyTeamDialog(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => const _CreateMyTeamSheet(),
     );
     if (created != true || !context.mounted) return;
 
@@ -209,15 +211,14 @@ class _DefaultTeamBadge extends StatelessWidget {
   }
 }
 
-class _CreateMyTeamDialog extends ConsumerStatefulWidget {
-  const _CreateMyTeamDialog();
+class _CreateMyTeamSheet extends ConsumerStatefulWidget {
+  const _CreateMyTeamSheet();
 
   @override
-  ConsumerState<_CreateMyTeamDialog> createState() =>
-      _CreateMyTeamDialogState();
+  ConsumerState<_CreateMyTeamSheet> createState() => _CreateMyTeamSheetState();
 }
 
-class _CreateMyTeamDialogState extends ConsumerState<_CreateMyTeamDialog> {
+class _CreateMyTeamSheetState extends ConsumerState<_CreateMyTeamSheet> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   var _isSaving = false;
@@ -245,35 +246,84 @@ class _CreateMyTeamDialogState extends ConsumerState<_CreateMyTeamDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return AlertDialog(
-      title: Text(l10n.addMyTeamTitle),
-      content: Form(
-        key: _formKey,
-        child: TextFormField(
-          controller: _nameController,
-          autofocus: true,
-          decoration: InputDecoration(labelText: l10n.myTeamNameLabel),
-          textInputAction: TextInputAction.done,
-          onFieldSubmitted: (_) {
-            if (!_isSaving) _submit();
-          },
-          validator: (value) => value == null || value.trim().isEmpty
-              ? l10n.myTeamNameRequired
-              : null,
-        ),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 8, 20, bottomInset + 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: colorScheme.outlineVariant,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const SizedBox(width: 40, height: 4),
+            ),
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.addMyTeamTitle,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: _isSaving
+                    ? null
+                    : () => Navigator.of(context).pop(false),
+                icon: const Icon(Icons.close),
+                tooltip: l10n.cancelButton,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _nameController,
+              autofocus: true,
+              decoration: InputDecoration(labelText: l10n.myTeamNameLabel),
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) {
+                if (!_isSaving) _submit();
+              },
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? l10n.myTeamNameRequired
+                  : null,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _isSaving
+                      ? null
+                      : () => Navigator.of(context).pop(false),
+                  child: Text(l10n.cancelButton),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _isSaving ? null : _submit,
+                  child: Text(l10n.addButton),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: _isSaving ? null : () => Navigator.of(context).pop(false),
-          child: Text(l10n.cancelButton),
-        ),
-        FilledButton(
-          onPressed: _isSaving ? null : _submit,
-          child: Text(l10n.addButton),
-        ),
-      ],
     );
   }
 }
