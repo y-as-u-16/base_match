@@ -78,7 +78,10 @@ void main() {
     await tester.tap(find.text('カレンダー'));
     await tester.pumpAndSettle();
 
-    expect(find.text('カレンダー表示は次の手順で追加します'), findsOneWidget);
+    final now = DateTime.now();
+    expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
+    expect(find.text('日'), findsOneWidget);
+    expect(find.text('1'), findsWidgets);
   });
 
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../view_models/game_view_model.dart';
 import '../view_models/my_team_view_model.dart';
-import '../widgets/game_calendar_placeholder.dart';
+import '../widgets/game_calendar_view.dart';
 import '../widgets/game_list_view.dart';
 import '../widgets/games_view_mode_selector.dart';
 import '../widgets/record_empty_state.dart';
@@ -51,7 +51,10 @@ class _GamesPageState extends ConsumerState<GamesPage> {
                       games: games,
                       myTeamById: myTeamById,
                     ),
-                    GamesViewMode.calendar => const GameCalendarPlaceholder(),
+                    GamesViewMode.calendar => GameCalendarView(
+                      games: games,
+                      myTeamById: myTeamById,
+                    ),
                   },
                 ),
               ],
