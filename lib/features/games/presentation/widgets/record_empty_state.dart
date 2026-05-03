@@ -18,14 +18,7 @@ class RecordEmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                colorScheme.surfaceContainerLow,
-                colorScheme.primary.withValues(alpha: 0.07),
-              ],
-            ),
+            color: colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: colorScheme.outlineVariant.withValues(alpha: 0.62),

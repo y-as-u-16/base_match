@@ -25,6 +25,7 @@ class _GamesPageState extends ConsumerState<GamesPage> {
     final games = ref.watch(gamesProvider);
     final myTeamById = ref.watch(myTeamByIdProvider);
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.recordTitle)),
@@ -33,19 +34,8 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         icon: const Icon(Icons.add),
         label: Text(l10n.addGameButton),
       ),
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(
-                context,
-              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.44),
-              Theme.of(context).colorScheme.surface,
-            ],
-          ),
-        ),
+      body: ColoredBox(
+        color: colorScheme.surfaceContainerLowest,
         child: SafeArea(
           top: false,
           child: SizedBox.expand(

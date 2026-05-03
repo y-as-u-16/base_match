@@ -39,16 +39,7 @@ class GameRecordCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                colorScheme.surfaceContainerLow,
-                result.color(colorScheme).withValues(alpha: 0.08),
-              ],
-            ),
-          ),
+          decoration: BoxDecoration(color: colorScheme.surfaceContainerLow),
           child: Stack(
             children: [
               Positioned(

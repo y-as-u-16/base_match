@@ -52,16 +52,8 @@ class _GameCalendarViewState extends State<GameCalendarView> {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(8),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary.withValues(alpha: 0.16),
-                  colorScheme.surfaceContainerLowest,
-                  colorScheme.tertiaryContainer.withValues(alpha: 0.20),
-                ],
-              ),
               border: Border.all(
                 color: colorScheme.outlineVariant.withValues(alpha: 0.55),
               ),
