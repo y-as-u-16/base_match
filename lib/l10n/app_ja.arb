@@ -62,6 +62,8 @@
   "gamesCalendarPlaceholder": "カレンダー表示は次の手順で追加します",
   "selectedDateGamesTitle": "選択日の試合",
   "noGamesOnSelectedDate": "この日の試合はありません",
+  "previousMonthTooltip": "前の月",
+  "nextMonthTooltip": "次の月",
   "emptyGamesTitle": "まだ試合がありません",
   "emptyGamesSubtitle": "試合を作成して、打席やピッチング成績を記録します。",
   "createGameButton": "試合を作成する",

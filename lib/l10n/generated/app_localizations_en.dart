@@ -103,6 +103,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noGamesOnSelectedDate => 'No games on this date';
 
   @override
+  String get previousMonthTooltip => 'Previous month';
+
+  @override
+  String get nextMonthTooltip => 'Next month';
+
+  @override
   String get emptyGamesTitle => 'No games yet';
 
   @override

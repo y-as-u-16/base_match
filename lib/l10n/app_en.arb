@@ -62,6 +62,8 @@
   "gamesCalendarPlaceholder": "Calendar view will be added in the next step.",
   "selectedDateGamesTitle": "Selected date games",
   "noGamesOnSelectedDate": "No games on this date",
+  "previousMonthTooltip": "Previous month",
+  "nextMonthTooltip": "Next month",
   "emptyGamesTitle": "No games yet",
   "emptyGamesSubtitle": "Create a game to record plate appearances and pitching stats.",
   "createGameButton": "Create game",

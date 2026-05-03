@@ -22,12 +22,15 @@ class GameCalendarView extends StatefulWidget {
 }
 
 class _GameCalendarViewState extends State<GameCalendarView> {
+  late DateTime _focusedMonth;
   late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = _dateKey(DateTime.now());
+    final today = _dateKey(DateTime.now());
+    _focusedMonth = DateTime(today.year, today.month);
+    _selectedDate = today;
   }
 
   @override
@@ -36,9 +39,7 @@ class _GameCalendarViewState extends State<GameCalendarView> {
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
     final localeName = Localizations.localeOf(context).toLanguageTag();
-    final today = DateTime.now();
-    final month = DateTime(today.year, today.month);
-    final calendarDays = _buildCalendarDays(month);
+    final calendarDays = _buildCalendarDays(_focusedMonth);
     final gameCountsByDate = _countGamesByDate(widget.games);
     final selectedGames = _gamesOnDate(widget.games, _selectedDate);
     final weekdayLabels = _weekdayLabels(localeName);
@@ -50,13 +51,36 @@ class _GameCalendarViewState extends State<GameCalendarView> {
         children: [
           Row(
             children: [
-              Icon(Icons.calendar_month_outlined, color: colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                DateFormat.yMMMM(localeName).format(month),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
+              IconButton(
+                tooltip: l10n.previousMonthTooltip,
+                onPressed: () => _changeMonth(-1),
+                icon: const Icon(Icons.chevron_left),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.calendar_month_outlined,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        DateFormat.yMMMM(localeName).format(_focusedMonth),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              IconButton(
+                tooltip: l10n.nextMonthTooltip,
+                onPressed: () => _changeMonth(1),
+                icon: const Icon(Icons.chevron_right),
               ),
             ],
           ),
@@ -116,6 +140,16 @@ class _GameCalendarViewState extends State<GameCalendarView> {
         ],
       ),
     );
+  }
+
+  void _changeMonth(int offset) {
+    setState(() {
+      _focusedMonth = DateTime(
+        _focusedMonth.year,
+        _focusedMonth.month + offset,
+      );
+      _selectedDate = _focusedMonth;
+    });
   }
 
   List<DateTime?> _buildCalendarDays(DateTime month) {

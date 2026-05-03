@@ -109,6 +109,18 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('次の月'));
+    await tester.pumpAndSettle();
+
+    final nextMonth = DateTime(now.year, now.month + 1);
+    expect(find.text('${nextMonth.year}年${nextMonth.month}月'), findsOneWidget);
+    expect(find.text('この日の試合はありません'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('前の月'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
   });
 
   testWidgets('試合詳細は自チーム名を表示する', (tester) async {

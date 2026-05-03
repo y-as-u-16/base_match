@@ -266,6 +266,18 @@ abstract class AppLocalizations {
   /// **'この日の試合はありません'**
   String get noGamesOnSelectedDate;
 
+  /// No description provided for @previousMonthTooltip.
+  ///
+  /// In ja, this message translates to:
+  /// **'前の月'**
+  String get previousMonthTooltip;
+
+  /// No description provided for @nextMonthTooltip.
+  ///
+  /// In ja, this message translates to:
+  /// **'次の月'**
+  String get nextMonthTooltip;
+
   /// No description provided for @emptyGamesTitle.
   ///
   /// In ja, this message translates to:

@@ -101,6 +101,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get noGamesOnSelectedDate => 'この日の試合はありません';
 
   @override
+  String get previousMonthTooltip => '前の月';
+
+  @override
+  String get nextMonthTooltip => '次の月';
+
+  @override
   String get emptyGamesTitle => 'まだ試合がありません';
 
   @override
