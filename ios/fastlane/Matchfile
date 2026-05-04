@@ -1,0 +1,8 @@
+git_url(ENV.fetch("MATCH_GIT_URL"))
+
+storage_mode("git")
+type("appstore")
+force_legacy_encryption(true)
+
+app_identifier(["com.basematch.app"])
+team_id("TFGTJ2C22L")

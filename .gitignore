@@ -45,9 +45,18 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# fastlane generated files
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/screenshots/
+ios/fastlane/test_output/
 
 # Environment variables
 .env
 .env.local
 .env.*
 !.env.example
+
+# Local deploy keys
+.match_deploy_key
+.match_deploy_key.pub
