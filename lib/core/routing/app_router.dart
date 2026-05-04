@@ -93,7 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: ':gameId',
-                pageBuilder: (context, state) => _fadeTransitionPage(
+                pageBuilder: (context, state) => _slideRightTransitionPage(
                   key: state.pageKey,
                   child: GameDetailPage(
                     gameId: state.pathParameters['gameId']!,
