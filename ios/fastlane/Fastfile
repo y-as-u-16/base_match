@@ -32,6 +32,19 @@ platform :ios do
       api_key: api_key
     )
 
+    profile_name = lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+      .fetch("com.basematch.app")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Runner.xcodeproj",
+      targets: ["Runner"],
+      build_configurations: ["Release", "Profile"],
+      team_id: "TFGTJ2C22L",
+      bundle_identifier: "com.basematch.app",
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name
+    )
+
     sh("cd .. && flutter build ipa --release --export-method app-store")
 
     ipa_path = Dir[File.expand_path("../../build/ios/ipa/*.ipa", __dir__)]
