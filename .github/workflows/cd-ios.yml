@@ -67,6 +67,10 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
 
+      - name: Install iOS Pods
+        working-directory: ios
+        run: bundle exec pod install
+
       - name: Upload iOS build to TestFlight
         working-directory: ios
         run: bundle exec fastlane ios beta
