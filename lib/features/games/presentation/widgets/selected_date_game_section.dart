@@ -29,9 +29,9 @@ class SelectedDateGameSection extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow.withValues(alpha: 0.76),
+        color: colorScheme.surfaceContainerLowest,
         border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.48),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.46),
         ),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -48,6 +48,9 @@ class SelectedDateGameSection extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: colorScheme.tertiaryContainer,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: colorScheme.tertiary.withValues(alpha: 0.16),
+                    ),
                   ),
                   child: Icon(
                     Icons.sports_baseball_outlined,
@@ -67,6 +70,7 @@ class SelectedDateGameSection extends StatelessWidget {
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.w900,
+                          letterSpacing: 0,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -77,6 +81,7 @@ class SelectedDateGameSection extends StatelessWidget {
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w800,
+                          letterSpacing: 0,
                         ),
                       ),
                     ],
@@ -90,7 +95,7 @@ class SelectedDateGameSection extends StatelessWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.55,
+                    alpha: 0.48,
                   ),
                   border: Border.all(
                     color: colorScheme.outlineVariant.withValues(alpha: 0.50),
@@ -98,14 +103,35 @@ class SelectedDateGameSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    l10n.noGamesOnSelectedDate,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+                  child: Column(
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerLowest.withValues(
+                            alpha: 0.82,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Icon(
+                            Icons.event_busy_outlined,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        l10n.noGamesOnSelectedDate,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -153,6 +179,7 @@ class _GameCountBadge extends StatelessWidget {
           style: theme.textTheme.labelLarge?.copyWith(
             color: colorScheme.onPrimaryContainer,
             fontWeight: FontWeight.w900,
+            letterSpacing: 0,
           ),
         ),
       ),

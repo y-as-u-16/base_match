@@ -1,6 +1,25 @@
 # Codex CLI プロジェクト設定
 # 参考: https://developers.openai.com/codex/config-reference
 
+# モデル
+# "gpt-5.5" = 高性能な標準モデル
+# "gpt-5.4" = バランス型
+# "gpt-5.4-mini" = 軽量・高速
+# model = "gpt-5.5"
+
+# 推論量
+# "minimal" = 最小
+# "low" = 軽め
+# "medium" = 標準
+# "high" = 高め
+# "xhigh" = 最大（対応モデルのみ）
+model_reasoning_effort = "high"
+
+# 速度
+# 標準 = service_tier を指定しない
+# "fast" = 速い（追加クレジット消費あり）
+# service_tier = "fast"
+
 # 承認ポリシー
 # "untrusted" = 全てのツール使用に承認が必要
 # "on-request" = ファイル変更・コマンド実行時に承認が必要

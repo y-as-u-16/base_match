@@ -25,6 +25,9 @@ class CalendarDayCell extends StatelessWidget {
     final foregroundColor = isSelected
         ? colorScheme.onPrimaryContainer
         : colorScheme.onSurface;
+    final mutedColor = isSelected
+        ? colorScheme.onPrimaryContainer.withValues(alpha: 0.70)
+        : colorScheme.onSurfaceVariant;
 
     return Semantics(
       selected: isSelected,
@@ -51,9 +54,9 @@ class CalendarDayCell extends StatelessWidget {
           boxShadow: [
             if (isSelected)
               BoxShadow(
-                color: colorScheme.primary.withValues(alpha: 0.16),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: colorScheme.primary.withValues(alpha: 0.18),
+                blurRadius: 14,
+                offset: const Offset(0, 7),
               ),
           ],
         ),
@@ -63,45 +66,54 @@ class CalendarDayCell extends StatelessWidget {
             onTap: onTap,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              padding: const EdgeInsets.fromLTRB(6, 6, 6, 5),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        '${day.day}',
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: foregroundColor,
-                          fontWeight: FontWeight.w900,
+                      Expanded(
+                        child: Text(
+                          '${day.day}',
+                          maxLines: 1,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: foregroundColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            height: 1,
+                            letterSpacing: 0,
+                          ),
                         ),
                       ),
-                      if (isToday) ...[
-                        const SizedBox(width: 3),
-                        Container(
-                          width: 5,
-                          height: 5,
+                      if (isToday)
+                        DecoratedBox(
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? colorScheme.onPrimaryContainer
                                 : colorScheme.tertiary,
                             shape: BoxShape.circle,
                           ),
+                          child: const SizedBox(width: 6, height: 6),
                         ),
-                      ],
                     ],
                   ),
-                  Expanded(
-                    child: Center(
-                      child: hasGames
-                          ? _GameCountPill(
-                              label: gameCountLabel,
-                              isSelected: isSelected,
-                            )
-                          : const SizedBox.shrink(),
+                  const Spacer(),
+                  if (hasGames)
+                    _GameCountPill(
+                      label: gameCountLabel,
+                      isSelected: isSelected,
+                    )
+                  else
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: mutedColor.withValues(alpha: 0.20),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: const SizedBox(width: 16, height: 3),
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -126,31 +138,39 @@ class _GameCountPill extends StatelessWidget {
         ? colorScheme.onPrimaryContainer
         : colorScheme.primary;
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 48),
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 5,
-              height: 5,
-              decoration: BoxDecoration(
-                color: foregroundColor,
-                shape: BoxShape.circle,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: foregroundColor.withValues(alpha: isSelected ? 0.14 : 0.10),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 5,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: foregroundColor,
+                  shape: BoxShape.circle,
+                ),
               ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              maxLines: 1,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: foregroundColor,
-                fontWeight: FontWeight.w900,
+              const SizedBox(width: 4),
+              Text(
+                label,
+                maxLines: 1,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: foregroundColor,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

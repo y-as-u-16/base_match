@@ -9,6 +9,7 @@ import '../widgets/game_calendar_view.dart';
 import '../widgets/game_list_view.dart';
 import '../widgets/games_view_mode_selector.dart';
 import '../widgets/record_empty_state.dart';
+import '../widgets/record_page_header.dart';
 
 class GamesPage extends ConsumerStatefulWidget {
   const GamesPage({super.key});
@@ -28,11 +29,23 @@ class _GamesPageState extends ConsumerState<GamesPage> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.recordTitle)),
+      backgroundColor: colorScheme.surfaceContainerLowest,
+      appBar: AppBar(
+        title: Text(l10n.recordTitle),
+        centerTitle: false,
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        foregroundColor: colorScheme.onSurface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.go('/games/create'),
         icon: const Icon(Icons.add),
         label: Text(l10n.addGameButton),
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       body: ColoredBox(
         color: colorScheme.surfaceContainerLowest,
@@ -43,6 +56,7 @@ class _GamesPageState extends ConsumerState<GamesPage> {
                 ? RecordEmptyState(onCreate: () => context.go('/games/create'))
                 : Column(
                     children: [
+                      RecordPageHeader(gameCount: games.length),
                       GamesViewModeSelector(
                         viewMode: _viewMode,
                         onChanged: (viewMode) {

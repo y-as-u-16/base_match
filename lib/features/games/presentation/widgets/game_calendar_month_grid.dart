@@ -29,7 +29,7 @@ class CalendarMonthGrid extends StatelessWidget {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: colorScheme.surface.withValues(alpha: 0.56),
+            color: colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
@@ -46,6 +46,7 @@ class CalendarMonthGrid extends StatelessWidget {
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w900,
+                          letterSpacing: 0,
                         ),
                       ),
                     ),

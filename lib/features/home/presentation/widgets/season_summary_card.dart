@@ -15,27 +15,21 @@ class SeasonSummaryCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Card(
+      elevation: 0,
+      color: colorScheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.52),
+        ),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(9),
-                    child: Icon(
-                      Icons.analytics_outlined,
-                      color: colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,22 +37,28 @@ class SeasonSummaryCard extends StatelessWidget {
                       Text(
                         l10n.seasonSummaryTitle,
                         style: theme.textTheme.titleLarge?.copyWith(
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w900,
+                          height: 1.12,
+                          letterSpacing: 0,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Text(
                         l10n.seasonSummarySubtitle(summary.year),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0,
                         ),
                       ),
                     ],
                   ),
                 ),
+                Icon(Icons.query_stats_rounded, color: colorScheme.primary),
               ],
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             LayoutBuilder(
               builder: (context, constraints) {
                 final columns = constraints.maxWidth >= 520 ? 3 : 2;
@@ -75,6 +75,7 @@ class SeasonSummaryCard extends StatelessWidget {
                       icon: Icons.sports_baseball_outlined,
                       label: l10n.seasonGamesMetricLabel,
                       value: l10n.seasonGamesCount(summary.games),
+                      emphasized: true,
                     ),
                     _SeasonMetricTile(
                       width: tileWidth,
@@ -121,39 +122,69 @@ class _SeasonMetricTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
+    this.emphasized = false,
   });
 
   final double width;
   final IconData icon;
   final String label;
   final String value;
+  final bool emphasized;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final colorScheme = theme.colorScheme;
+    final background = emphasized
+        ? colorScheme.primary
+        : colorScheme.surfaceContainerLow;
+    final foreground = emphasized
+        ? colorScheme.onPrimary
+        : colorScheme.onSurface;
+    final muted = emphasized
+        ? colorScheme.onPrimary.withValues(alpha: 0.68)
+        : colorScheme.onSurfaceVariant;
 
     return SizedBox(
       width: width,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest,
+          color: background,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: colorScheme.outlineVariant),
+          border: Border.all(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.38),
+          ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 18, color: colorScheme.tertiary),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: emphasized
+                      ? colorScheme.onPrimary.withValues(alpha: 0.12)
+                      : colorScheme.primary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: Icon(
+                    icon,
+                    size: 17,
+                    color: emphasized
+                        ? colorScheme.onPrimary
+                        : colorScheme.primary,
+                  ),
+                ),
+              ),
               const SizedBox(height: 10),
               Text(
                 label,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                  color: muted,
                   fontWeight: FontWeight.w700,
+                  letterSpacing: 0,
                 ),
               ),
               const SizedBox(height: 4),
@@ -164,7 +195,9 @@ class _SeasonMetricTile extends StatelessWidget {
                   value,
                   maxLines: 1,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    color: foreground,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
                   ),
                 ),
               ),

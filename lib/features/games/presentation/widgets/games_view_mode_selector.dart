@@ -21,10 +21,10 @@ class GamesViewModeSelector extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLow.withValues(alpha: 0.82),
+          color: colorScheme.surfaceContainerLow.withValues(alpha: 0.86),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: colorScheme.outlineVariant.withValues(alpha: 0.48),
@@ -46,26 +46,27 @@ class GamesViewModeSelector extends StatelessWidget {
                 side: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
                     return BorderSide(
-                      color: colorScheme.primary.withValues(alpha: 0.88),
+                      color: colorScheme.primary.withValues(alpha: 0.20),
                     );
                   }
                   return BorderSide(color: Colors.transparent);
                 }),
                 backgroundColor: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
-                    return colorScheme.primaryContainer;
+                    return colorScheme.primary;
                   }
                   return Colors.transparent;
                 }),
                 foregroundColor: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
-                    return colorScheme.onPrimaryContainer;
+                    return colorScheme.onPrimary;
                   }
                   return colorScheme.onSurfaceVariant;
                 }),
                 textStyle: WidgetStatePropertyAll(
                   theme.textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.w800,
+                    letterSpacing: 0,
                   ),
                 ),
               ),

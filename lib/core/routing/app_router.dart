@@ -93,7 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
               GoRoute(
                 path: ':gameId',
-                pageBuilder: (context, state) => _fadeTransitionPage(
+                pageBuilder: (context, state) => _slideRightTransitionPage(
                   key: state.pageKey,
                   child: GameDetailPage(
                     gameId: state.pathParameters['gameId']!,
@@ -142,25 +142,42 @@ class _ScaffoldWithNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _calculateSelectedIndex(context),
-        onDestinationSelected: (index) => _onItemTapped(index, context),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            label: l10n.navHome,
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.96),
+          border: Border(
+            top: BorderSide(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.52),
+            ),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.sports_baseball_outlined),
-            label: l10n.navRecord,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.bar_chart),
-            label: l10n.navStats,
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          height: 66,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          selectedIndex: _calculateSelectedIndex(context),
+          onDestinationSelected: (index) => _onItemTapped(index, context),
+          destinations: [
+            NavigationDestination(
+              selectedIcon: const Icon(Icons.home_rounded),
+              icon: const Icon(Icons.home_outlined),
+              label: l10n.navHome,
+            ),
+            NavigationDestination(
+              selectedIcon: const Icon(Icons.sports_baseball),
+              icon: const Icon(Icons.sports_baseball_outlined),
+              label: l10n.navRecord,
+            ),
+            NavigationDestination(
+              selectedIcon: const Icon(Icons.bar_chart_rounded),
+              icon: const Icon(Icons.bar_chart_outlined),
+              label: l10n.navStats,
+            ),
+          ],
+        ),
       ),
     );
   }

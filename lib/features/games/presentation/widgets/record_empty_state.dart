@@ -18,11 +18,18 @@ class RecordEmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLow,
+            color: colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.62),
+              color: colorScheme.outlineVariant.withValues(alpha: 0.50),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.shadow.withValues(alpha: 0.06),
+                blurRadius: 22,
+                offset: const Offset(0, 12),
+              ),
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
@@ -37,6 +44,7 @@ class RecordEmptyState extends StatelessWidget {
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -46,6 +54,8 @@ class RecordEmptyState extends StatelessWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     height: 1.45,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -57,6 +67,8 @@ class RecordEmptyState extends StatelessWidget {
                     label: Text(l10n.createGameButton),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -85,7 +97,7 @@ class _EmptyScoreboardPreview extends StatelessWidget {
         color: colorScheme.surface.withValues(alpha: 0.78),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.64),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.50),
         ),
       ),
       child: Padding(
@@ -136,6 +148,7 @@ class _EmptyScoreboardPreview extends StatelessWidget {
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
                   ),
                 ),
               ],
@@ -178,6 +191,7 @@ class _PreviewScoreCell extends StatelessWidget {
                 color: foregroundColor,
                 fontSize: 10,
                 fontWeight: FontWeight.w800,
+                letterSpacing: 0,
               ),
             ),
             const SizedBox(height: 4),
@@ -186,6 +200,7 @@ class _PreviewScoreCell extends StatelessWidget {
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: foregroundColor,
                 fontWeight: FontWeight.w900,
+                letterSpacing: 0,
               ),
             ),
           ],

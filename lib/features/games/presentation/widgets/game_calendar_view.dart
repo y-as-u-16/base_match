@@ -52,21 +52,21 @@ class _GameCalendarViewState extends State<GameCalendarView> {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLow,
+              color: colorScheme.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.55),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.46),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: colorScheme.shadow.withValues(alpha: 0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
+                  color: colorScheme.shadow.withValues(alpha: 0.06),
+                  blurRadius: 18,
+                  offset: const Offset(0, 10),
                 ),
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

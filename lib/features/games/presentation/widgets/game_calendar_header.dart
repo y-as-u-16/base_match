@@ -31,10 +31,10 @@ class GameCalendarHeader extends StatelessWidget {
         Expanded(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: 0.72),
+              color: colorScheme.surfaceContainerLow.withValues(alpha: 0.88),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.55),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.42),
               ),
             ),
             child: Padding(
@@ -50,7 +50,7 @@ class GameCalendarHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      Icons.analytics_outlined,
+                      Icons.calendar_month_outlined,
                       size: 18,
                       color: colorScheme.onPrimaryContainer,
                     ),
@@ -64,6 +64,7 @@ class GameCalendarHeader extends StatelessWidget {
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.w900,
+                        letterSpacing: 0,
                       ),
                     ),
                   ),
@@ -105,9 +106,7 @@ class _MonthIconButton extends StatelessWidget {
         icon: Icon(icon),
         style: IconButton.styleFrom(
           fixedSize: const Size(42, 42),
-          backgroundColor: colorScheme.surfaceContainerHighest.withValues(
-            alpha: 0.84,
-          ),
+          backgroundColor: colorScheme.surfaceContainerLow,
           foregroundColor: colorScheme.onSurface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
