@@ -56,3 +56,7 @@ ios/fastlane/test_output/
 .env.local
 .env.*
 !.env.example
+
+# Local deploy keys
+.match_deploy_key
+.match_deploy_key.pub
