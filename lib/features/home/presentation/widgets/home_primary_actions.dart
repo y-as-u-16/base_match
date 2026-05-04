@@ -25,8 +25,8 @@ class HomePrimaryActions extends StatelessWidget {
           icon: const Icon(Icons.add_circle_outline),
           label: Text(l10n.recordGameButton),
           style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xFF1D1D1F),
-            foregroundColor: Colors.white,
+            backgroundColor: theme.colorScheme.primary,
+            foregroundColor: theme.colorScheme.onPrimary,
             minimumSize: const Size.fromHeight(54),
             textStyle: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w800,
@@ -42,9 +42,11 @@ class HomePrimaryActions extends StatelessWidget {
           icon: const Icon(Icons.bar_chart_rounded),
           label: Text(l10n.viewStatsButton),
           style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: const Color(0xFF0071E3),
-            side: BorderSide(color: Colors.black.withValues(alpha: 0.08)),
+            backgroundColor: theme.colorScheme.surfaceContainerLowest,
+            foregroundColor: theme.colorScheme.primary,
+            side: BorderSide(
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.54),
+            ),
             minimumSize: const Size.fromHeight(54),
             textStyle: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w800,

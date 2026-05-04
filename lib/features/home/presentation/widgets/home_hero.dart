@@ -11,6 +11,7 @@ class HomeHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
     return Padding(
@@ -19,11 +20,18 @@ class HomeHero extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0xFF050505),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.primary,
+                Color.lerp(colorScheme.primary, colorScheme.secondary, 0.44)!,
+              ],
+            ),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.14),
+                color: colorScheme.primary.withValues(alpha: 0.18),
                 blurRadius: 34,
                 offset: const Offset(0, 18),
               ),
@@ -31,11 +39,11 @@ class HomeHero extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              const Positioned.fill(
+              Positioned.fill(
                 child: CustomPaint(
                   painter: _BallparkLinePainter(
-                    lineColor: Color(0x26FFFFFF),
-                    accentColor: Color(0x1A78D27A),
+                    lineColor: colorScheme.onPrimary.withValues(alpha: 0.16),
+                    accentColor: colorScheme.tertiary.withValues(alpha: 0.20),
                   ),
                 ),
               ),
@@ -58,7 +66,7 @@ class HomeHero extends StatelessWidget {
                             l10n.homeHeadline,
                             textAlign: TextAlign.center,
                             style: theme.textTheme.displaySmall?.copyWith(
-                              color: Colors.white,
+                              color: colorScheme.onPrimary,
                               fontSize: compact ? 34 : 42,
                               fontWeight: FontWeight.w900,
                               height: 1.02,
@@ -73,7 +81,9 @@ class HomeHero extends StatelessWidget {
                             l10n.homeDescription,
                             textAlign: TextAlign.center,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.74),
+                              color: colorScheme.onPrimary.withValues(
+                                alpha: 0.78,
+                              ),
                               height: 1.45,
                               fontWeight: FontWeight.w500,
                               letterSpacing: 0,
@@ -87,6 +97,7 @@ class HomeHero extends StatelessWidget {
                           recordLabel: l10n.seasonRecordMetricLabel,
                           recordValue:
                               '${summary.wins}-${summary.losses}-${summary.draws}',
+                          foregroundColor: colorScheme.onPrimary,
                         ),
                       ],
                     );
@@ -107,20 +118,22 @@ class _HeroScoreboard extends StatelessWidget {
     required this.gamesValue,
     required this.recordLabel,
     required this.recordValue,
+    required this.foregroundColor,
   });
 
   final String gamesLabel;
   final String gamesValue;
   final String recordLabel;
   final String recordValue;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.10),
+        color: foregroundColor.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+        border: Border.all(color: foregroundColor.withValues(alpha: 0.16)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(6),
@@ -131,15 +144,23 @@ class _HeroScoreboard extends StatelessWidget {
             if (compact) {
               return Column(
                 children: [
-                  _HeroStatChip(label: gamesLabel, value: gamesValue),
+                  _HeroStatChip(
+                    label: gamesLabel,
+                    value: gamesValue,
+                    foregroundColor: foregroundColor,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: Divider(
                       height: 1,
-                      color: Colors.white.withValues(alpha: 0.14),
+                      color: foregroundColor.withValues(alpha: 0.14),
                     ),
                   ),
-                  _HeroStatChip(label: recordLabel, value: recordValue),
+                  _HeroStatChip(
+                    label: recordLabel,
+                    value: recordValue,
+                    foregroundColor: foregroundColor,
+                  ),
                 ],
               );
             }
@@ -147,17 +168,25 @@ class _HeroScoreboard extends StatelessWidget {
             return Row(
               children: [
                 Expanded(
-                  child: _HeroStatChip(label: gamesLabel, value: gamesValue),
+                  child: _HeroStatChip(
+                    label: gamesLabel,
+                    value: gamesValue,
+                    foregroundColor: foregroundColor,
+                  ),
                 ),
                 SizedBox(
                   height: 54,
                   child: VerticalDivider(
                     width: 1,
-                    color: Colors.white.withValues(alpha: 0.14),
+                    color: foregroundColor.withValues(alpha: 0.14),
                   ),
                 ),
                 Expanded(
-                  child: _HeroStatChip(label: recordLabel, value: recordValue),
+                  child: _HeroStatChip(
+                    label: recordLabel,
+                    value: recordValue,
+                    foregroundColor: foregroundColor,
+                  ),
                 ),
               ],
             );
@@ -176,12 +205,15 @@ class _SeasonPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.12),
+        color: colorScheme.onPrimary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+        border: Border.all(
+          color: colorScheme.onPrimary.withValues(alpha: 0.16),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -191,13 +223,13 @@ class _SeasonPill extends StatelessWidget {
             Icon(
               Icons.calendar_month_outlined,
               size: 14,
-              color: Colors.white.withValues(alpha: 0.84),
+              color: colorScheme.onPrimary.withValues(alpha: 0.84),
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: theme.textTheme.labelMedium?.copyWith(
-                color: Colors.white.withValues(alpha: 0.84),
+                color: colorScheme.onPrimary.withValues(alpha: 0.84),
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0,
               ),
@@ -210,10 +242,15 @@ class _SeasonPill extends StatelessWidget {
 }
 
 class _HeroStatChip extends StatelessWidget {
-  const _HeroStatChip({required this.label, required this.value});
+  const _HeroStatChip({
+    required this.label,
+    required this.value,
+    required this.foregroundColor,
+  });
 
   final String label;
   final String value;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +267,7 @@ class _HeroStatChip extends StatelessWidget {
               maxLines: 1,
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
+                color: foregroundColor,
                 fontWeight: FontWeight.w900,
                 height: 1,
                 letterSpacing: 0,
@@ -242,7 +279,7 @@ class _HeroStatChip extends StatelessWidget {
             label,
             textAlign: TextAlign.center,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.66),
+              color: foregroundColor.withValues(alpha: 0.66),
               fontWeight: FontWeight.w700,
               letterSpacing: 0,
             ),

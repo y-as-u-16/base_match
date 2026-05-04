@@ -20,6 +20,7 @@ class HomePage extends ConsumerWidget {
     final localGameState = ref.watch(localGameStoreProvider);
     final myTeamById = ref.watch(myTeamByIdProvider);
     final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
     final summary = SeasonSummary.fromRecords(
       games: games,
       plateAppearances: localGameState.plateAppearances,
@@ -27,12 +28,12 @@ class HomePage extends ConsumerWidget {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7),
+      backgroundColor: colorScheme.surfaceContainerLowest,
       appBar: AppBar(
         title: Text(l10n.navHome),
         centerTitle: false,
-        backgroundColor: const Color(0xFFF5F5F7),
-        foregroundColor: const Color(0xFF1D1D1F),
+        backgroundColor: colorScheme.surfaceContainerLowest,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         scrolledUnderElevation: 0,
         titleTextStyle: _homeTitleStyle(context),
@@ -68,9 +69,10 @@ class HomePage extends ConsumerWidget {
 
   TextStyle _homeTitleStyle(BuildContext context) {
     final base = Theme.of(context).textTheme.titleLarge;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return (base ?? const TextStyle()).copyWith(
-      color: const Color(0xFF1D1D1F),
+      color: colorScheme.onSurface,
       fontSize: 22,
       fontWeight: FontWeight.w800,
       letterSpacing: 0,

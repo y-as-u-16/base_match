@@ -27,19 +27,29 @@ class GameRecordCard extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.zero,
-      elevation: 0,
+      elevation: 1,
       clipBehavior: Clip.antiAlias,
       color: colorScheme.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.62),
+          color: colorScheme.outlineVariant.withValues(alpha: 0.46),
         ),
       ),
+      shadowColor: colorScheme.shadow.withValues(alpha: 0.08),
       child: InkWell(
         onTap: onTap,
         child: Ink(
-          decoration: BoxDecoration(color: colorScheme.surfaceContainerLow),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                colorScheme.surfaceContainerLowest,
+                colorScheme.surfaceContainerLow.withValues(alpha: 0.72),
+              ],
+            ),
+          ),
           child: Stack(
             children: [
               Positioned(
@@ -53,10 +63,10 @@ class GameRecordCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(13, 12, 14, 12),
+                padding: const EdgeInsets.fromLTRB(15, 14, 14, 14),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final compact = constraints.maxWidth < 340;
+                    final compact = constraints.maxWidth < 380;
                     final scoreBoard = _ScoreBoard(
                       homeScore: homeScore,
                       awayScore: awayScore,
@@ -76,14 +86,6 @@ class GameRecordCard extends StatelessWidget {
                           scoreBoard,
                           const SizedBox(height: 12),
                           details,
-                          const SizedBox(height: 8),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(
-                              Icons.chevron_right,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
                         ],
                       );
                     }
@@ -91,12 +93,23 @@ class GameRecordCard extends StatelessWidget {
                     return Row(
                       children: [
                         scoreBoard,
-                        const SizedBox(width: 14),
+                        const SizedBox(width: 16),
                         Expanded(child: details),
                         const SizedBox(width: 8),
-                        Icon(
-                          Icons.chevron_right,
-                          color: colorScheme.onSurfaceVariant,
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHighest
+                                .withValues(alpha: 0.72),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Icon(
+                              Icons.chevron_right,
+                              color: colorScheme.onSurfaceVariant,
+                              size: 20,
+                            ),
+                          ),
                         ),
                       ],
                     );
@@ -170,19 +183,19 @@ class _ScoreBoard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return SizedBox(
-      width: fillWidth ? double.infinity : 132,
+      width: fillWidth ? double.infinity : 142,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.surface.withValues(alpha: 0.76),
+          color: colorScheme.surfaceContainerLow.withValues(alpha: 0.92),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.72),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.52),
           ),
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 9, 10, 9),
           child: SizedBox(
-            height: 82,
+            height: 88,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -205,14 +218,15 @@ class _ScoreBoard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: result
-                              .color(colorScheme)
-                              .withValues(alpha: 0.22),
-                          borderRadius: BorderRadius.circular(3),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: LinearProgressIndicator(
+                          minHeight: 5,
+                          value: _scoreShare(homeScore, awayScore),
+                          backgroundColor: colorScheme.outlineVariant
+                              .withValues(alpha: 0.46),
+                          color: result.color(colorScheme),
                         ),
-                        child: const SizedBox(height: 5),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -225,6 +239,14 @@ class _ScoreBoard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  double _scoreShare(int homeScore, int awayScore) {
+    final total = homeScore + awayScore;
+    if (total == 0) {
+      return 0.5;
+    }
+    return (homeScore / total).clamp(0.08, 0.92);
   }
 }
 
@@ -242,6 +264,9 @@ class _ResultBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: result.containerColor(colorScheme),
         borderRadius: BorderRadius.circular(7),
+        border: Border.all(
+          color: result.color(colorScheme).withValues(alpha: 0.20),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -250,6 +275,7 @@ class _ResultBadge extends StatelessWidget {
           style: theme.textTheme.labelSmall?.copyWith(
             color: result.onContainerColor(colorScheme),
             fontWeight: FontWeight.w900,
+            letterSpacing: 0,
           ),
         ),
       ),
@@ -279,6 +305,7 @@ class _TeamScore extends StatelessWidget {
               color: colorScheme.onSurfaceVariant,
               fontSize: 10,
               fontWeight: FontWeight.w800,
+              letterSpacing: 0,
             ),
           ),
           const SizedBox(height: 1),
@@ -289,8 +316,9 @@ class _TeamScore extends StatelessWidget {
               maxLines: 1,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: colorScheme.onSurface,
-                fontSize: 28,
+                fontSize: 30,
                 fontWeight: FontWeight.w900,
+                letterSpacing: 0,
               ),
             ),
           ),
@@ -319,6 +347,8 @@ class _GameRecordDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _DateLine(date: date),
+        const SizedBox(height: 6),
         Text(
           title,
           maxLines: 2,
@@ -327,20 +357,55 @@ class _GameRecordDetails extends StatelessWidget {
             color: colorScheme.onSurface,
             fontWeight: FontWeight.w900,
             height: 1.18,
+            letterSpacing: 0,
           ),
         ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 7,
-          children: [
-            _GameMetaChip(icon: Icons.calendar_today_outlined, label: date),
-            if (locationLabel != null && locationLabel!.isNotEmpty)
+        if (locationLabel != null && locationLabel!.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 7,
+            children: [
               _GameMetaChip(
                 icon: Icons.location_on_outlined,
                 label: locationLabel!,
               ),
-          ],
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _DateLine extends StatelessWidget {
+  const _DateLine({required this.date});
+
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.calendar_today_outlined,
+          size: 13,
+          color: colorScheme.primary,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          date,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 0,
+          ),
         ),
       ],
     );
@@ -362,6 +427,9 @@ class _GameMetaChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.26),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -378,6 +446,7 @@ class _GameMetaChip extends StatelessWidget {
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w700,
+                  letterSpacing: 0,
                 ),
               ),
             ),

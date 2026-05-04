@@ -68,7 +68,7 @@ class _SectionHeader extends StatelessWidget {
           child: Text(
             title,
             style: theme.textTheme.titleMedium?.copyWith(
-              color: const Color(0xFF1D1D1F),
+              color: colorScheme.onSurface,
               fontWeight: FontWeight.w900,
               letterSpacing: 0,
             ),
@@ -95,9 +95,11 @@ class _EmptyRecentGames extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.52),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 15, 16, 15),
@@ -105,14 +107,14 @@ class _EmptyRecentGames extends StatelessWidget {
           children: [
             DecoratedBox(
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F7),
+                color: colorScheme.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Icon(
                   Icons.add_chart_outlined,
-                  color: colorScheme.onSurfaceVariant,
+                  color: colorScheme.primary,
                 ),
               ),
             ),
@@ -121,7 +123,7 @@ class _EmptyRecentGames extends StatelessWidget {
               child: Text(
                 l10n.homeEmptyGames,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF6E6E73),
+                  color: colorScheme.onSurfaceVariant,
                   height: 1.45,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0,

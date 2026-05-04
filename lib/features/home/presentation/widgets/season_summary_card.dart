@@ -11,14 +11,17 @@ class SeasonSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
     return Card(
       elevation: 0,
-      color: Colors.white,
+      color: colorScheme.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+        side: BorderSide(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.52),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
@@ -34,7 +37,7 @@ class SeasonSummaryCard extends StatelessWidget {
                       Text(
                         l10n.seasonSummaryTitle,
                         style: theme.textTheme.titleLarge?.copyWith(
-                          color: const Color(0xFF1D1D1F),
+                          color: colorScheme.onSurface,
                           fontWeight: FontWeight.w900,
                           height: 1.12,
                           letterSpacing: 0,
@@ -44,7 +47,7 @@ class SeasonSummaryCard extends StatelessWidget {
                       Text(
                         l10n.seasonSummarySubtitle(summary.year),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: const Color(0xFF6E6E73),
+                          color: colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0,
                         ),
@@ -52,7 +55,7 @@ class SeasonSummaryCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.query_stats_rounded, color: Color(0xFF86868B)),
+                Icon(Icons.query_stats_rounded, color: colorScheme.primary),
               ],
             ),
             const SizedBox(height: 16),
@@ -128,18 +131,19 @@ class _SeasonMetricTile extends StatelessWidget {
   final String value;
   final bool emphasized;
 
-  static const _accentBlue = Color(0xFF0071E3);
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final background = emphasized
-        ? const Color(0xFF1D1D1F)
-        : const Color(0xFFF5F5F7);
-    final foreground = emphasized ? Colors.white : const Color(0xFF1D1D1F);
+        ? colorScheme.primary
+        : colorScheme.surfaceContainerLow;
+    final foreground = emphasized
+        ? colorScheme.onPrimary
+        : colorScheme.onSurface;
     final muted = emphasized
-        ? Colors.white.withValues(alpha: 0.68)
-        : const Color(0xFF6E6E73);
+        ? colorScheme.onPrimary.withValues(alpha: 0.68)
+        : colorScheme.onSurfaceVariant;
 
     return SizedBox(
       width: width,
@@ -147,7 +151,9 @@ class _SeasonMetricTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          border: Border.all(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.38),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
@@ -157,8 +163,8 @@ class _SeasonMetricTile extends StatelessWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: emphasized
-                      ? Colors.white.withValues(alpha: 0.12)
-                      : _accentBlue.withValues(alpha: 0.10),
+                      ? colorScheme.onPrimary.withValues(alpha: 0.12)
+                      : colorScheme.primary.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Padding(
@@ -166,7 +172,9 @@ class _SeasonMetricTile extends StatelessWidget {
                   child: Icon(
                     icon,
                     size: 17,
-                    color: emphasized ? Colors.white : _accentBlue,
+                    color: emphasized
+                        ? colorScheme.onPrimary
+                        : colorScheme.primary,
                   ),
                 ),
               ),
