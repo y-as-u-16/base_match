@@ -9,6 +9,27 @@ platform :ios do
     )
   end
 
+  private_lane :flutter_build_name do
+    pubspec = File.read(File.expand_path("../../pubspec.yaml", __dir__))
+    version_line = pubspec.lines.find { |line| line.start_with?("version:") }
+    UI.user_error!("version is missing in pubspec.yaml") unless version_line
+
+    version_line.split(":", 2).last.strip.split("+", 2).first
+  end
+
+  private_lane :next_testflight_build_number do |options|
+    version = options.fetch(:version)
+    api_key = options.fetch(:api_key)
+    latest_build_number = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: "com.basematch.app",
+      version: version,
+      initial_build_number: 0
+    )
+
+    latest_build_number.to_i + 1
+  end
+
   desc "Create or sync App Store signing certificates and profiles"
   lane :sync_signing do
     api_key = app_store_connect_api_key_from_env
@@ -45,7 +66,18 @@ platform :ios do
       profile_name: profile_name
     )
 
-    sh("cd .. && flutter build ipa --release --export-method app-store")
+    build_name = flutter_build_name
+    build_number = next_testflight_build_number(
+      api_key: api_key,
+      version: build_name
+    )
+
+    sh(
+      "cd .. && flutter build ipa --release " \
+      "--build-name #{build_name} " \
+      "--build-number #{build_number} " \
+      "--export-method app-store"
+    )
 
     ipa_path = Dir[File.expand_path("../../build/ios/ipa/*.ipa", __dir__)]
       .max_by { |path| File.mtime(path) }
