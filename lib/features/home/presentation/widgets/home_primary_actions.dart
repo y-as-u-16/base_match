@@ -14,6 +14,7 @@ class HomePrimaryActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
     return LayoutBuilder(
@@ -24,7 +25,13 @@ class HomePrimaryActions extends StatelessWidget {
           icon: const Icon(Icons.add_circle_outline),
           label: Text(l10n.recordGameButton),
           style: FilledButton.styleFrom(
-            minimumSize: const Size.fromHeight(50),
+            backgroundColor: const Color(0xFF1D1D1F),
+            foregroundColor: Colors.white,
+            minimumSize: const Size.fromHeight(54),
+            textStyle: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -35,7 +42,14 @@ class HomePrimaryActions extends StatelessWidget {
           icon: const Icon(Icons.bar_chart_rounded),
           label: Text(l10n.viewStatsButton),
           style: OutlinedButton.styleFrom(
-            minimumSize: const Size.fromHeight(50),
+            backgroundColor: Colors.white,
+            foregroundColor: const Color(0xFF0071E3),
+            side: BorderSide(color: Colors.black.withValues(alpha: 0.08)),
+            minimumSize: const Size.fromHeight(54),
+            textStyle: theme.textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

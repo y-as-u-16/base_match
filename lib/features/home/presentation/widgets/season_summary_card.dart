@@ -11,39 +11,22 @@ class SeasonSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context);
 
     return Card(
       elevation: 0,
-      color: colorScheme.surfaceContainerLow,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.62),
-        ),
+        side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(9),
-                    child: Icon(
-                      Icons.query_stats_rounded,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,21 +34,25 @@ class SeasonSummaryCard extends StatelessWidget {
                       Text(
                         l10n.seasonSummaryTitle,
                         style: theme.textTheme.titleLarge?.copyWith(
-                          color: colorScheme.onSurface,
+                          color: const Color(0xFF1D1D1F),
                           fontWeight: FontWeight.w900,
                           height: 1.12,
+                          letterSpacing: 0,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
                       Text(
                         l10n.seasonSummarySubtitle(summary.year),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                          color: const Color(0xFF6E6E73),
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0,
                         ),
                       ),
                     ],
                   ),
                 ),
+                const Icon(Icons.query_stats_rounded, color: Color(0xFF86868B)),
               ],
             ),
             const SizedBox(height: 16),
@@ -85,6 +72,7 @@ class SeasonSummaryCard extends StatelessWidget {
                       icon: Icons.sports_baseball_outlined,
                       label: l10n.seasonGamesMetricLabel,
                       value: l10n.seasonGamesCount(summary.games),
+                      emphasized: true,
                     ),
                     _SeasonMetricTile(
                       width: tileWidth,
@@ -131,28 +119,35 @@ class _SeasonMetricTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
+    this.emphasized = false,
   });
 
   final double width;
   final IconData icon;
   final String label;
   final String value;
+  final bool emphasized;
+
+  static const _accentBlue = Color(0xFF0071E3);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final colorScheme = theme.colorScheme;
+    final background = emphasized
+        ? const Color(0xFF1D1D1F)
+        : const Color(0xFFF5F5F7);
+    final foreground = emphasized ? Colors.white : const Color(0xFF1D1D1F);
+    final muted = emphasized
+        ? Colors.white.withValues(alpha: 0.68)
+        : const Color(0xFF6E6E73);
 
     return SizedBox(
       width: width,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest.withValues(alpha: 0.92),
+          color: background,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.72),
-          ),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 11),
@@ -161,22 +156,27 @@ class _SeasonMetricTile extends StatelessWidget {
             children: [
               DecoratedBox(
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.62,
-                  ),
+                  color: emphasized
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : _accentBlue.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(7),
-                  child: Icon(icon, size: 17, color: colorScheme.tertiary),
+                  child: Icon(
+                    icon,
+                    size: 17,
+                    color: emphasized ? Colors.white : _accentBlue,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 label,
                 style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                  color: muted,
                   fontWeight: FontWeight.w700,
+                  letterSpacing: 0,
                 ),
               ),
               const SizedBox(height: 4),
@@ -187,7 +187,9 @@ class _SeasonMetricTile extends StatelessWidget {
                   value,
                   maxLines: 1,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
+                    color: foreground,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
                   ),
                 ),
               ),

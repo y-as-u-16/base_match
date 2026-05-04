@@ -27,7 +27,16 @@ class HomePage extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.navHome)),
+      backgroundColor: const Color(0xFFF5F5F7),
+      appBar: AppBar(
+        title: Text(l10n.navHome),
+        centerTitle: false,
+        backgroundColor: const Color(0xFFF5F5F7),
+        foregroundColor: const Color(0xFF1D1D1F),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        titleTextStyle: _homeTitleStyle(context),
+      ),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -54,6 +63,17 @@ class HomePage extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  TextStyle _homeTitleStyle(BuildContext context) {
+    final base = Theme.of(context).textTheme.titleLarge;
+
+    return (base ?? const TextStyle()).copyWith(
+      color: const Color(0xFF1D1D1F),
+      fontSize: 22,
+      fontWeight: FontWeight.w800,
+      letterSpacing: 0,
     );
   }
 }
