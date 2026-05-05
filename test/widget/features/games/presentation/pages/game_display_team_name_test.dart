@@ -102,23 +102,21 @@ void main() {
 
     await tester.pumpWidget(buildSubject(seed.database, const GamesPage()));
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('calendar-day-2026-5-3')));
+    await tester.pumpAndSettle();
 
     expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
   });
 
-  testWidgets('記録一覧はリストとカレンダーを切り替えられる', (tester) async {
+  testWidgets('記録一覧はカレンダーのみを表示する', (tester) async {
     final seed = await createDatabaseWithGame();
     addTearDown(seed.database.close);
 
     await tester.pumpWidget(buildSubject(seed.database, const GamesPage()));
     await tester.pumpAndSettle();
 
-    expect(find.text('リスト'), findsOneWidget);
-    expect(find.text('カレンダー'), findsOneWidget);
-    expect(find.text('Tokyo Bears vs Osaka Tigers'), findsOneWidget);
-
-    await tester.tap(find.text('カレンダー'));
-    await tester.pumpAndSettle();
+    expect(find.text('リスト'), findsNothing);
+    expect(find.text('カレンダー'), findsNothing);
 
     final now = DateTime.now();
     expect(find.text('${now.year}年${now.month}月'), findsOneWidget);
@@ -170,9 +168,6 @@ void main() {
     addTearDown(seed.database.close);
 
     await tester.pumpWidget(buildRoutedSubject(seed.database));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('カレンダー'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey('calendar-day-2026-5-3')));
