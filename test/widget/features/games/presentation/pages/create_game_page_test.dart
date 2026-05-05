@@ -1,4 +1,5 @@
 import 'package:drift/native.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -156,6 +157,30 @@ void main() {
       expect(games, hasLength(1));
       expect(games.single.myTeamId, team.id);
       expect(games.single.date, DateTime(2026, 5, 3));
+    });
+
+    testWidgets('日付をドラムロールで選択できる', (tester) async {
+      final database = LocalDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(database.close);
+      final initialDate = DateTime(2026, 5, 3);
+
+      await tester.pumpWidget(buildSubject(database, initialDate: initialDate));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text(l10n.gameDateLabel).last);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CupertinoDatePicker), findsOneWidget);
+
+      final picker = tester.widget<CupertinoDatePicker>(
+        find.byType(CupertinoDatePicker),
+      );
+      picker.onDateTimeChanged(DateTime(2026, 6, 14));
+      await tester.pump();
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('2026/06/14'), findsWidgets);
     });
   });
 }
