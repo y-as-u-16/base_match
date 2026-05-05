@@ -2,7 +2,7 @@ name: base_match
 description: "Local baseball game and stats tracking app"
 
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: ^3.9.2

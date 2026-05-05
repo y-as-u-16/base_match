@@ -6,9 +6,6 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../view_models/game_view_model.dart';
 import '../view_models/my_team_view_model.dart';
 import '../widgets/game_calendar_view.dart';
-import '../widgets/game_list_view.dart';
-import '../widgets/games_view_mode_selector.dart';
-import '../widgets/record_empty_state.dart';
 import '../widgets/record_page_header.dart';
 
 class GamesPage extends ConsumerStatefulWidget {
@@ -19,7 +16,7 @@ class GamesPage extends ConsumerStatefulWidget {
 }
 
 class _GamesPageState extends ConsumerState<GamesPage> {
-  GamesViewMode _viewMode = GamesViewMode.list;
+  DateTime _calendarSelectedDate = _dateKey(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +36,7 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         scrolledUnderElevation: 0,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/games/create'),
+        onPressed: () => context.go(_createGameLocation()),
         icon: const Icon(Icons.add),
         label: Text(l10n.addGameButton),
         backgroundColor: colorScheme.primary,
@@ -52,43 +49,40 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         child: SafeArea(
           top: false,
           child: SizedBox.expand(
-            child: games.isEmpty
-                ? RecordEmptyState(onCreate: () => context.go('/games/create'))
-                : Column(
-                    children: [
-                      RecordPageHeader(gameCount: games.length),
-                      GamesViewModeSelector(
-                        viewMode: _viewMode,
-                        onChanged: (viewMode) {
-                          setState(() {
-                            _viewMode = viewMode;
-                          });
-                        },
-                      ),
-                      Expanded(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 220),
-                          switchInCurve: Curves.easeOutCubic,
-                          switchOutCurve: Curves.easeInCubic,
-                          child: switch (_viewMode) {
-                            GamesViewMode.list => GameListView(
-                              key: const ValueKey('games-list-view'),
-                              games: games,
-                              myTeamById: myTeamById,
-                            ),
-                            GamesViewMode.calendar => GameCalendarView(
-                              key: const ValueKey('games-calendar-view'),
-                              games: games,
-                              myTeamById: myTeamById,
-                            ),
-                          },
-                        ),
-                      ),
-                    ],
+            child: Column(
+              children: [
+                RecordPageHeader(gameCount: games.length),
+                Expanded(
+                  child: GameCalendarView(
+                    key: const ValueKey('games-calendar-view'),
+                    games: games,
+                    myTeamById: myTeamById,
+                    selectedDate: _calendarSelectedDate,
+                    onSelectedDateChanged: (date) {
+                      setState(() {
+                        _calendarSelectedDate = _dateKey(date);
+                      });
+                    },
                   ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  String _createGameLocation() {
+    final date = _calendarSelectedDate;
+    final dateQuery =
+        '${date.year.toString().padLeft(4, '0')}-'
+        '${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}';
+    return '/games/create?date=$dateQuery';
+  }
+
+  static DateTime _dateKey(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 }

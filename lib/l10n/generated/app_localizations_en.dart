@@ -87,16 +87,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addGameButton => 'Add game';
 
   @override
-  String get gamesListViewLabel => 'List';
-
-  @override
-  String get gamesCalendarViewLabel => 'Calendar';
-
-  @override
-  String get gamesCalendarPlaceholder =>
-      'Calendar view will be added in the next step.';
-
-  @override
   String get selectedDateGamesTitle => 'Selected date games';
 
   @override
@@ -107,16 +97,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nextMonthTooltip => 'Next month';
-
-  @override
-  String get emptyGamesTitle => 'No games yet';
-
-  @override
-  String get emptyGamesSubtitle =>
-      'Create a game to record plate appearances and pitching stats.';
-
-  @override
-  String get createGameButton => 'Create game';
 
   @override
   String get createGameTitle => 'Create Game';

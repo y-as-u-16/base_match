@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +14,9 @@ import '../widgets/create_game_page_widgets.dart';
 import '../widgets/create_my_team_sheet.dart';
 
 class CreateGamePage extends ConsumerStatefulWidget {
-  const CreateGamePage({super.key});
+  const CreateGamePage({super.key, this.initialDate});
+
+  final DateTime? initialDate;
 
   @override
   ConsumerState<CreateGamePage> createState() => _CreateGamePageState();
@@ -25,11 +28,22 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   final _locationController = TextEditingController();
   final _homeScoreController = TextEditingController(text: '0');
   final _awayScoreController = TextEditingController(text: '0');
-  DateTime _selectedDate = DateTime.now();
+  late DateTime _selectedDate;
   int _selectedInnings = 7;
   String? _selectedMyTeamId;
 
   static const _inningsOptions = [3, 5, 7, 9];
+
+  @override
+  void initState() {
+    super.initState();
+    final initialDate = widget.initialDate ?? DateTime.now();
+    _selectedDate = DateTime(
+      initialDate.year,
+      initialDate.month,
+      initialDate.day,
+    );
+  }
 
   @override
   void dispose() {
@@ -41,13 +55,80 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    final minimumDate = DateTime(2000);
+    final maximumDate = _dateKey(DateTime.now().add(const Duration(days: 365)));
+    var selectedDate = _dateInRange(_selectedDate, minimumDate, maximumDate);
+
+    final picked = await showModalBottomSheet<DateTime>(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        final materialLocalizations = MaterialLocalizations.of(context);
+
+        return SafeArea(
+          top: false,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLowest,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 10, 12, 6),
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(materialLocalizations.cancelButtonLabel),
+                      ),
+                      const Spacer(),
+                      FilledButton(
+                        onPressed: () =>
+                            Navigator.of(context).pop(selectedDate),
+                        child: Text(materialLocalizations.okButtonLabel),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 216,
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      brightness: theme.brightness,
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: theme.textTheme.titleLarge
+                            ?.copyWith(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0,
+                            ),
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: selectedDate,
+                      minimumDate: minimumDate,
+                      maximumDate: maximumDate,
+                      onDateTimeChanged: (date) {
+                        selectedDate = _dateKey(date);
+                      },
+                    ),
+                  ),
+                ),
+                const Gap(12),
+              ],
+            ),
+          ),
+        );
+      },
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) setState(() => _selectedDate = _dateKey(picked));
   }
 
   Future<void> _onCreate() async {
@@ -105,6 +186,21 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
     }
     return teams.where((team) => team.isDefault).firstOrNull?.id ??
         teams.first.id;
+  }
+
+  DateTime _dateInRange(
+    DateTime date,
+    DateTime minimumDate,
+    DateTime maximumDate,
+  ) {
+    final normalizedDate = _dateKey(date);
+    if (normalizedDate.isBefore(minimumDate)) return minimumDate;
+    if (normalizedDate.isAfter(maximumDate)) return maximumDate;
+    return normalizedDate;
+  }
+
+  DateTime _dateKey(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 
   @override
