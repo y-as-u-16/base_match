@@ -13,7 +13,7 @@ concurrency:
 jobs:
   testflight:
     name: Upload to TestFlight
-    runs-on: macos-latest
+    runs-on: macos-26
     timeout-minutes: 60
     env:
       APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -52,6 +52,9 @@ jobs:
         with:
           channel: stable
           cache: true
+
+      - name: Show Xcode version
+        run: xcodebuild -version
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
