@@ -20,6 +20,7 @@ class GamesPage extends ConsumerStatefulWidget {
 
 class _GamesPageState extends ConsumerState<GamesPage> {
   GamesViewMode _viewMode = GamesViewMode.list;
+  DateTime _calendarSelectedDate = _dateKey(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         scrolledUnderElevation: 0,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/games/create'),
+        onPressed: () => context.go(_createGameLocation()),
         icon: const Icon(Icons.add),
         label: Text(l10n.addGameButton),
         backgroundColor: colorScheme.primary,
@@ -80,6 +81,12 @@ class _GamesPageState extends ConsumerState<GamesPage> {
                               key: const ValueKey('games-calendar-view'),
                               games: games,
                               myTeamById: myTeamById,
+                              selectedDate: _calendarSelectedDate,
+                              onSelectedDateChanged: (date) {
+                                setState(() {
+                                  _calendarSelectedDate = _dateKey(date);
+                                });
+                              },
                             ),
                           },
                         ),
@@ -90,5 +97,20 @@ class _GamesPageState extends ConsumerState<GamesPage> {
         ),
       ),
     );
+  }
+
+  String _createGameLocation() {
+    if (_viewMode != GamesViewMode.calendar) return '/games/create';
+
+    final date = _calendarSelectedDate;
+    final dateQuery =
+        '${date.year.toString().padLeft(4, '0')}-'
+        '${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}';
+    return '/games/create?date=$dateQuery';
+  }
+
+  static DateTime _dateKey(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 }

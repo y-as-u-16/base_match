@@ -13,7 +13,9 @@ import '../widgets/create_game_page_widgets.dart';
 import '../widgets/create_my_team_sheet.dart';
 
 class CreateGamePage extends ConsumerStatefulWidget {
-  const CreateGamePage({super.key});
+  const CreateGamePage({super.key, this.initialDate});
+
+  final DateTime? initialDate;
 
   @override
   ConsumerState<CreateGamePage> createState() => _CreateGamePageState();
@@ -25,11 +27,22 @@ class _CreateGamePageState extends ConsumerState<CreateGamePage> {
   final _locationController = TextEditingController();
   final _homeScoreController = TextEditingController(text: '0');
   final _awayScoreController = TextEditingController(text: '0');
-  DateTime _selectedDate = DateTime.now();
+  late DateTime _selectedDate;
   int _selectedInnings = 7;
   String? _selectedMyTeamId;
 
   static const _inningsOptions = [3, 5, 7, 9];
+
+  @override
+  void initState() {
+    super.initState();
+    final initialDate = widget.initialDate ?? DateTime.now();
+    _selectedDate = DateTime(
+      initialDate.year,
+      initialDate.month,
+      initialDate.day,
+    );
+  }
 
   @override
   void dispose() {

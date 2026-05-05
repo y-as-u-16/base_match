@@ -13,10 +13,14 @@ class GameCalendarView extends StatefulWidget {
     super.key,
     required this.games,
     required this.myTeamById,
+    required this.selectedDate,
+    required this.onSelectedDateChanged,
   });
 
   final List<Game> games;
   final Map<String, MyTeam> myTeamById;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onSelectedDateChanged;
 
   @override
   State<GameCalendarView> createState() => _GameCalendarViewState();
@@ -24,14 +28,12 @@ class GameCalendarView extends StatefulWidget {
 
 class _GameCalendarViewState extends State<GameCalendarView> {
   late DateTime _focusedMonth;
-  late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    final today = _dateKey(DateTime.now());
-    _focusedMonth = DateTime(today.year, today.month);
-    _selectedDate = today;
+    final selectedDate = _dateKey(widget.selectedDate);
+    _focusedMonth = DateTime(selectedDate.year, selectedDate.month);
   }
 
   @override
@@ -42,7 +44,8 @@ class _GameCalendarViewState extends State<GameCalendarView> {
     final localeName = Localizations.localeOf(context).toLanguageTag();
     final calendarDays = _buildCalendarDays(_focusedMonth);
     final gameCountsByDate = _countGamesByDate(widget.games);
-    final selectedGames = _gamesOnDate(widget.games, _selectedDate);
+    final selectedDate = _dateKey(widget.selectedDate);
+    final selectedGames = _gamesOnDate(widget.games, selectedDate);
     final weekdayLabels = _weekdayLabels(localeName);
 
     return SingleChildScrollView(
@@ -84,12 +87,10 @@ class _GameCalendarViewState extends State<GameCalendarView> {
                     days: calendarDays,
                     weekdayLabels: weekdayLabels,
                     gameCountsByDate: gameCountsByDate,
-                    selectedDate: _selectedDate,
+                    selectedDate: selectedDate,
                     gameCountLabelBuilder: l10n.seasonGamesCount,
                     onDateSelected: (day) {
-                      setState(() {
-                        _selectedDate = _dateKey(day);
-                      });
+                      widget.onSelectedDateChanged(_dateKey(day));
                     },
                   ),
                 ],
@@ -98,7 +99,7 @@ class _GameCalendarViewState extends State<GameCalendarView> {
           ),
           const SizedBox(height: 18),
           SelectedDateGameSection(
-            selectedDate: _selectedDate,
+            selectedDate: selectedDate,
             games: selectedGames,
             myTeamById: widget.myTeamById,
           ),
@@ -108,13 +109,14 @@ class _GameCalendarViewState extends State<GameCalendarView> {
   }
 
   void _changeMonth(int offset) {
+    final focusedMonth = DateTime(
+      _focusedMonth.year,
+      _focusedMonth.month + offset,
+    );
     setState(() {
-      _focusedMonth = DateTime(
-        _focusedMonth.year,
-        _focusedMonth.month + offset,
-      );
-      _selectedDate = _focusedMonth;
+      _focusedMonth = focusedMonth;
     });
+    widget.onSelectedDateChanged(focusedMonth);
   }
 
   List<DateTime?> _buildCalendarDays(DateTime month) {

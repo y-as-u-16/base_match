@@ -88,7 +88,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: 'create',
                 pageBuilder: (context, state) => _slideRightTransitionPage(
                   key: state.pageKey,
-                  child: const CreateGamePage(),
+                  child: CreateGamePage(
+                    initialDate: _parseCreateGameDate(state),
+                  ),
                 ),
               ),
               GoRoute(
@@ -134,6 +136,15 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+DateTime? _parseCreateGameDate(GoRouterState state) {
+  final date = state.uri.queryParameters['date'];
+  if (date == null) return null;
+
+  final parsed = DateTime.tryParse(date);
+  if (parsed == null) return null;
+  return DateTime(parsed.year, parsed.month, parsed.day);
+}
 
 class _ScaffoldWithNavBar extends StatelessWidget {
   const _ScaffoldWithNavBar({required this.child});

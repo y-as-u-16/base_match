@@ -15,13 +15,13 @@ import 'package:base_match/l10n/generated/app_localizations_ja.dart';
 void main() {
   final l10n = AppLocalizationsJa();
 
-  Widget buildSubject(LocalDatabase database) {
+  Widget buildSubject(LocalDatabase database, {DateTime? initialDate}) {
     final router = GoRouter(
       initialLocation: '/games/create',
       routes: [
         GoRoute(
           path: '/games/create',
-          builder: (context, state) => const CreateGamePage(),
+          builder: (context, state) => CreateGamePage(initialDate: initialDate),
         ),
         GoRoute(
           path: '/games/:gameId',
@@ -125,6 +125,37 @@ void main() {
       expect(games, hasLength(1));
       expect(games.single.myTeamId, team.id);
       expect(games.single.awayTeamName, 'Osaka Tigers');
+    });
+
+    testWidgets('初期日付が渡された場合はその日付で試合を作成する', (tester) async {
+      final database = LocalDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(database.close);
+      final team = await LocalMyTeamRepository(
+        database,
+      ).createMyTeam(name: 'Tokyo Bears');
+      final initialDate = DateTime(2026, 5, 3);
+
+      await tester.pumpWidget(buildSubject(database, initialDate: initialDate));
+      await tester.pumpAndSettle();
+
+      expect(find.text('2026/05/03'), findsWidgets);
+
+      await tester.enterText(
+        find.widgetWithText(TextFormField, l10n.awayTeamNameLabel),
+        'Osaka Tigers',
+      );
+      await tester.ensureVisible(
+        find.widgetWithText(FilledButton, l10n.createButton),
+      );
+      await tester.tap(find.widgetWithText(FilledButton, l10n.createButton));
+      await tester.pumpAndSettle();
+
+      expect(find.text('created-game'), findsOneWidget);
+
+      final games = await database.select(database.localGames).get();
+      expect(games, hasLength(1));
+      expect(games.single.myTeamId, team.id);
+      expect(games.single.date, DateTime(2026, 5, 3));
     });
   });
 }
